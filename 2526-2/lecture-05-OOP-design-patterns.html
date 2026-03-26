@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bài 4: Mẫu thiết kế OOP (Design Patterns) + Anti-patterns</title>
+
+  <link rel="stylesheet" href="revealjs/dist/reset.css" />
+  <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+  <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+  <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="lecture-style.css" />
+
+  <style>
+    /* Giảm nhẹ cỡ chữ để “vừa khung” slide hơn */
+    .reveal {
+      --r-main-font-size: 34px;
+      --r-heading-margin: 0 0 16px 0;
+    }
+
+    .reveal section {
+      line-height: 1.25;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.8em;
+      border: 1px solid #ccc;
+      background: #F3F2EC;
+      margin-right: 0.4rem;
+    }
+
+    .cols-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+  </style>
+</head>
+
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Trang bìa -->
+      <section>
+        <section>
+          <h1>Thực hành phát triển hệ thống trí tuệ nhân tạo</h1>
+          <h3>Bài 4: Mẫu thiết kế OOP (Design Patterns)</h3>
+          <p><span class="text-light">Phản mẫu (Anti-patterns) &amp; Anti-OOP patterns</span></p>
+          <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
+        </section>
+
+        <section>
+          <h2>Nội dung</h2>
+          <ol>
+            <li>Tư duy pattern: vấn đề – bối cảnh – giải pháp</li>
+            <li>GoF (Gang of Four) Patterns</li>
+            <li>Anti-patterns (5–10 mẫu “xấu” thường gặp)</li>
+            <li>Anti-OOP patterns (5–10 lỗi thiết kế OOP)</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Mục tiêu buổi học</h2>
+          <ul>
+            <li>Hiểu <strong>pattern</strong> là gì và khi nào nên (không nên) dùng</li>
+            <li>Nắm “xương sống” của các mẫu GoF phổ biến và cách nhận biết</li>
+            <li>Nhận diện anti-pattern/anti-OOP pattern để tránh sớm</li>
+            <li>Ghi nhớ nhanh bằng <strong>sơ đồ minh hoạ</strong> và UML</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- PHẦN 1: TƯ DUY PATTERN -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">1.</span><br />
+            Tư duy pattern
+          </h1>
+        </section>
+
+        <section>
+          <h2>Design Pattern là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Ý tưởng</div>
+            <strong>Design pattern</strong> là <span class="keyword">cách giải</span> đã được kiểm chứng cho một <span
+              class="keyword">vấn đề lặp lại</span> trong thiết kế phần mềm, dưới một <span class="keyword">bối cảnh</span>
+            nhất định.
+          </div>
+          <ul style="margin-top:0.75rem;">
+            <li>Không phải “đoạn code copy-paste”</li>
+            <li>Là “từ vựng chung” để thảo luận thiết kế</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Pattern vs Principle vs Library</h2>
+          <table style="font-size:0.9em;">
+            <thead>
+              <tr>
+                <th>Thứ</th>
+                <th>Bản chất</th>
+                <th>Ví dụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Principle</td>
+                <td>Nguyên tắc định hướng</td>
+                <td>SOLID, DRY</td>
+              </tr>
+              <tr>
+                <td>Pattern</td>
+                <td>Mẫu giải pháp có cấu trúc</td>
+                <td>Factory, Observer</td>
+              </tr>
+              <tr>
+                <td>Library/Framework</td>
+                <td>Mã triển khai cụ thể</td>
+                <td>Spring, React</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Khi nào dùng pattern?</h2>
+          <ul>
+            <li><strong>Khi vấn đề lặp lại</strong> và có dấu hiệu “thiết kế bắt đầu rối”</li>
+            <li>Khi cần <strong>giảm liên kết chặt</strong> (coupling), tăng khả năng mở rộng</li>
+            <li>Khi cần “ngôn ngữ chung” để trao đổi trong review và dự án lớn</li>
+          </ul>
+          <p><span class="keyword">Không dùng pattern</span> chỉ vì “nghe hay”. Pattern cũng có chi phí.</p>
+        </section>
+
+        <section>
+          <h2>Chi phí của pattern</h2>
+          <ul>
+            <li>Thêm lớp/đối tượng → tăng độ phức tạp</li>
+            <li>Khó đọc hơn nếu nhóm chưa thống nhất “từ vựng”</li>
+            <li>Dễ <strong>quá tay</strong> (over-engineering) nếu bài toán nhỏ</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Phân loại GoF</h2>
+          <div class="cols-2" style="font-size:0.95em;">
+            <div>
+              <div class="badge">Creational</div> Tạo đối tượng<br />
+              <div class="badge">Structural</div> Ghép/cấu trúc đối tượng<br />
+              <div class="badge">Behavioral</div> Hành vi/luồng tương tác
+            </div>
+            <div>
+              <div style="border:1px solid #ccc;border-radius:12px;padding:0.75rem;">
+                <strong>Mẹo nhớ</strong><br />
+                - Tạo: “làm sao sinh object đúng cách?”<br />
+                - Cấu trúc: “ghép object cho linh hoạt?”<br />
+                - Hành vi: “ai nói chuyện với ai, lúc nào?”
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Format ghi nhớ mỗi pattern</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: đang gặp vấn đề ở đâu?</li>
+            <li><strong>Ràng buộc</strong>: các lực kéo/đánh đổi là gì?</li>
+            <li><strong>Giải pháp</strong>: cấu trúc giải quyết ra sao?</li>
+            <li><strong>Khi không nên dùng</strong>: trường hợp nào nên tránh?</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- PHẦN 2: GOF PATTERNS (CHỌN LỌC) -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">2.</span><br />
+            GoF Patterns (chọn lọc)
+          </h1>
+        </section>
+
+        <section>
+          <h2>Sơ lược</h2>
+          <div style="font-size:0.9em;">
+            <p><span class="badge">Creational</span> Singleton, Factory Method, Abstract Factory, Builder, Prototype</p>
+            <p><span class="badge">Structural</span> Adapter, Facade, Decorator, Composite, Proxy</p>
+            <p><span class="badge">Behavioral</span> Strategy, Observer, Command, Template Method, State</p>
+          </div>
+        </section>
+
+        <!-- CREATIONAL -->
+        <section>
+          <h1><span class="text-light">2.1</span><br />Creational</h1>
+        </section>
+
+        <section>
+          <h2>Singleton</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: cần đúng 1 thể hiện dùng chung (config, logger...).</li>
+            <li><strong>Giải pháp</strong>: ẩn constructor + cung cấp <span class="inline-code">getInstance()</span>.</li>
+            <li><strong>Khi không nên dùng</strong>: dễ biến thành “trạng thái toàn cục”, khó kiểm thử.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Singleton – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Singleton_UML_class_diagram.svg"
+            alt="Singleton UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Singleton – Lưu ý triển khai</h2>
+          <ul>
+            <li><strong>Khởi tạo trễ</strong> (lazy): tạo khi cần; chú ý an toàn luồng (thread-safety).</li>
+            <li><strong>Khởi tạo sớm</strong> (eager): đơn giản, an toàn; nhưng tốn tài nguyên nếu hiếm khi dùng.</li>
+            <li><strong>Dễ kiểm thử</strong>: ưu tiên <strong>tiêm phụ thuộc</strong> (Dependency Injection) để thay thế thể hiện khi test.</li>
+            <li><strong>Mùi thiết kế</strong>: nếu mọi nơi đều gọi <span class="inline-code">getInstance()</span> thì có thể bạn đang dùng “trạng thái toàn cục”.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Factory Method</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: tạo đối tượng phụ thuộc điều kiện; không muốn <span class="inline-code">new</span> rải khắp nơi.</li>
+            <li><strong>Giải pháp</strong>: lớp cha định nghĩa “phương thức tạo”; lớp con quyết định lớp cụ thể.</li>
+            <li><strong>Khi không nên dùng</strong>: chỉ có 1–2 loại và hiếm khi thay đổi → có thể giữ đơn giản.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Factory Method – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Factory_Method_UML_class_diagram.svg/1280px-Factory_Method_UML_class_diagram.svg.png?_=20090530030543"
+            alt="Factory Method UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Factory Method – Sơ đồ nhanh</h2>
+          <div style="font-size:0.9em;">
+            <p><strong>Creator</strong> định nghĩa <span class="inline-code">factoryMethod()</span> → trả về <strong>Product</strong>.</p>
+            <p><strong>ConcreteCreator</strong> ghi đè factoryMethod → trả về <strong>ConcreteProductA/B</strong>.</p>
+            <p><strong>Ý nghĩa</strong>: phía client chỉ dùng interface <strong>Product</strong>, giảm phụ thuộc vào lớp cụ thể.</p>
+          </div>
+        </section>
+
+        <section>
+          <h2>Abstract Factory</h2>
+          <ul>
+            <li><strong>Problem</strong>: cần tạo <strong>họ</strong> object “ăn khớp” nhau (UI Windows vs UI macOS).</li>
+            <li><strong>Solution</strong>: factory tạo ra nhiều sản phẩm liên quan (Button, Menu, Dialog...).</li>
+            <li><strong>When not</strong>: nếu không có “họ sản phẩm”, dễ bị overkill.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Abstract Factory – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Abstract_Factory_UML_class_diagram.svg"
+            alt="Abstract Factory UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Abstract Factory – Khi nào cực hữu ích?</h2>
+          <ul>
+            <li>Khi muốn <strong>đổi “theme/platform”</strong> mà không sửa logic nghiệp vụ.</li>
+            <li>Khi các sản phẩm phải <strong>tương thích</strong>: WinButton đi với WinMenu, không trộn lẫn.</li>
+            <li><strong>Đánh đổi</strong>: thêm nhiều interface; khó thêm “loại sản phẩm mới” (ví dụ thêm Checkbox) vì phải cập nhật mọi factory.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Builder</h2>
+          <ul>
+            <li><strong>Problem</strong>: tạo object phức tạp, nhiều bước/tuỳ chọn; constructor dài.</li>
+            <li><strong>Solution</strong>: tách “quy trình xây” khỏi “đối tượng cuối”.</li>
+            <li><strong>When not</strong>: object đơn giản, ít tham số.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Builder – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Builder_UML_class_diagram.svg"
+            alt="Builder UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Builder</h2>
+          <ul>
+            <li><strong>Director</strong> (tuỳ chọn): đóng gói “thứ tự các bước”.</li>
+            <li><strong>Builder</strong>: định nghĩa các bước; <strong>ConcreteBuilder</strong>: tạo ra product cụ thể.</li>
+            <li><strong>Hợp với</strong>: đối tượng bất biến (immutable), nhiều tham số tuỳ chọn, cần kiểm tra hợp lệ trước khi build.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Prototype</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: tạo đối tượng mới bằng cách sao chép mẫu (clone) để giảm chi phí khởi tạo.</li>
+            <li><strong>Giải pháp</strong>: đối tượng cung cấp <span class="inline-code">clone()</span> / copy.</li>
+            <li><strong>Khi không nên dùng</strong>: copy sâu (deep copy) phức tạp, dễ phát sinh lỗi.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Prototype – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Prototype_UML.svg/1280px-Prototype_UML.svg.png"
+            alt="Prototype UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Prototype – Liên hệ từ tài liệu</h2>
+            <li>Trong <strong>OOP dựa trên prototype</strong> (không dùng lớp, ví dụ JavaScript), đối tượng thường được tạo bằng <strong>clone/copy</strong> từ “prototype”.</li>
+            <li>Prototype pattern tận dụng ý này để tạo object nhanh khi khởi tạo ban đầu tốn kém.</li>
+            <li><strong>Đánh đổi</strong>: cần quy ước rõ “copy nông/sâu”, tránh vô tình chia sẻ trạng thái có thể thay đổi (mutable state).</li>
+          </ul>
+        </section>
+
+        <!-- STRUCTURAL -->
+        <section>
+          <h1><span class="text-light">2.2</span><br />Structural</h1>
+        </section>
+
+        <section>
+          <h2>Adapter</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: API không khớp (cũ/mới, thư viện bên ngoài).</li>
+            <li><strong>Giải pháp</strong>: bọc interface cũ thành interface mới mong muốn.</li>
+            <li><strong>Khi không nên dùng</strong>: nếu có thể sửa trực tiếp (mã nội bộ), đừng bọc quá nhiều tầng.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Adapter – UML</h2>
+          <img src="https://images.viblo.asia/e7900de4-f4a7-4cdb-bc76-defe4f277189.png"
+            alt="Adapter UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Adapter – Ví dụ điển hình</h2>
+          <ul>
+            <li>Đổi hệ thống payment: API cũ <span class="inline-code">charge(amount, currency)</span>, API mới
+              <span class="inline-code">pay(Money)</span>.</li>
+            <li>Adapter chuyển đổi dữ liệu + mapping lỗi, giúp code nghiệp vụ không đổi.</li>
+            <li><strong>Lưu ý</strong>: adapter thường là nơi phù hợp để đặt <strong>ghi log</strong> và <strong>đo lường</strong> (metrics) cho tích hợp ngoài.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Facade</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: hệ con (subsystem) phức tạp, nhiều API.</li>
+            <li><strong>Giải pháp</strong>: tạo “mặt tiền” để đơn giản hoá điểm vào.</li>
+            <li><strong>Khi không nên dùng</strong>: nếu che giấu quá mức sẽ khó debug; cần có lối đi tới API nâng cao khi thật sự cần.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Facade – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Facade_UML_class_diagram.svg/1280px-Facade_UML_class_diagram.svg.png?_=20070225003803"
+            alt="Facade UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Facade</h2>
+          <ul>
+            <li><strong>Mục tiêu</strong>: giảm “bề mặt” phụ thuộc của client vào subsystem.</li>
+            <li><strong>Khác Adapter</strong>: Adapter đổi interface; Facade giữ interface đơn giản và ổn định, có thể gọi
+              nhiều API phía sau.</li>
+            <li><strong>Thực hành tốt</strong>: Facade nên mỏng; logic nghiệp vụ không nên “trôi” vào Facade.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Decorator</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: thêm tính năng theo lớp chồng (tổ hợp), không muốn bùng nổ cây kế thừa.</li>
+            <li><strong>Giải pháp</strong>: bọc đối tượng bằng “lớp trang trí” có cùng interface.</li>
+            <li><strong>Khi không nên dùng</strong>: quá nhiều decorator lồng nhau → khó lần vết (trace) và debug.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Decorator – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Decorator_UML_class_diagram.svg/1280px-Decorator_UML_class_diagram.svg.png?_=20090613125941"
+            alt="Decorator UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Decorator – Khi nào nên dùng?</h2>
+          <ul>
+            <li>Khi muốn mở rộng hành vi <strong>mà không sửa code gốc</strong> (Open/Closed).</li>
+            <li>Khi “biến thiên” là theo tổ hợp (A+B+C) thay vì theo cây kế thừa.</li>
+            <li><strong>Đánh đổi</strong>: nên có ghi log/trace để hiểu chuỗi decorator đang bọc những gì.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Composite</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: xử lý “cây” đối tượng (file/folder) theo cách đồng nhất.</li>
+            <li><strong>Giải pháp</strong>: leaf và composite cùng interface (treat uniformly).</li>
+            <li><strong>Khi không nên dùng</strong>: nếu cây nhỏ và không cần thao tác chung, đừng ép theo composite.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Composite – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Composite_UML_class_diagram.svg/1280px-Composite_UML_class_diagram.svg.png?_=20070919034558"
+            alt="Composite UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+            <h2>Composite – Minh họa</h2>
+            <img src="https://images.viblo.asia/full/33426952-6848-43d6-9b07-88d9ee9436d7.png"
+              alt="Composite UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Composite – “Uniformity” là điểm cốt lõi</h2>
+            <li><strong>Client</strong> gọi <span class="inline-code">render()</span> hoặc <span class="inline-code">size()</span>
+              trên cả file và folder.</li>
+            <li>Folder implement bằng cách gọi đệ quy lên các con.</li>
+            <li><strong>Lưu ý</strong>: cân nhắc quyền thao tác (add/remove) trên leaf — có thể cần “safe vs transparent composite”.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Proxy</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: cần “đại diện” cho đối tượng (tải lười, kiểm soát quyền, gọi từ xa).</li>
+            <li><strong>Giải pháp</strong>: proxy có cùng interface, kiểm soát truy cập trước khi gọi real subject.</li>
+            <li><strong>Khi không nên dùng</strong>: nếu proxy chỉ thêm 1–2 dòng, cân nhắc middleware hoặc hàm thường.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Proxy – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Proxy_pattern_diagram.svg/960px-Proxy_pattern_diagram.svg.png"
+            alt="Proxy UML class diagram" style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>Bridge</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: phần “trừu tượng” và phần “hiện thực” cùng biến thiên → dễ bùng nổ lớp nếu dùng kế thừa.</li>
+            <li><strong>Giải pháp</strong>: tách 2 hệ phân cấp, nối bằng composition (abstraction giữ Implementor).</li>
+            <li><strong>Khi không nên dùng</strong>: nếu chỉ có 1 hiện thực ổn định.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Bridge – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Bridge_UML_class_diagram.svg"
+            alt="Bridge UML class diagram" style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>Flyweight</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: quá nhiều đối tượng giống nhau → tốn RAM.</li>
+            <li><strong>Giải pháp</strong>: tách <strong>intrinsic</strong> (chia sẻ) và <strong>extrinsic</strong> (đưa ra ngoài), sau đó cache flyweight.</li>
+            <li><strong>Khi không nên dùng</strong>: nếu không bị áp lực bộ nhớ, tránh làm phức tạp không cần thiết.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Flyweight – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Flyweight_UML_class_diagram.svg"
+            alt="Flyweight UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Proxy – Các biến thể thường gặp</h2>
+          <ul>
+            <li><strong>Virtual proxy</strong>: lazy load (ảnh lớn, dữ liệu DB).</li>
+            <li><strong>Protection proxy</strong>: kiểm soát quyền (authz).</li>
+            <li><strong>Remote proxy</strong>: đại diện cho object ở máy khác (RPC).</li>
+            <li><strong>Đánh đổi</strong>: tăng độ trễ, tăng số lớp; cần đo/giám sát.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Interpreter</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: biểu diễn và đánh giá ngôn ngữ/biểu thức đơn giản.</li>
+            <li><strong>Giải pháp</strong>: AST + phương thức interpret() đệ quy.</li>
+            <li><strong>Khi không nên dùng</strong>: grammar lớn/phức tạp → dùng parser generator/VM sẽ hợp hơn.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Interpreter – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Interpreter_UML_class_diagram.svg"
+            alt="Interpreter UML class diagram" style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>Iterator</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: duyệt collection mà không lộ cấu trúc bên trong.</li>
+            <li><strong>Giải pháp</strong>: iterator (next/hasNext), tách logic duyệt khỏi container.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Iterator – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/Iterator_UML_class_diagram.svg"
+            alt="Iterator UML class diagram" style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>Mediator</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: nhiều đối tượng giao tiếp chằng chịt (N-N).</li>
+            <li><strong>Giải pháp</strong>: tập trung điều phối vào mediator để giảm liên kết chặt.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Mediator – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/W3sDesign_Mediator_Design_Pattern_UML.jpg"
+            alt="Mediator UML class diagram" style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>Memento</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: lưu/khôi phục trạng thái (undo) mà không phá vỡ đóng gói (encapsulation).</li>
+            <li><strong>Solution</strong>: memento snapshot + caretaker; originator tạo/khôi phục snapshot.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Memento – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/W3sDesign_Memento_Design_Pattern_UML.jpg"
+            alt="Memento UML class diagram" style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>Visitor</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: thêm thao tác mới lên cấu trúc đối tượng mà không sửa các lớp “phần tử”.</li>
+            <li><strong>Solution</strong>: double dispatch (accept/visit).</li>
+            <li><strong>Đánh đổi</strong>: khó thêm “phần tử” mới (phải cập nhật visitor).</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Visitor – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Visitor_UML_class_diagram.svg"
+            alt="Visitor UML class diagram" style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>Chain of Responsibility</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: nhiều handler có thể xử lý request; tránh chuỗi if/else cố định.</li>
+            <li><strong>Giải pháp</strong>: xâu chuỗi handler; mỗi handler xử lý hoặc chuyển tiếp.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Chain of Responsibility – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/W3sDesign_Chain_of_Responsibility_Design_Pattern_UML.jpg"
+            alt="Chain of Responsibility UML class diagram" style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>Command / Observer / Strategy / State / Template Method</h2>
+          <p class="text-light">Các UML của nhóm hành vi đã được chèn thành các slide riêng ngay sau mỗi pattern tương ứng.</p>
+        </section>
+
+        <!-- BEHAVIORAL -->
+        <section>
+          <h1><span class="text-light">2.3</span><br />Behavioral</h1>
+        </section>
+
+        <section>
+          <h2>Strategy</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: nhiều thuật toán thay thế nhau (sort, pricing), tránh <span class="inline-code">if/else</span> dài.</li>
+            <li><strong>Giải pháp</strong>: đóng gói thuật toán thành đối tượng; chọn strategy khi chạy.</li>
+            <li><strong>Khi không nên dùng</strong>: nếu chỉ có 1 thuật toán ổn định, đừng tách quá sớm.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Strategy – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Strategy_classes_pl.svg/1280px-Strategy_classes_pl.svg.png?_=20150615134638"
+            alt="Strategy UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Strategy – Sơ đồ &amp; trade-off</h2>
+          <ul>
+            <li><strong>Context</strong> giữ tham chiếu tới <strong>Strategy</strong> (interface).</li>
+            <li>Đổi thuật toán bằng cách gán strategy khác (runtime).</li>
+            <li><strong>Đánh đổi</strong>: nhiều lớp nhỏ; bù lại loại bỏ if/else rối.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Observer</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: khi trạng thái đổi, cần thông báo nhiều nơi (UI, log, cache).</li>
+            <li><strong>Giải pháp</strong>: subject giữ danh sách observer, thông báo khi có thay đổi.</li>
+            <li><strong>Khi không nên dùng</strong>: thông báo quá nhiều → khó kiểm soát; cân nhắc event bus nhưng phải có kỷ luật.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Observer – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Observer-pattern-class-diagram.svg/1280px-Observer-pattern-class-diagram.svg.png?_=20071204040851"
+            alt="Observer UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Observer – Lưu ý thực tế</h2>
+          <ul>
+            <li><strong>Rò rỉ bộ nhớ</strong>: observer quên unsubscribe → subject giữ tham chiếu mãi.</li>
+            <li><strong>Thứ tự notify</strong>: nên coi là không đảm bảo (trừ khi API cam kết).</li>
+            <li><strong>Đệ quy sự kiện</strong>: observer cập nhật lại subject → vòng lặp; cần cơ chế chống re-entrancy.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Command</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: cần đóng gói “một hành động” để xếp hàng (queue), ghi log, hoàn tác (undo).</li>
+            <li><strong>Giải pháp</strong>: biến request thành đối tượng có <span class="inline-code">execute()</span>.</li>
+            <li><strong>Khi không nên dùng</strong>: nếu không cần undo/queue, callback/function có thể đủ.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Command – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c8/W3sDesign_Command_Design_Pattern_UML.jpg?_=20170918130659"
+            alt="Command UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Command – Undo/Redo</h2>
+          <ul>
+            <li>Command có thể thêm <span class="inline-code">undo()</span> để hoàn tác.</li>
+            <li>Invoker lưu lịch sử command (stack) để redo.</li>
+            <li><strong>Đánh đổi</strong>: phải xác định “đơn vị hành động” và dữ liệu cần lưu để undo.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Template Method</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: nhiều thuật toán có “khung” giống nhau, chỉ khác vài bước.</li>
+            <li><strong>Giải pháp</strong>: lớp cha định nghĩa khung; lớp con ghi đè các bước biến thiên.</li>
+            <li><strong>Khi không nên dùng</strong>: nếu composition phù hợp hơn, cân nhắc Strategy.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Template Method – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Template_Method_UML.svg/960px-Template_Method_UML.svg.png?_=20060428202039"
+            alt="Template Method UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>Template Method – Hook methods</h2>
+          <ul>
+            <li>Có thể thêm <strong>hook</strong> (mặc định rỗng) để lớp con tuỳ chọn ghi đè.</li>
+            <li><strong>Ưu điểm</strong>: giữ khung ổn định, tránh copy–paste luồng chính.</li>
+            <li><strong>Nhược</strong>: phụ thuộc kế thừa; khó phối hợp nhiều biến thiên cùng lúc.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>State</h2>
+          <ul>
+            <li><strong>Vấn đề</strong>: đối tượng đổi hành vi theo trạng thái (order: new/paid/shipped).</li>
+            <li><strong>Giải pháp</strong>: tách state thành đối tượng; chuyển state = thay đối tượng state.</li>
+            <li><strong>Khi không nên dùng</strong>: nếu chỉ 2 trạng thái đơn giản, if/else có thể đủ.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>State – UML</h2>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/State_Design_Pattern_UML_Class_Diagram.svg/1280px-State_Design_Pattern_UML_Class_Diagram.svg.png"
+            alt="State UML class diagram" style="width: 100%;" />
+        </section>
+        <section>
+          <h2>State – Liên hệ với “dynamic method lookup”</h2>
+          <ul>
+            <li>State pattern thường làm rõ “hành vi phụ thuộc trạng thái” bằng cách <strong>đẩy dispatch</strong> sang object state.</li>
+            <li>Tương tự tinh thần <strong>chọn phương thức động</strong>: chọn đoạn code chạy dựa trên “effective type” (ở đây là đối tượng state).</li>
+            <li><strong>Lưu ý</strong>: cần quy hoạch trạng thái và chuyển trạng thái rõ ràng (finite state machine).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Tóm tắt GoF (chọn lọc)</h2>
+          <ul>
+            <li><strong>Creational</strong>: kiểm soát tạo object (Singleton/Factory/Builder/Prototype).</li>
+            <li><strong>Structural</strong>: bọc/ghép object linh hoạt (Adapter/Facade/Decorator/Composite/Proxy).</li>
+            <li><strong>Behavioral</strong>: quản lý hành vi và tương tác (Strategy/Observer/Command/Template/State).</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- PHẦN 3: ANTI-PATTERNS -->
+      <section>
+        <section>
+          <h1><span class="text-light">3.</span><br />Anti-patterns</h1>
+        </section>
+
+        <section>
+          <h2>Anti-pattern là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <span class="keyword">Anti-pattern</span> là “cách làm” lặp lại khá phổ biến nhưng thường dẫn tới hệ quả xấu (khó bảo trì, dễ phát sinh lỗi, chậm phát triển).
+          </div>
+          <p>Mục tiêu: <strong>nhận diện sớm</strong> và biết hướng refactor.</p>
+        </section>
+
+        <section>
+          <h2>1) God Object / God Class</h2>
+          <ul>
+            <li><strong>Dấu hiệu</strong>: 1 class biết mọi thứ, làm mọi việc.</li>
+            <li><strong>Hậu quả</strong>: liên kết chặt, sửa 1 chỗ dễ “vỡ” nhiều chỗ.</li>
+            <li><strong>Cách xử lý</strong>: tách theo trách nhiệm (SRP), mô-đun hoá, có thể thêm facade theo cụm chức năng.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>God Object – Minh hoạ</h2>
+          <img src="https://3.bp.blogspot.com/-kr0eD1k7pSs/ToGnvXdez3I/AAAAAAAAAS4/JK6OmTYVs7I/s1600/Screen%2Bshot%2B2011-09-27%2Bat%2B11.20.42.png" alt="God Object illustration"
+            style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>2) Spaghetti Code</h2>
+          <ul>
+            <li>Luồng điều khiển rối, phụ thuộc chằng chịt.</li>
+            <li><strong>Cách xử lý</strong>: cấu trúc hoá, tách hàm, giảm trạng thái toàn cục, bổ sung kiểm thử.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Spaghetti Code – Minh hoạ</h2>
+          <img src="https://miro.medium.com/v2/resize:fit:1224/0*RTnjKNOBLvh95iK-.png" alt="Spaghetti-code"
+            style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>3) Lava Flow</h2>
+          <ul>
+            <li>Code “đã từng cần” nhưng giờ không ai dám xoá.</li>
+            <li><strong>Cách xử lý</strong>: đo coverage, xoá dần, dùng feature flag, ghi lại quyết định thiết kế.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>4) Premature Optimization</h2>
+          <ul>
+            <li>Tối ưu trước khi đo → tăng phức tạp vô ích.</li>
+            <li><strong>Cách xử lý</strong>: ưu tiên đúng/sạch; đo trước (profiling), tối ưu đúng điểm nghẽn.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Premature Optimization – Minh hoạ</h2>
+          <img src="https://media.licdn.com/dms/image/v2/D4D22AQGygn5V9vQ8Mg/feedshare-shrink_800/B4DZUDjVaMGcAo-/0/1739521350055?e=2147483647&v=beta&t=2rMbijSA0JUO8qdva4DuyILl2eQiZKTA-0_qLD3MFFc" alt="Premature optimization image"
+            style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>5) Magic Numbers / Magic Strings</h2>
+          <ul>
+            <li>Rải <span class="inline-code">42</span>, <span class="inline-code">\"READY\"</span> khắp nơi.</li>
+            <li><strong>Cách xử lý</strong>: hằng số có tên, enum, cấu hình rõ ràng.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>6) Copy–Paste Programming</h2>
+          <ul>
+            <li>Nhân bản code, sửa chỗ này quên chỗ kia.</li>
+            <li><strong>Cách xử lý</strong>: trích hàm, template, strategy, thư viện dùng chung nội bộ.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Copy–Paste Programming – Minh hoạ</h2>
+          <img src="https://pbs.twimg.com/media/ExfjxooWUAERMBH.jpg" alt="Copy–Paste Programming image"
+            style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>7) Shotgun Surgery</h2>
+          <ul>
+            <li>Sửa 1 logic phải sửa 20 file.</li>
+            <li><strong>Cách xử lý</strong>: gom thay đổi về một abstraction phù hợp, giảm liên kết chặt.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Shotgun Surgery – Minh hoạ</h2>
+          <img src="https://refactoring.guru/images/refactoring/content/smells/shotgun-surgery-01-3x.png" alt="Shotgun surgery smell"
+            style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>9) Golden Hammer</h2>
+          <ul>
+            <li><strong>Dấu hiệu</strong>: có một “cây búa vàng” và cái gì cũng đóng đinh.</li>
+            <li><strong>Hậu quả</strong>: ép pattern/tech vào sai bối cảnh → hệ thống méo mó.</li>
+            <li><strong>Cách xử lý</strong>: quay về yêu cầu, cân nhắc nhiều phương án, quyết định dựa trên đánh đổi.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Golden Hammer – Minh hoạ</h2>
+          <img src="https://miro.medium.com/1*zdKS1-JX8EcUpxiJzUhGtQ.jpeg" alt="Golden hammer anti-pattern"
+            style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>8) Boat Anchor</h2>
+          <ul>
+            <li>Giữ một khối code/phụ thuộc “phòng khi cần” nhưng không dùng.</li>
+            <li><strong>Cách xử lý</strong>: xoá, đơn giản hoá, dựa vào VCS để “khôi phục khi cần”.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Tóm tắt Anti-patterns</h2>
+          <p>8 loại phổ biến: God Object, Spaghetti, Lava Flow, Premature Optimization, Magic Values, Copy–Paste, Shotgun Surgery, Boat Anchor.</p>
+        </section>
+      </section>
+
+      <!-- PHẦN 4: ANTI-OOP PATTERNS -->
+      <section>
+        <section>
+          <h1><span class="text-light">4.</span><br />Anti-OOP patterns</h1>
+        </section>
+
+        <section>
+          <h2>Anti-OOP pattern là gì?</h2>
+          <p>Không phải “anti-OOP = bỏ OOP”. Ở đây là các <strong>lỗi thiết kế thường gặp</strong> khi áp dụng OOP sai cách.</p>
+        </section>
+
+        <section>
+          <h2>1) Anemic Domain Model</h2>
+          <ul>
+            <li><strong>Dấu hiệu</strong>: object chỉ có getter/setter; logic nằm hết ở service.</li>
+            <li><strong>Hậu quả</strong>: mất encapsulation; domain rỗng.</li>
+            <li><strong>Cách xử lý</strong>: đưa bất biến (invariants) và hành vi về đúng đối tượng; giới hạn setter.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Anemic Domain Model – Minh hoạ</h2>
+          <img src="https://i0.wp.com/charliedigital.com/wp-content/uploads/2017/08/domain-modelling.png?fit=457%2C368&ssl=1" alt="Anemic Domain Model illustration"
+            style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>2) Inheritance Abuse</h2>
+          <ul>
+            <li>Dùng kế thừa để “reuse code” dẫn tới cây kế thừa rối.</li>
+            <li><strong>Cách xử lý</strong>: ưu tiên composition; cân nhắc Strategy/Decorator.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>3) Base Class Hell</h2>
+          <ul>
+            <li>Base class phình to: mọi thứ override; không rõ hợp đồng.</li>
+            <li><strong>Cách xử lý</strong>: interface + composition; tách base theo vai trò nhỏ.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>4) Telescoping Constructors</h2>
+          <ul>
+            <li>Nhiều constructor overload với hàng loạt tham số.</li>
+            <li><strong>Cách xử lý</strong>: Builder, named parameters, options object.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>5) “Everything is a class” (Over-abstraction)</h2>
+          <ul>
+            <li>Mọi thứ đều bọc class/interface → số lượng file quá nhiều.</li>
+            <li><strong>Cách xử lý</strong>: chỉ trừu tượng hoá nơi có biến thiên thật sự; YAGNI.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>6) Getters/Setters Everywhere (Encapsulation Leak)</h2>
+          <ul>
+            <li>Expose toàn bộ state → mọi nơi thao tác tùy tiện.</li>
+            <li><strong>Cách xử lý</strong>: ưu tiên lộ hành vi thay vì lộ dữ liệu; giảm setter; dùng bất biến (immutable) khi phù hợp.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>7) Circular Dependencies giữa lớp</h2>
+          <ul>
+            <li>A cần B, B cần A… → khó test, khó build.</li>
+            <li><strong>Cách xử lý</strong>: dependency inversion, eventing, tách module.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Tight Coupling – Minh hoạ</h2>
+          <img src="https://media.geeksforgeeks.org/wp-content/uploads/Untitled-28.png" alt="Tight coupling illustration"
+            style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>Feature Envy (code smell)</h2>
+          <ul>
+            <li><strong>Dấu hiệu</strong>: một method “thích” dữ liệu của class khác hơn class của nó (gọi getter liên tục).</li>
+            <li><strong>Cách xử lý</strong>: chuyển hành vi về đúng nơi chứa dữ liệu (tăng cohesion).</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Feature Envy – Minh hoạ</h2>
+          <img src="https://refactoring.guru/images/refactoring/content/smells/feature-envy-01.png?id=f520a24562e3f4b7848eca94792c329f" alt="Feature envy"
+            style="width: 100%;" />
+        </section>
+        <section>
+            <h2>Feature Envy – Minh hoạ</h2>
+            <img src="https://waog.wordpress.com/wp-content/uploads/2014/08/feature-envy-1.jpg" alt="Feature envy"
+                style="width: 100%;" />
+        </section>
+
+        <section>
+          <h2>8) “Manager/Helper/Util” không ranh giới</h2>
+          <ul>
+            <li>Class tên chung chung, trách nhiệm mơ hồ.</li>
+            <li><strong>Cách xử lý</strong>: đặt tên theo domain; tách cohesive unit; giới hạn public API.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Tóm tắt Anti-OOP patterns</h2>
+          <p>8 loại phổ biến: Anemic Model, Inheritance Abuse, Base Class Hell, Telescoping Ctors, Over-abstraction, Encapsulation Leak, Circular deps, “Manager/Util” mơ hồ.</p>
+        </section>
+      </section>
+
+      <section>
+        <section style="font-size:0.85em;">
+          <h2>Tổng kết</h2>
+          <ul>
+            <li><strong>Pattern</strong> là “từ vựng” thiết kế: dùng đúng bối cảnh, tránh quá tay (over-engineering).</li>
+            <li>Bộ GoF chọn lọc giúp giải quyết các bài toán tạo đối tượng, ghép cấu trúc và tổ chức tương tác.</li>
+            <li><strong>Anti-pattern</strong> và <strong>anti-OOP pattern</strong> giúp tránh những lối thiết kế gây khó bảo trì về sau.</li>
+          </ul>
+        </section>
+      </section>
+
+      <div class="footer">
+        THPTHTTTNT (Học kỳ 2 2025-2026) §7: Mẫu thiết kế OOP (Design Patterns)
+      </div>
+    </div>
+  </div>
+  <script src="revealjs/dist/reveal.js"></script>
+  <script src="plugin/notes/notes.js"></script>
+  <script src="plugin/markdown/markdown.js"></script>
+  <script src="plugin/highlight/highlight.js"></script>
+  <script src="plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+    });
+  </script>
+</body>
+
+</html>

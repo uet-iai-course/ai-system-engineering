@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bài 7: Software Architecture cho dự án AI</title>
+
+  <link rel="stylesheet" href="revealjs/dist/reset.css" />
+  <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+  <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+  <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="lecture-style.css" />
+  <style>
+    .reveal {
+      font-size: 34px;
+    }
+
+    .reveal h1 {
+      font-size: 1.85em;
+      line-height: 1.08;
+    }
+
+    .reveal h2 {
+      font-size: 1.35em;
+      line-height: 1.12;
+      margin-bottom: 0.35em;
+    }
+
+    .reveal h3 {
+      font-size: 1.1em;
+      line-height: 1.15;
+      margin-bottom: 0.35em;
+    }
+
+    .reveal p,
+    .reveal li,
+    .reveal table {
+      line-height: 1.35;
+    }
+
+    .reveal ul,
+    .reveal ol {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+
+    .reveal .question-box {
+      padding: 0.6em;
+    }
+
+    .reveal .footer {
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Cover -->
+      <section>
+        <section>
+          <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+          <h3>Bài 7: Software Architecture Engineering</h3>
+          <p>Kiến trúc phần mềm cho dự án AI production</p>
+          <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
+        </section>
+
+        <section>
+          <h2>Nội dung chính</h2>
+          <ol>
+            <li>Nền tảng software architecture cho hệ AI</li>
+            <li>Monolithic và Microservices</li>
+            <li>RESTful API, gRPC, event-driven</li>
+            <li>Thành phần hạ tầng: LB, API Gateway, cache, queue, CDN, VPN, VPS</li>
+            <li>Serverless, monitoring, database/storage</li>
+            <li>Reference architecture và lộ trình triển khai</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Mục tiêu buổi học</h2>
+          <ul>
+            <li>Biết chọn kiến trúc phù hợp cho bài toán AI thật, không chỉ “model-centric”.</li>
+            <li>Hiểu vai trò và trade-off của các thành phần kiến trúc thường gặp.</li>
+            <li>Có thể phác thảo kiến trúc end-to-end cho một sản phẩm AI production.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Thông điệp cốt lõi từ học liệu</h2>
+          <div class="question-box">
+            <div class="question-title">System-wide view</div>
+            Mô hình ML chỉ là <span class="keyword">một thành phần</span>. Giá trị sản phẩm phụ thuộc vào
+            <span class="keyword">toàn hệ thống</span>: giao diện, pipeline dữ liệu, dịch vụ backend, bảo mật,
+            giám sát, vận hành.
+          </div>
+        </section>
+      </section>
+
+      <!-- 1 -->
+      <section>
+        <section>
+          <h1><span class="text-light">1.</span><br />Nền tảng Software Architecture</h1>
+        </section>
+
+        <section>
+          <h2>Software architecture là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa làm việc</div>
+            Software architecture là cách tổ chức các thành phần phần mềm, các quan hệ giữa chúng,
+            và các quyết định kiến trúc để đạt mục tiêu chất lượng của hệ thống.
+          </div>
+        </section>
+
+        <section>
+          <h2>Trong dự án AI, kiến trúc phải trả lời gì?</h2>
+          <ul>
+            <li>Model được gọi ở đâu? theo request realtime hay batch?</li>
+            <li>Dữ liệu đi qua những lớp nào trước khi vào model?</li>
+            <li>Khi model sai thì hệ thống xử lý an toàn thế nào?</li>
+            <li>Làm sao mở rộng khi traffic tăng đột biến?</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Model-centric vs System-centric</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Góc nhìn</th>
+                <th>Model-centric</th>
+                <th>System-centric</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Trọng tâm</td>
+                <td>accuracy model</td>
+                <td>mục tiêu hệ thống</td>
+              </tr>
+              <tr>
+                <td>Rủi ro</td>
+                <td>bỏ qua vận hành</td>
+                <td>quản trị trade-off rõ</td>
+              </tr>
+              <tr>
+                <td>Kết quả</td>
+                <td>demo tốt</td>
+                <td>sản phẩm chạy bền</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Chất lượng hệ thống cần cân bằng</h2>
+          <ul>
+            <li>Latency, throughput, availability</li>
+            <li>Scalability và cost</li>
+            <li>Maintainability và deployability</li>
+            <li>Security, privacy, compliance</li>
+            <li>Observability và incident response</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Tại sao “accuracy tăng” chưa chắc “system tốt hơn”?</h2>
+          <ul>
+            <li>Model tốt hơn nhưng chậm hơn → UX xấu.</li>
+            <li>Model tốt hơn nhưng cost inference quá cao.</li>
+            <li>Model tốt hơn nhưng khó giải thích → khó duyệt nghiệp vụ.</li>
+            <li>Model tốt hơn nhưng gây hiệu ứng “creepy” với người dùng.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Một kiến trúc AI điển hình</h2>
+          <div class="pipeline">
+            <div class="stage"><div class="stage-title">Client</div><div class="stage-desc">web/mobile</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">API</div><div class="stage-desc">gateway/backend</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Inference</div><div class="stage-desc">model service</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Data</div><div class="stage-desc">DB/object store</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Obs</div><div class="stage-desc">logs/metrics/traces</div></div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <ol>
+            <li>Bạn đang tối ưu model hay tối ưu hệ thống?</li>
+            <li>2 quality attributes quan trọng nhất cho bài toán của bạn là gì?</li>
+            <li>Nếu model trả sai, hệ thống đã có cơ chế fallback chưa?</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- 2 -->
+      <section>
+        <section>
+          <h1><span class="text-light">2.</span><br />Monolithic vs Microservices</h1>
+        </section>
+
+        <section>
+          <h2>Monolithic architecture</h2>
+          <ul>
+            <li>Một codebase/deploy unit lớn, nhiều module bên trong.</li>
+            <li>Dễ bắt đầu nhanh khi team nhỏ, domain đơn giản.</li>
+            <li>Debug local thuận tiện, transaction nội bộ dễ.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ưu điểm Monolith</h2>
+          <ul>
+            <li>Đơn giản về vận hành ban đầu.</li>
+            <li>Ít chi phí network giữa service.</li>
+            <li>Release ban đầu nhanh.</li>
+            <li>Phù hợp MVP/POC.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Hạn chế Monolith</h2>
+          <ul>
+            <li>Khó scale riêng từng phần nóng.</li>
+            <li>Deploy một phần cũng phải redeploy toàn app.</li>
+            <li>Coupling cao, dễ “spaghetti dependencies”.</li>
+            <li>Khó tách ownership khi team lớn dần.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ví dụ Monolith trong dự án AI</h2>
+          <ul>
+            <li>Một backend Flask/Django chứa:
+              <ul>
+                <li>API user</li>
+                <li>business logic</li>
+                <li>feature preprocessing</li>
+                <li>model inference</li>
+              </ul>
+            </li>
+            <li>Phù hợp khi QPS thấp, ít team, yêu cầu thay đổi nhanh.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Microservices architecture</h2>
+          <ul>
+            <li>Hệ thống tách thành nhiều service nhỏ theo bounded context.</li>
+            <li>Mỗi service có lifecycle/deploy độc lập.</li>
+            <li>Service giao tiếp qua API hoặc event bus.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ưu điểm Microservices</h2>
+          <ul>
+            <li>Scale theo chiều ngang từng service.</li>
+            <li>Deploy độc lập, giảm blast radius.</li>
+            <li>Dễ tổ chức team ownership theo domain.</li>
+            <li>Cho phép polyglot tech stack.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Hạn chế Microservices</h2>
+          <ul>
+            <li>Tăng độ phức tạp vận hành (network, observability, CI/CD).</li>
+            <li>Distributed debugging khó hơn.</li>
+            <li>Data consistency và transaction phức tạp.</li>
+            <li>Yêu cầu kỷ luật kiến trúc cao.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ví dụ Microservices cho AI product</h2>
+          <ul>
+            <li>`user-service`, `catalog-service`, `recommendation-service`</li>
+            <li>`feature-service`, `ranking-service`, `notification-service`</li>
+            <li>`monitoring-service`, `feedback-label-service`</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Khi nào chọn Monolith?</h2>
+          <ul>
+            <li>Team &lt; 6 người, domain còn thay đổi nhiều.</li>
+            <li>Sản phẩm ở giai đoạn tìm product-market fit.</li>
+            <li>Ops chưa đủ năng lực cho distributed systems.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Khi nào chuyển sang Microservices?</h2>
+          <ul>
+            <li>Traffic tăng mạnh, hotspot rõ ràng.</li>
+            <li>Release bottleneck do đụng nhau nhiều team.</li>
+            <li>Cần scale và deploy riêng model inference.</li>
+            <li>Cần isolation rủi ro cho thành phần critical.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Chiến lược chuyển đổi an toàn</h2>
+          <ul>
+            <li>Monolith-first, tách dần theo domain.</li>
+            <li>Dùng Strangler pattern để thay thế từng phần.</li>
+            <li>Không “big bang rewrite” nếu chưa có lý do kinh doanh rõ.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Bảng so sánh nhanh</h2>
+          <table>
+            <thead>
+              <tr><th>Tiêu chí</th><th>Monolith</th><th>Microservices</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Time-to-market ban đầu</td><td>Nhanh</td><td>Chậm hơn</td></tr>
+              <tr><td>Vận hành</td><td>Đơn giản</td><td>Phức tạp</td></tr>
+              <tr><td>Scale</td><td>Toàn khối</td><td>Từng service</td></tr>
+              <tr><td>Autonomy team</td><td>Thấp</td><td>Cao</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <ol>
+            <li>Hệ thống của bạn đang “quá sớm” hay “đúng lúc” để microservices?</li>
+            <li>Service nào nên tách đầu tiên nếu cần?</li>
+            <li>Nếu không tách, bottleneck hiện tại là gì?</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- 3 -->
+      <section>
+        <section>
+          <h1><span class="text-light">3.</span><br />RESTful API, gRPC, Event</h1>
+        </section>
+
+        <section>
+          <h2>RESTful API (HTTP/JSON)</h2>
+          <ul>
+            <li>Phổ biến, dễ dùng từ web/mobile/service.</li>
+            <li>Resource-oriented: GET/POST/PUT/DELETE.</li>
+            <li>Dễ debug qua browser/Postman/curl.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ưu nhược điểm REST</h2>
+          <ul>
+            <li><strong>Ưu:</strong> đơn giản, ecosystem rộng.</li>
+            <li><strong>Nhược:</strong> overhead JSON lớn, latency cao hơn nhị phân.</li>
+            <li><strong>Phù hợp:</strong> client-facing APIs, public APIs.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>gRPC (HTTP/2 + Protobuf)</h2>
+          <ul>
+            <li>Nhanh, binary protocol, strongly typed contracts.</li>
+            <li>Hỗ trợ streaming hai chiều.</li>
+            <li>Phù hợp giao tiếp nội bộ service-to-service.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ưu nhược điểm gRPC</h2>
+          <ul>
+            <li><strong>Ưu:</strong> performance cao, contract-first.</li>
+            <li><strong>Nhược:</strong> khó debug thủ công hơn REST.</li>
+            <li><strong>Phù hợp:</strong> low-latency microservices, realtime backend.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>REST vs gRPC: chọn thế nào?</h2>
+          <table>
+            <thead>
+              <tr><th>Tiêu chí</th><th>REST</th><th>gRPC</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Client web/mobile</td><td>Rất tốt</td><td>Trung bình</td></tr>
+              <tr><td>Internal low latency</td><td>Khá</td><td>Rất tốt</td></tr>
+              <tr><td>Khả năng debug tay</td><td>Dễ</td><td>Khó hơn</td></tr>
+              <tr><td>Schema contract</td><td>Linh hoạt</td><td>Chặt chẽ</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Event-driven communication</h2>
+          <ul>
+            <li>Publisher phát sự kiện, subscriber xử lý bất đồng bộ.</li>
+            <li>Giảm coupling thời gian giữa các service.</li>
+            <li>Tăng khả năng scale theo throughput.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Queue vs Pub/Sub (thực hành)</h2>
+          <ul>
+            <li><strong>Queue</strong>: một message thường được một consumer xử lý.</li>
+            <li><strong>Pub/Sub</strong>: một event có thể fan-out cho nhiều consumer.</li>
+            <li>Ví dụ: RabbitMQ (queue), Kafka (event streaming/pub-sub).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Khi nào dùng async?</h2>
+          <ul>
+            <li>Tác vụ nặng: xử lý file, trích xuất đặc trưng, batch scoring.</li>
+            <li>Tác vụ không cần phản hồi tức thì cho người dùng.</li>
+            <li>Cần chống backpressure và spike traffic.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Mẫu kiến trúc giao tiếp hỗn hợp</h2>
+          <div class="pipeline">
+            <div class="stage"><div class="stage-title">Client</div><div class="stage-desc">REST</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Gateway</div><div class="stage-desc">auth/routing</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Services</div><div class="stage-desc">gRPC</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Queue/Event</div><div class="stage-desc">Kafka/RabbitMQ</div></div>
+          </div>
+        </section>
+
+        <section>
+          <h2>API versioning</h2>
+          <ul>
+            <li>Không phá vỡ client cũ khi đổi schema.</li>
+            <li>Version qua path/header hoặc contract registry.</li>
+            <li>Deprecation policy rõ ràng cho đội tích hợp.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Idempotency và retry</h2>
+          <ul>
+            <li>Request lặp lại không tạo side effects sai.</li>
+            <li>Cần cho mạng không ổn định, timeout, retry tự động.</li>
+            <li>Dùng idempotency key cho các thao tác create/payment/order.</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- 4 -->
+      <section>
+        <section>
+          <h1><span class="text-light">4.</span><br />Thành phần hạ tầng cốt lõi</h1>
+        </section>
+
+        <section>
+          <h2>Load Balancing là gì?</h2>
+          <ul>
+            <li>Phân phối request tới nhiều instance backend.</li>
+            <li>Tăng availability, giảm điểm nghẽn.</li>
+            <li>Có thể L4 hoặc L7 tùy nhu cầu.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Công nghệ Load Balancer phổ biến</h2>
+          <ul>
+            <li>Cloud LB: AWS ALB/NLB, GCP Load Balancer, Azure Load Balancer.</li>
+            <li>Self-managed: NGINX, HAProxy, Traefik, Envoy.</li>
+            <li>K8s ingress controllers: NGINX Ingress, Traefik, Istio Gateway.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Thuật toán cân bằng tải phổ biến</h2>
+          <ul>
+            <li>Round-robin</li>
+            <li>Least connections</li>
+            <li>Weighted routing</li>
+            <li>Latency-aware / geo-aware routing</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>API Gateway</h2>
+          <ul>
+            <li>Điểm vào thống nhất cho nhiều service phía sau.</li>
+            <li>Chức năng: authN/authZ, rate limit, routing, transform, logging.</li>
+            <li>Giảm phức tạp cho client.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Công nghệ API Gateway phổ biến</h2>
+          <ul>
+            <li>Managed: AWS API Gateway, Apigee, Azure API Management.</li>
+            <li>Open source: Kong Gateway, KrakenD, Tyk, Ambassador.</li>
+            <li>Service mesh edge: Istio ingress gateway, Envoy-based gateway.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>LB vs API Gateway</h2>
+          <table>
+            <thead><tr><th></th><th>Load Balancer</th><th>API Gateway</th></tr></thead>
+            <tbody>
+              <tr><td>Mục tiêu</td><td>Phân tải</td><td>Quản trị API</td></tr>
+              <tr><td>Tầng</td><td>L4/L7</td><td>L7</td></tr>
+              <tr><td>Tính năng</td><td>route cơ bản</td><td>auth, quota, policy</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Caching (Redis và các lớp cache)</h2>
+          <ul>
+            <li>Giảm latency, giảm tải DB/backend.</li>
+            <li>Lớp cache: client cache, CDN cache, application cache, DB cache.</li>
+            <li>Redis thường dùng làm in-memory key-value store.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Công nghệ caching phổ biến</h2>
+          <ul>
+            <li>In-memory: Redis, Memcached.</li>
+            <li>HTTP cache: Varnish, NGINX cache.</li>
+            <li>Application cache frameworks: Caffeine (Java), cachetools (Python).</li>
+            <li>Distributed cache trên cloud: AWS ElastiCache, Azure Cache for Redis.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Cache patterns</h2>
+          <ul>
+            <li>Cache-aside</li>
+            <li>Read-through / Write-through</li>
+            <li>Write-behind</li>
+            <li>TTL + invalidation strategy</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Event queue / streaming</h2>
+          <ul>
+            <li>RabbitMQ: queue-centric, routing mạnh qua exchange.</li>
+            <li>Kafka: log/event streaming throughput cao, retention tốt.</li>
+            <li>Dùng cho async processing, decoupling, replay.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Công nghệ queue/event phổ biến</h2>
+          <ul>
+            <li>Queue: RabbitMQ, ActiveMQ, AWS SQS.</li>
+            <li>Streaming: Kafka, Redpanda, AWS Kinesis, Google Pub/Sub.</li>
+            <li>Workflow/event orchestration: Temporal, Airflow, Argo Workflows.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>CDN là gì?</h2>
+          <ul>
+            <li>Phân phối nội dung tĩnh qua edge nodes gần người dùng.</li>
+            <li>Giảm latency toàn cầu, giảm tải origin.</li>
+            <li>Rất quan trọng cho frontend assets, media, model docs.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Công nghệ CDN phổ biến</h2>
+          <ul>
+            <li>Cloudflare CDN</li>
+            <li>AWS CloudFront</li>
+            <li>Google Cloud CDN</li>
+            <li>Azure CDN</li>
+            <li>Fastly, Akamai (enterprise)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>VPS và VPN (khái niệm thường gặp)</h2>
+          <ul>
+            <li><strong>VPS</strong> (Virtual Private Server): máy chủ ảo riêng trên hạ tầng cloud/DC.</li>
+            <li><strong>VPN</strong> (Virtual Private Network): kênh mạng riêng, mã hóa giữa các mạng.</li>
+            <li>Dùng để bảo vệ truy cập admin, kết nối private giữa môi trường.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ví dụ công nghệ VPS/VPN</h2>
+          <ul>
+            <li>VPS: DigitalOcean Droplets, Linode, Vultr, EC2.</li>
+            <li>VPN self-host: WireGuard, OpenVPN.</li>
+            <li>Enterprise/managed: AWS Client VPN, Cloudflare Zero Trust.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Serverless (AWS Lambda)</h2>
+          <ul>
+            <li>Chạy function theo event, không quản lý server trực tiếp.</li>
+            <li>Trả phí theo mức sử dụng.</li>
+            <li>Phù hợp xử lý ngắn, event-driven, bursty workload.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Công nghệ serverless phổ biến</h2>
+          <ul>
+            <li>AWS Lambda</li>
+            <li>Google Cloud Functions / Cloud Run</li>
+            <li>Azure Functions</li>
+            <li>OpenFaaS, Knative (self-host/Kubernetes)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Khi nào không nên serverless?</h2>
+          <ul>
+            <li>Tác vụ chạy lâu hoặc cần GPU liên tục.</li>
+            <li>Cold start không phù hợp SLA p95/p99 thấp.</li>
+            <li>Stateful connection dài, yêu cầu control runtime sâu.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Monitoring và Observability</h2>
+          <ul>
+            <li>3 trụ cột phổ biến: metrics, logs, traces.</li>
+            <li>Mục tiêu: phát hiện nhanh + khoanh vùng nhanh + sửa nhanh.</li>
+            <li>Hệ microservices cần distributed tracing theo request-id.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Công nghệ monitoring phổ biến</h2>
+          <ul>
+            <li>Metrics: Prometheus + Grafana, Datadog.</li>
+            <li>Logs: ELK/EFK stack, Loki.</li>
+            <li>Tracing/APM: OpenTelemetry, Jaeger, Zipkin, New Relic.</li>
+            <li>Alerting/on-call: Alertmanager, PagerDuty, Opsgenie.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Alerting đúng cách</h2>
+          <ul>
+            <li>Alert policy rõ ngưỡng và thời gian vi phạm.</li>
+            <li>Notification đúng nhóm chịu trách nhiệm.</li>
+            <li>Có runbook giảm alert fatigue.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Sơ đồ thành phần hạ tầng</h2>
+          <div class="pipeline">
+            <div class="stage"><div class="stage-title">CDN</div><div class="stage-desc">edge cache</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">LB</div><div class="stage-desc">traffic split</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">API Gateway</div><div class="stage-desc">auth/rate</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Services</div><div class="stage-desc">REST/gRPC</div></div>
+          </div>
+          <div class="pipeline">
+            <div class="stage"><div class="stage-title">Cache</div><div class="stage-desc">Redis</div></div>
+            <div class="arrow">↔</div>
+            <div class="stage"><div class="stage-title">Queue</div><div class="stage-desc">RabbitMQ/Kafka</div></div>
+            <div class="arrow">↔</div>
+            <div class="stage"><div class="stage-title">DB/Storage</div><div class="stage-desc">SQL/NoSQL/S3</div></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- 5 -->
+      <section>
+        <section>
+          <h1><span class="text-light">5.</span><br />Database &amp; Storage cho AI systems</h1>
+        </section>
+
+        <section>
+          <h2>Vai trò data layer trong kiến trúc</h2>
+          <ul>
+            <li>Lưu trạng thái nghiệp vụ.</li>
+            <li>Lưu log/sự kiện/feature/model artifacts.</li>
+            <li>Phục vụ cả OLTP và analytics/ML pipelines.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Relational DB (SQL)</h2>
+          <ul>
+            <li>Ví dụ: PostgreSQL, MySQL.</li>
+            <li>Mạnh về transaction, consistency, query quan hệ.</li>
+            <li>Phù hợp user/account/order/billing.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ví dụ công nghệ relational phổ biến</h2>
+          <ul>
+            <li>PostgreSQL, MySQL, MariaDB.</li>
+            <li>Managed SQL: AWS RDS/Aurora, Cloud SQL, Azure SQL.</li>
+            <li>Analytical SQL engines: Snowflake, BigQuery, Redshift.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>NoSQL</h2>
+          <ul>
+            <li>Document (MongoDB), key-value (Redis), wide-column, graph.</li>
+            <li>Linh hoạt schema, scale ngang tốt cho một số workload.</li>
+            <li>Phù hợp session, catalog, metadata lớn.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ví dụ công nghệ NoSQL phổ biến</h2>
+          <ul>
+            <li>Document: MongoDB, Couchbase.</li>
+            <li>Key-value: Redis, DynamoDB.</li>
+            <li>Wide-column: Cassandra, HBase.</li>
+            <li>Graph: Neo4j, Amazon Neptune.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Realtime DB</h2>
+          <ul>
+            <li>Ví dụ: Firebase Realtime Database / Firestore.</li>
+            <li>Đồng bộ theo thời gian thực cho mobile/web.</li>
+            <li>Phù hợp chat, trạng thái online, collaboration.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ví dụ công nghệ realtime backend</h2>
+          <ul>
+            <li>Firebase Realtime Database, Cloud Firestore.</li>
+            <li>Supabase Realtime.</li>
+            <li>Ably, Pusher (managed realtime messaging).</li>
+            <li>Socket.IO + Redis adapter (self-host).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Object storage (file)</h2>
+          <ul>
+            <li>Ví dụ: Amazon S3, Google Cloud Storage, MinIO.</li>
+            <li>Lưu media, dataset, model artifact, backup.</li>
+            <li>Chi phí tốt cho lưu trữ lớn, durability cao.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ví dụ công nghệ file/object storage</h2>
+          <ul>
+            <li>Amazon S3, Google Cloud Storage, Azure Blob Storage.</li>
+            <li>MinIO (S3-compatible on-prem).</li>
+            <li>Lưu model artifacts: MLflow artifact store trên S3/GCS.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Data warehouse / lake / lakehouse</h2>
+          <ul>
+            <li>Warehouse: phân tích có cấu trúc, BI tốt.</li>
+            <li>Lake: linh hoạt dữ liệu thô, chi phí thấp.</li>
+            <li>Lakehouse: kết hợp ưu điểm hai bên.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>OLTP vs OLAP</h2>
+          <table>
+            <thead><tr><th>Tiêu chí</th><th>OLTP</th><th>OLAP</th></tr></thead>
+            <tbody>
+              <tr><td>Mục tiêu</td><td>giao dịch realtime</td><td>phân tích/báo cáo</td></tr>
+              <tr><td>Khối lượng query</td><td>nhiều query nhỏ</td><td>ít query nặng</td></tr>
+              <tr><td>Độ trễ mong muốn</td><td>ms</td><td>s-phút</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Polyglot persistence</h2>
+          <ul>
+            <li>Mỗi dịch vụ chọn DB phù hợp workload của nó.</li>
+            <li>Không ép “một DB cho tất cả”.</li>
+            <li>Đổi lại: tăng độ phức tạp vận hành và nhất quán dữ liệu.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Data consistency trong hệ phân tán</h2>
+          <ul>
+            <li>Strong consistency vs eventual consistency.</li>
+            <li>Saga pattern cho transaction liên service.</li>
+            <li>Outbox pattern để đồng bộ DB và event queue.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Schema management</h2>
+          <ul>
+            <li>Schema versioning cho API, events, database.</li>
+            <li>Backward/forward compatibility cho message.</li>
+            <li>Migration có rollback plan.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Backup, restore, disaster recovery</h2>
+          <ul>
+            <li>RPO/RTO rõ ràng theo mức độ critical.</li>
+            <li>Backup định kỳ + test restore thường xuyên.</li>
+            <li>Multi-AZ/region nếu yêu cầu sẵn sàng cao.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Bảo mật dữ liệu</h2>
+          <ul>
+            <li>Mã hóa at-rest và in-transit.</li>
+            <li>Phân quyền tối thiểu (least privilege).</li>
+            <li>Secrets management, audit logs, key rotation.</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- 6 -->
+      <section>
+        <section>
+          <h1><span class="text-light">6.</span><br />Reference Architecture cho AI Product</h1>
+        </section>
+
+        <section>
+          <h2>Use case mẫu: hệ gợi ý sản phẩm</h2>
+          <ul>
+            <li>Client web/mobile gửi request tìm kiếm/gợi ý.</li>
+            <li>Backend trả danh sách item + score + lý do ngắn.</li>
+            <li>Hệ thống thu feedback click/purchase để cải thiện model.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Sơ đồ kiến trúc tổng thể (gợi ý)</h2>
+          <div class="pipeline">
+            <div class="stage"><div class="stage-title">Client</div><div class="stage-desc">Web/Mobile</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">CDN + WAF</div><div class="stage-desc">edge security</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">LB + Gateway</div><div class="stage-desc">auth/rate</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">App Services</div><div class="stage-desc">REST/gRPC</div></div>
+          </div>
+          <div class="pipeline">
+            <div class="stage"><div class="stage-title">Feature/Rank Service</div><div class="stage-desc">inference</div></div>
+            <div class="arrow">↔</div>
+            <div class="stage"><div class="stage-title">Redis Cache</div><div class="stage-desc">hot data</div></div>
+            <div class="arrow">↔</div>
+            <div class="stage"><div class="stage-title">SQL + NoSQL + S3</div><div class="stage-desc">state + artifacts</div></div>
+          </div>
+          <div class="pipeline">
+            <div class="stage"><div class="stage-title">Kafka/RabbitMQ</div><div class="stage-desc">event bus</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Data/ML Pipeline</div><div class="stage-desc">train/retrain</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Monitoring</div><div class="stage-desc">logs/metrics/traces</div></div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Luồng request online inference</h2>
+          <ol>
+            <li>Client gọi API qua gateway.</li>
+            <li>Gateway xác thực + route tới recommendation service.</li>
+            <li>Service lấy feature (cache/DB), gọi ranking model.</li>
+            <li>Trả kết quả và ghi log để quan sát + học lại.</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Luồng dữ liệu học lại mô hình</h2>
+          <ol>
+            <li>Sự kiện người dùng đẩy vào Kafka/RabbitMQ.</li>
+            <li>Job xử lý tạo training dataset/labels.</li>
+            <li>Training + evaluation + model registry.</li>
+            <li>Promote model mới qua canary/blue-green.</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Nút thắt thường gặp và xử lý</h2>
+          <ul>
+            <li>p95 latency cao → thêm cache + tối ưu query + tách service nóng.</li>
+            <li>DB quá tải → read replica, partition, CQRS.</li>
+            <li>Queue backlog → scale consumers + backpressure control.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Pattern hỗ trợ độ tin cậy</h2>
+          <ul>
+            <li>Timeout, retry, circuit breaker</li>
+            <li>Bulkhead isolation</li>
+            <li>Rate limiting và load shedding</li>
+            <li>Graceful degradation (fallback rule-based)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Blue-Green cho software architecture</h2>
+          <ul>
+            <li>Deploy bản mới lên môi trường Green.</li>
+            <li>Switch traffic qua LB/Gateway.</li>
+            <li>Nếu lỗi: route lại Blue trong vài giây.</li>
+            <li>Phù hợp component critical API/inference.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Auto scaling trong kiến trúc dịch vụ</h2>
+          <ul>
+            <li>Scale app/inference service theo QPS, CPU, p95 latency.</li>
+            <li>Scale consumer theo queue lag.</li>
+            <li>Giới hạn max để kiểm soát cost.</li>
+            <li>Warm-up để giảm cold start.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Quan sát hệ thống theo lớp</h2>
+          <ul>
+            <li>Edge: CDN hit ratio, TLS errors</li>
+            <li>Gateway: auth failures, 4xx/5xx</li>
+            <li>Service: p95 latency, saturation</li>
+            <li>Data: query latency, replication lag</li>
+            <li>ML: prediction drift, quality proxy metrics</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Security architecture checklist</h2>
+          <ul>
+            <li>Network segmentation (private subnets, VPN/bastion).</li>
+            <li>Zero-trust cho service-to-service (mTLS nếu cần).</li>
+            <li>Secrets vault và rotation.</li>
+            <li>Audit trail cho admin/model changes.</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- 7 -->
+      <section>
+        <section>
+          <h1><span class="text-light">7.</span><br />Thiết kế theo giai đoạn trưởng thành</h1>
+        </section>
+
+        <section>
+          <h2>Giai đoạn 1: MVP</h2>
+          <ul>
+            <li>Monolith + 1 DB + 1 queue đơn giản.</li>
+            <li>Deploy nhanh, đo usage thật.</li>
+            <li>Ưu tiên feedback loop với người dùng.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Giai đoạn 2: Growth</h2>
+          <ul>
+            <li>Tách service nóng: auth, inference, billing.</li>
+            <li>Thêm API gateway, cache, monitoring chuẩn hóa.</li>
+            <li>Tăng độ tự động CI/CD.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Giai đoạn 3: Scale</h2>
+          <ul>
+            <li>Microservices rõ bounded context.</li>
+            <li>Event-driven cho nhiều luồng bất đồng bộ.</li>
+            <li>DR strategy, multi-region cho workload quan trọng.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Anti-patterns thường gặp</h2>
+          <ul>
+            <li>Tách microservices quá sớm.</li>
+            <li>Không có observability nhưng hệ phân tán rộng.</li>
+            <li>Đưa mọi thứ vào queue “cho dễ scale”.</li>
+            <li>Không version API/schema/event.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Checklist chọn kiến trúc</h2>
+          <ol>
+            <li>Traffic profile hiện tại và 12 tháng tới?</li>
+            <li>Độ critical của tính năng AI?</li>
+            <li>Năng lực đội vận hành hiện tại?</li>
+            <li>Cost ceiling và SLO mong muốn?</li>
+            <li>Ràng buộc pháp lý/bảo mật?</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Bài tập tình huống 1</h2>
+          <p>Bạn xây ứng dụng chatbot nội bộ cho 300 nhân viên:</p>
+          <ul>
+            <li>Nên bắt đầu monolith hay microservices?</li>
+            <li>Thành phần nào bắt buộc ở bản v1?</li>
+            <li>KPI kỹ thuật nào cần theo dõi tuần đầu?</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Bài tập tình huống 2</h2>
+          <p>Bạn có app gợi ý video tăng từ 5K lên 500K DAU:</p>
+          <ul>
+            <li>Dịch vụ nào cần tách trước?</li>
+            <li>Queue nào phù hợp: RabbitMQ hay Kafka?</li>
+            <li>Thiết kế cache chiến lược thế nào?</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- 8 -->
+      <section>
+        <section style="font-size: 0.82em;">
+          <h2>Tổng kết</h2>
+          <ul>
+            <li>Software architecture cho AI phải theo <strong>system-wide view</strong>.</li>
+            <li><strong>Monolith vs Microservices</strong> là bài toán thời điểm và năng lực vận hành.</li>
+            <li><strong>REST/gRPC/event-driven</strong> nên kết hợp theo đúng use case.</li>
+            <li>Các “khối lego” quan trọng: LB, API Gateway, cache, queue, CDN, serverless, monitoring, data layer.</li>
+            <li>Kiến trúc tốt là kiến trúc cân bằng giữa latency, reliability, cost, tốc độ phát triển.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Gợi ý tự học sau buổi này</h2>
+          <ol>
+            <li>Thiết kế 1 sơ đồ kiến trúc cho dự án AI bạn đang làm.</li>
+            <li>Liệt kê 5 quyết định kiến trúc và trade-off tương ứng.</li>
+            <li>Đề xuất lộ trình 3 giai đoạn: MVP → Growth → Scale.</li>
+          </ol>
+        </section>
+      </section>
+
+      <div class="footer">
+        Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §7: Software Architecture Engineering
+      </div>
+    </div>
+  </div>
+
+  <script src="revealjs/dist/reveal.js"></script>
+  <script src="plugin/notes/notes.js"></script>
+  <script src="plugin/markdown/markdown.js"></script>
+  <script src="plugin/highlight/highlight.js"></script>
+  <script src="plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+    });
+  </script>
+</body>
+
+</html>

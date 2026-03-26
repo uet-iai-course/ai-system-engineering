@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bài 6: MLOps trong dự án phần mềm AI</title>
+
+  <link rel="stylesheet" href="revealjs/dist/reset.css" />
+  <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+  <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+  <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="lecture-style.css" />
+  <style>
+    /* Deck-specific: reduce overflow risk */
+    .reveal {
+      font-size: 34px;
+    }
+
+    .reveal h1 {
+      font-size: 1.85em;
+      line-height: 1.08;
+    }
+
+    .reveal h2 {
+      font-size: 1.35em;
+      line-height: 1.12;
+      margin-bottom: 0.35em;
+    }
+
+    .reveal h3 {
+      font-size: 1.1em;
+      line-height: 1.15;
+      margin-bottom: 0.35em;
+    }
+
+    .reveal p,
+    .reveal li,
+    .reveal table {
+      line-height: 1.35;
+    }
+
+    .reveal ul,
+    .reveal ol {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+
+    .reveal .question-box {
+      padding: 0.6em;
+    }
+
+    .reveal .footer {
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Trang bìa -->
+      <section>
+        <section>
+          <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+          <h3>Bài 6: MLOps trong dự án phần mềm AI</h3>
+          <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
+        </section>
+
+        <section>
+          <h2>Nội dung</h2>
+          <ol>
+            <li>MLOps overview + lifecycle</li>
+            <li>Training + experiment tracking</li>
+            <li>Evaluation + model registry</li>
+            <li>Deployment (API + Docker)</li>
+            <li>CI/CD cho ML</li>
+            <li>Monitoring + retraining</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Mục tiêu buổi học</h2>
+          <ul>
+            <li>Hiểu MLOps như một <strong>hệ thống</strong> và <strong>vòng đời</strong>, không phải “một tool”.</li>
+            <li>Biết thiết kế pipeline để <strong>tái lập</strong>, <strong>triển khai</strong>, <strong>giám sát</strong>, và <strong>cập nhật</strong>
+              mô hình an toàn.</li>
+            <li>Nắm các thành phần lõi: <strong>tracking</strong>, <strong>registry</strong>, <strong>deployment</strong>, <strong>CI/CD</strong>,
+              <strong>monitoring</strong>, <strong>retraining</strong>.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Thông điệp chính</h2>
+          <div class="question-box">
+            <div class="question-title">Gợi ý từ học liệu</div>
+            <strong>Deploy</strong> mô hình không phải là “kết thúc”, mà là <span class="keyword">bắt đầu</span> của một pha mới:
+            <span class="keyword">giám sát</span>, <span class="keyword">chống drift</span>, và <span class="keyword">cập nhật liên tục</span>.
+          </div>
+        </section>
+      </section>
+
+      <!-- 1. MLOps overview + lifecycle -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">1.</span><br />
+            MLOps overview &amp; lifecycle
+          </h1>
+        </section>
+
+        <section>
+          <h2>MLOps là gì? (định nghĩa làm việc)</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <strong>MLOps</strong> là tập thực hành (practice) để <span class="keyword">tự động hoá</span> và <span class="keyword">vận hành</span>
+            vòng đời ML: từ dữ liệu → huấn luyện → đánh giá → triển khai → giám sát → cập nhật.
+          </div>
+          <p class="caption">Trọng tâm: “làm cho việc cập nhật mô hình nhanh và an toàn” giống tư duy DevOps.</p>
+        </section>
+
+        <section>
+          <h2>Vì sao cần MLOps?</h2>
+          <ul>
+            <li>ML systems thường <strong>fail silently</strong>: code vẫn chạy, nhưng dự đoán sai.</li>
+            <li>Data phân phối thay đổi theo thời gian → model “rot”.</li>
+            <li>Hệ thống có nhiều thành phần: data/labels/features/code/infra/teams → khó debug.</li>
+            <li>Cần cơ chế: tái lập, quan sát, và release có kiểm soát.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>DevOps vs MLOps (so sánh nhanh)</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Tiêu chí</th>
+                <th>DevOps</th>
+                <th>MLOps</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Đơn vị thay đổi</td>
+                <td>code</td>
+                <td>code + data + model</td>
+              </tr>
+              <tr>
+                <td>Test</td>
+                <td>deterministic</td>
+                <td>thống kê + tolerances</td>
+              </tr>
+              <tr>
+                <td>Quan sát</td>
+                <td>logs/metrics/traces</td>
+                <td>+ drift, data quality, model metrics</td>
+              </tr>
+              <tr>
+                <td>“Nợ kỹ thuật”</td>
+                <td>code debt</td>
+                <td>+ data debt + versioning debt</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Lifecycle của một ML-enabled system</h2>
+          <div class="pipeline">
+            <div class="stage">
+              <div class="stage-title">Data</div>
+              <div class="stage-desc">collect, label, validate</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Train</div>
+              <div class="stage-desc">experiments, tuning</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Eval</div>
+              <div class="stage-desc">offline + slices</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Release</div>
+              <div class="stage-desc">registry, approval</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Deploy</div>
+              <div class="stage-desc">API/batch</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Monitor</div>
+              <div class="stage-desc">drift, perf</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Update</div>
+              <div class="stage-desc">retrain, rollback</div>
+            </div>
+          </div>
+          <p class="caption">MLOps “bọc” trọn vòng đời: không có monitoring thì không có lifecycle.</p>
+        </section>
+
+        <section>
+          <h2>“Production” là một phổ (spectrum)</h2>
+          <ul>
+            <li>Có team xem “production” là tạo plot trong notebook cho business.</li>
+            <li>Có team xem “production” là phục vụ hàng triệu request/ngày, 99.9% uptime.</li>
+            <li>MLOps cần thiết khi:
+              <ul>
+                <li>có SLA/latency/uptime</li>
+                <li>model cập nhật thường xuyên</li>
+                <li>có nhiều model (không chỉ 1 model)</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Myth: “Chỉ deploy 1–2 model”</h2>
+          <ul>
+            <li>Thực tế: một ứng dụng có thể có <strong>rất nhiều</strong> model (ETA, pricing, fraud, churn…).</li>
+            <li>Multi-region/multi-market → model variant theo quốc gia/segment.</li>
+            <li>Hệ quả: cần registry + versioning + routing.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Myth: “Nếu không làm gì, model vẫn tốt”</h2>
+          <ul>
+            <li>ML systems chịu <strong>data distribution shifts</strong>.</li>
+            <li>Model thường tốt nhất ngay sau training và <strong>giảm dần</strong> theo thời gian.</li>
+            <li>Do đó câu hỏi đúng: “Bao lâu <strong>có thể</strong> update model?”</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <ol>
+            <li>MLOps trong dự án của bạn là “tool” hay là “vòng đời”?</li>
+            <li>Model của bạn có cần update thường xuyên không? vì sao?</li>
+            <li>Nếu có nhiều model/biến thể, bạn quản lý release thế nào?</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- 2. Training + Experiment tracking -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">2.</span><br />
+            Training &amp; experiment tracking
+          </h1>
+        </section>
+
+        <section>
+          <h2>Training không chỉ là “fit()”</h2>
+          <ul>
+            <li>Trong thực tế, training = chạy nhiều lần với nhiều cấu hình.</li>
+            <li>Cần:
+              <ul>
+                <li>quản lý cấu hình (config)</li>
+                <li>tracking metrics + artifacts</li>
+                <li>versioning code + data + env</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Quản lý cấu hình: vì sao quan trọng?</h2>
+          <ul>
+            <li>Tách cấu hình khỏi code (YAML/JSON).</li>
+            <li>Dễ thử nghiệm và tái hiện.</li>
+            <li>So sánh các phiên bản mô hình dựa trên cấu hình.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Hydra (config động)</h2>
+          <ul>
+            <li>Ghép nhiều file config theo cây (hierarchy).</li>
+            <li>Override từ command line (rất hợp cho experiments).</li>
+            <li>Tự lưu lại config của mỗi run để tái hiện.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Ví dụ Hydra override</h2>
+          <pre><code class="language-bash" data-trim>
+python train.py optimizer.lr=0.0005 model.hidden_dim=128
+          </code></pre>
+          <p class="caption">Thực hành tốt: mỗi run lưu snapshot config + git commit id.</p>
+        </section>
+
+        <section>
+          <h2>Experiment tracking là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Khái niệm</div>
+            <strong>Experiment tracking</strong> = theo dõi tiến trình &amp; kết quả huấn luyện (loss, metrics, resource…).
+            <br />
+            <strong>Versioning</strong> = lưu đủ thông tin để có thể so sánh/khôi phục run về sau.
+          </div>
+        </section>
+
+        <section>
+          <h2>Nên track những gì trong training?</h2>
+          <ul>
+            <li>Loss curve (train + validation splits).</li>
+            <li>Metrics quan trọng (accuracy/F1/AUC/perplexity…).</li>
+            <li>Sample prediction + ground truth để sanity check.</li>
+            <li>Tốc độ (steps/s, tokens/s), tài nguyên (CPU/GPU, memory).</li>
+            <li>Hyperparameters động (learning rate schedule, gradient norms…).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>MLflow Tracking</h2>
+          <ul>
+            <li>Log <strong>params</strong>, <strong>metrics</strong>, <strong>artifacts</strong> theo từng run.</li>
+            <li>Có UI để so sánh runs.</li>
+            <li>Có thể mở rộng sang model registry.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Ví dụ MLflow</h2>
+          <pre><code class="language-python" data-trim>
+import mlflow
+mlflow.set_experiment("thu-nghiem-phan-loai")
+with mlflow.start_run():
+    mlflow.log_param("model", "RandomForest")
+    mlflow.log_param("n_estimators", 100)
+    mlflow.log_metric("accuracy", 0.92)
+    mlflow.log_artifact("model.pkl")
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Weights &amp; Biases (W&amp;B)</h2>
+          <ul>
+            <li>Dashboard trực quan realtime.</li>
+            <li>Hợp tác nhóm (share runs/reports).</li>
+            <li>Artifacts: versioning dataset/model theo lineage kiểu “mô hình nào từ data nào”.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Ví dụ W&amp;B</h2>
+          <pre><code class="language-python" data-trim>
+import wandb
+wandb.init(project="thu-nghiem-phan-loai")
+wandb.config.learning_rate = 0.01
+for epoch in range(1, 6):
+    loss = 0.1 * epoch
+    acc = 0.9 - 0.02 * epoch
+    wandb.log({"epoch": epoch, "loss": loss, "accuracy": acc})
+wandb.finish()
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Versioning: vì sao khó?</h2>
+          <ul>
+            <li>ML = code + data. Code dễ version (Git), data khó version (quá lớn).</li>
+            <li>“Diff” cho data không rõ ràng (thay file? checksum? schema?).</li>
+            <li>Ràng buộc pháp lý (ví dụ GDPR: xoá dữ liệu theo yêu cầu).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Một lỗi kinh điển: “không tái hiện được run tốt”</h2>
+          <ul>
+            <li>Thay đổi nhỏ về code/hyperparams/data subset nhưng không ghi lại.</li>
+            <li>Kết quả “promising” không lặp lại được → mất thời gian và niềm tin.</li>
+            <li>Nguyên tắc: <strong>mọi run quan trọng phải trace được</strong>.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Debugging ML: 3 mẹo thực chiến</h2>
+          <ul>
+            <li><strong>Start simple</strong>: bắt đầu đơn giản rồi tăng dần.</li>
+            <li><strong>Overfit 1 batch</strong>: nếu không overfit được, có thể sai pipeline/implementation.</li>
+            <li><strong>Set random seed</strong>: giảm nhiễu khi so sánh experiments.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>AutoML (đặt vào pipeline như thế nào?)</h2>
+          <ul>
+            <li><strong>Soft AutoML</strong>: hyperparameter tuning (random/grid/Bayesian).</li>
+            <li><strong>Hard AutoML</strong>: NAS, learned optimizer (đắt, ít team làm).</li>
+            <li>Trong MLOps: HPO là một “stage” có budget + guardrails.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Hyperparameter tuning: 3 phương pháp</h2>
+          <ul>
+            <li><strong>Grid search</strong>: exhaustive, đắt.</li>
+            <li><strong>Random search</strong>: thường hiệu quả hơn grid khi không gian lớn.</li>
+            <li><strong>Bayesian optimization</strong>: thông minh hơn, ít thử hơn.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>HPO trong production: guardrails</h2>
+          <ul>
+            <li><strong>Budget</strong>: số trial tối đa, tổng GPU-hours, giới hạn chi phí.</li>
+            <li><strong>Early stopping</strong>: cắt trial kém (ASHA/Hyperband, pruning).</li>
+            <li><strong>Constraints</strong>: latency/cost/size (không chỉ accuracy).</li>
+            <li><strong>Repro</strong>: log seed + config + code/data snapshot.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Training at scale: 3 “đau điểm”</h2>
+          <ul>
+            <li><strong>Data parallelism</strong>: stragglers, gradient staleness (sync vs async).</li>
+            <li><strong>Batch size lớn</strong>: diminishing returns, cần scale learning rate cẩn thận.</li>
+            <li><strong>Model/pipeline parallelism</strong>: phức tạp hệ thống, khó debug.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Training performance: checkpoints &amp; mixed precision</h2>
+          <ul>
+            <li><strong>Gradient checkpointing</strong>: đổi compute để tiết kiệm memory.</li>
+            <li><strong>Mixed precision</strong>: giảm thời gian/chi phí training (phụ thuộc hardware).</li>
+            <li><strong>Tracking</strong>: log GPU utilization để phát hiện bottlenecks.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <ol>
+            <li>Run “tốt nhất” của bạn có tái hiện được sau 1 tháng không?</li>
+            <li>Nếu log quá nhiều metrics, bạn sẽ bị hại ở đâu?</li>
+            <li>AutoML/HPO nên có “budget” và “early stop” thế nào?</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- 3. Evaluation + Model registry -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">3.</span><br />
+            Evaluation &amp; model registry
+          </h1>
+        </section>
+
+        <section>
+          <h2>Evaluation: metric “một con số” là chưa đủ</h2>
+          <ul>
+            <li>Metrics tự thân “không có nghĩa” nếu thiếu baseline.</li>
+            <li>Production cần thêm: robustness, fairness, calibration, sanity.</li>
+            <li>Offline eval tốt giúp giảm rủi ro, nhưng không thay thế monitoring.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>5 loại baseline hay dùng</h2>
+          <ul>
+            <li><strong>Random baseline</strong></li>
+            <li><strong>Simple heuristic</strong></li>
+            <li><strong>Zero rule</strong> (luôn đoán lớp phổ biến nhất)</li>
+            <li><strong>Human baseline</strong></li>
+            <li><strong>Existing solution</strong> (rule system / vendor)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Perturbation / invariance / directional tests</h2>
+          <ul>
+            <li><strong>Perturbation</strong>: thêm nhiễu nhỏ để xem model có bền không.</li>
+            <li><strong>Invariance</strong>: thay thuộc tính nhạy cảm (giới tính/chủng tộc) → output không nên đổi.</li>
+            <li><strong>Directional expectation</strong>: thay input theo hướng “hợp lý” → output cũng hợp lý.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Model calibration (vì sao quan trọng)</h2>
+          <ul>
+            <li>Dự đoán xác suất 70% nghĩa là: trong 100 lần nói 70%, đúng ~70 lần.</li>
+            <li>Quan trọng cho:
+              <ul>
+                <li>decision-making có ngưỡng</li>
+                <li>ranking/recommender (độ đa dạng vs độ chính xác)</li>
+                <li>triage trong y tế/hỗ trợ khách hàng</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Từ evaluation đến “release”</h2>
+          <ul>
+            <li>Không phải model nào “điểm cao” cũng được deploy.</li>
+            <li>Cần điều kiện:
+              <ul>
+                <li>đạt quality gates (accuracy + robustness + latency/cost)</li>
+                <li>đủ metadata để audit (data/code/version)</li>
+                <li>đủ thông tin để rollback</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Model registry là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Khái niệm</div>
+            <strong>Model registry</strong> (model store/registry) là nơi quản lý <span class="keyword">phiên bản model</span> + metadata + trạng
+            thái (staging/production/archived).
+          </div>
+        </section>
+
+        <section>
+          <h2>Registry lưu những gì? (gợi ý)</h2>
+          <ul>
+            <li>Model artifact (weights/format), signature (input/output).</li>
+            <li>Run metadata: metrics, hyperparams, git commit.</li>
+            <li>Data reference/version, schema, feature definitions.</li>
+            <li>Dependencies/environment (conda/pip, container image).</li>
+            <li>Owner, tags, approval, release notes.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Promotion flow (ví dụ)</h2>
+          <div class="pipeline">
+            <div class="stage">
+              <div class="stage-title">Dev</div>
+              <div class="stage-desc">experiments</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Staging</div>
+              <div class="stage-desc">integration test</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Canary</div>
+              <div class="stage-desc">small traffic</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Prod</div>
+              <div class="stage-desc">monitoring</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <ol>
+            <li>Baseline nào phù hợp nhất cho bài toán của bạn?</li>
+            <li>“Đạt accuracy” nhưng không calibrated có nguy hiểm không?</li>
+            <li>Registry tối thiểu cần lưu gì để rollback an toàn?</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- 4. Deployment (API + Docker) -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">4.</span><br />
+            Deployment: API &amp; Docker
+          </h1>
+        </section>
+
+        <section>
+          <h2>Deploy là gì?</h2>
+          <ul>
+            <li>Deploy = làm cho model <strong>chạy được</strong> và <strong>được dùng được</strong> bởi hệ thống khác.</li>
+            <li>Đưa model ra khỏi “dev environment” → staging/prod.</li>
+            <li>Deploy dễ nếu bỏ qua phần khó; phần khó là scale + SLO + on-call + rollback.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Online vs batch prediction</h2>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Batch (async)</th>
+                <th>Online (sync)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mục tiêu</td>
+                <td>throughput cao</td>
+                <td>latency thấp</td>
+              </tr>
+              <tr>
+                <td>Khi nào dùng</td>
+                <td>không cần tức thì (recsys định kỳ)</td>
+                <td>fraud, assistant, realtime</td>
+              </tr>
+              <tr>
+                <td>Rủi ro</td>
+                <td>stale predictions</td>
+                <td>timeout, cost spikes</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>3 chế độ online prediction (gợi ý)</h2>
+          <ul>
+            <li>Online chỉ dùng <strong>batch features</strong> (ví dụ embeddings precompute).</li>
+            <li>Online dùng <strong>batch + streaming features</strong> (streaming prediction).</li>
+            <li>Hybrid: cache precompute cho query phổ biến + online cho phần còn lại.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Một lỗi phổ biến: 2 pipeline train vs inference</h2>
+          <ul>
+            <li>Batch pipeline cho training, stream pipeline cho inference.</li>
+            <li>Thay đổi một bên không phản ánh bên kia → training-serving skew.</li>
+            <li>Giải pháp hướng hệ thống:
+              <ul>
+                <li>chia sẻ code/feature definitions</li>
+                <li>feature store / unified processing</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Prediction service: API contract (tối thiểu)</h2>
+          <ul>
+            <li>Endpoint: <span class="inline-code">POST /predict</span></li>
+            <li>Input schema: versioned + validated.</li>
+            <li>Output: prediction + (optional) confidence + model_version.</li>
+            <li>Logging: request id, latency, errors, (hashed) features, model version.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Ví dụ API (pseudo)</h2>
+          <pre><code class="language-python" data-trim>
+@app.post("/predict")
+def predict(payload: dict):
+    X = payload["X"]
+    y = MODEL.predict(X)
+    return {"y": y, "model_version": MODEL_VERSION}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Docker trong deployment (vai trò)</h2>
+          <ul>
+            <li>Đóng gói model + dependencies + runtime.</li>
+            <li>Giảm “works on my machine”.</li>
+            <li>Hỗ trợ CI/CD, rollback theo image tag.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Dockerfile tối thiểu (minh hoạ)</h2>
+          <pre><code class="language-dockerfile" data-trim>
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+          </code></pre>
+          <p class="caption">Trong thực tế: pin versions, non-root, healthcheck, observability.</p>
+        </section>
+
+        <section>
+          <h2>Tối ưu inference: 4 kỹ thuật phổ biến</h2>
+          <ul>
+            <li><strong>Quantization</strong>: 32-bit → 16/8-bit (giảm size, tăng tốc).</li>
+            <li><strong>Pruning</strong>: bỏ trọng số/nhánh ít hữu dụng (tăng sparsity).</li>
+            <li><strong>Knowledge distillation</strong>: teacher → student nhỏ hơn.</li>
+            <li><strong>Low-rank / kiến trúc gọn</strong>: MobileNet, SqueezeNet…</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Từ batch sang online (checklist)</h2>
+          <ul>
+            <li>Có pipeline gần real-time (streaming features nếu cần).</li>
+            <li>Model đủ nhanh theo latency budget (optimize/compress/hardware).</li>
+            <li>Cache/precompute cho phần “đắt” (embeddings, candidate generation).</li>
+            <li>Đảm bảo consistency features giữa train &amp; serve.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Rollout strategies</h2>
+          <ul>
+            <li><strong>Canary</strong>: đẩy 1% traffic → quan sát → tăng dần.</li>
+            <li><strong>A/B test</strong>: so sánh 2 model song song.</li>
+            <li><strong>Shadow</strong>: model mới nhận request nhưng không ảnh hưởng output user.</li>
+            <li><strong>Rollback</strong>: quay lại model cũ dựa trên registry + routing.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Blue-Green deployment (xanh dương - xanh lá)</h2>
+          <ul>
+            <li>Giữ đồng thời 2 môi trường giống nhau: <strong>Blue</strong> (đang phục vụ) và <strong>Green</strong> (phiên bản mới).</li>
+            <li>Kiểm thử Green trước khi chuyển traffic.</li>
+            <li>Switch traffic gần như tức thời qua load balancer/ingress.</li>
+            <li>Nếu lỗi: chuyển ngược về Blue rất nhanh.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Sơ đồ Blue-Green deployment</h2>
+          <div class="pipeline">
+            <div class="stage">
+              <div class="stage-title">Users</div>
+              <div class="stage-desc">requests</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">LB / Ingress</div>
+              <div class="stage-desc">routing</div>
+            </div>
+          </div>
+          <div class="pipeline">
+            <div class="stage">
+              <div class="stage-title">Blue</div>
+              <div class="stage-desc">v1 (active)</div>
+            </div>
+            <div class="arrow">⇄</div>
+            <div class="stage">
+              <div class="stage-title">Green</div>
+              <div class="stage-desc">v2 (candidate)</div>
+            </div>
+          </div>
+          <ul>
+            <li>Trước switch: 100% traffic vào Blue.</li>
+            <li>Sau switch: 100% traffic vào Green, Blue giữ làm fallback.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Khi nào dùng Blue-Green?</h2>
+          <ul>
+            <li>Yêu cầu downtime gần 0 và rollback cực nhanh.</li>
+            <li>Phù hợp release “all-at-once” hơn canary.</li>
+            <li>Đánh đổi: tốn tài nguyên hơn vì phải duy trì 2 môi trường.</li>
+            <li>Với DB migration cần backward-compatible để tránh lỗi khi rollback.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Auto Scaling cho dịch vụ ML</h2>
+          <ul>
+            <li><strong>Horizontal scaling</strong>: tăng/giảm số replica theo tải.</li>
+            <li><strong>Vertical scaling</strong>: tăng/giảm CPU/RAM/GPU cho pod/instance.</li>
+            <li>Signal thường dùng: CPU, memory, QPS, queue length, p95 latency.</li>
+            <li>Kết hợp min/max replicas + cooldown để tránh “scale flapping”.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Auto Scaling + MLOps: lưu ý thực chiến</h2>
+          <ul>
+            <li><strong>Cold start</strong> model lớn có thể làm tăng latency đột ngột.</li>
+            <li>Dùng warm pool, pre-load model, hoặc tách service nặng/nhẹ.</li>
+            <li>Thiết kế SLO theo p95/p99 để trigger scale đúng lúc.</li>
+            <li>Theo dõi chi phí: scale tốt phải cân bằng latency và cloud bill.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <ol>
+            <li>Bài toán của bạn phù hợp batch hay online?</li>
+            <li>Deploy API cần log tối thiểu gì để debug “fail silently”?</li>
+            <li>Canary vs A/B vs Shadow: chọn cái nào cho risk cao?</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- 5. CI/CD -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">5.</span><br />
+            CI/CD cho ML
+          </h1>
+        </section>
+
+        <section>
+          <h2>CI/CD trong ML khác gì?</h2>
+          <ul>
+            <li>Không chỉ build/test code, mà còn:
+              <ul>
+                <li>validate data schema &amp; quality</li>
+                <li>reproducible training environments</li>
+                <li>model packaging + signing + registry</li>
+              </ul>
+            </li>
+            <li>Rollback không chỉ là “đổi code”, còn là “đổi model version + data deps”.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Pipeline automation (khung)</h2>
+          <div class="pipeline">
+            <div class="stage">
+              <div class="stage-title">CI</div>
+              <div class="stage-desc">lint/test</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Train</div>
+              <div class="stage-desc">reproducible</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Eval</div>
+              <div class="stage-desc">quality gates</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Register</div>
+              <div class="stage-desc">model registry</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Deploy</div>
+              <div class="stage-desc">canary</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Các công cụ CI/CD phổ biến</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Công cụ</th>
+                <th>Điểm mạnh</th>
+                <th>Phù hợp khi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GitHub Actions</td>
+                <td>Tích hợp chặt với GitHub, YAML đơn giản</td>
+                <td>Repo trên GitHub</td>
+              </tr>
+              <tr>
+                <td>GitLab CI</td>
+                <td>All-in-one SCM + CI/CD</td>
+                <td>GitLab self-host/cloud</td>
+              </tr>
+              <tr>
+                <td>Jenkins</td>
+                <td>Plugin ecosystem lớn, tuỳ biến cao</td>
+                <td>Hệ thống legacy/phức tạp</td>
+              </tr>
+              <tr>
+                <td>ArgoCD</td>
+                <td>GitOps CD cho Kubernetes</td>
+                <td>K8s + declarative deploy</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>AWS trong chuỗi CI/CD cho ML</h2>
+          <ul>
+            <li><strong>Source/Build</strong>: GitHub/CodeCommit + CodeBuild.</li>
+            <li><strong>Pipeline</strong>: CodePipeline orchestration.</li>
+            <li><strong>Deploy</strong>: ECS/EKS/Lambda/SageMaker endpoints.</li>
+            <li><strong>Scale/Observe</strong>: Auto Scaling + CloudWatch + alarms.</li>
+            <li><strong>Artifact</strong>: ECR (container image), S3 (model/data artifacts).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Quy trình kích hoạt CI/CD (triggers)</h2>
+          <ul>
+            <li><strong>Pull Request</strong>: chạy lint/test/security checks trước merge.</li>
+            <li><strong>Push/Merge</strong>: build image, run integration tests, publish artifact.</li>
+            <li><strong>Tag/Release</strong>: promote sang staging/prod.</li>
+            <li><strong>Event-driven</strong>: dataset mới, drift alert, schedule retrain.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Multi-branch pipeline strategy</h2>
+          <ul>
+            <li><strong>feature/*</strong>: unit tests + lightweight checks.</li>
+            <li><strong>develop</strong>: integration tests, deploy môi trường dev/staging.</li>
+            <li><strong>main</strong>: production-ready pipeline, cần approvals.</li>
+            <li><strong>release/*</strong>: freeze + smoke tests + canary/blue-green rollout.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.84em;">
+          <h2>Sơ đồ kích hoạt CI/CD (PR → Prod)</h2>
+          <div class="pipeline">
+            <div class="stage">
+              <div class="stage-title">PR opened</div>
+              <div class="stage-desc">lint + unit test</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">PR merged</div>
+              <div class="stage-desc">build + package</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Staging</div>
+              <div class="stage-desc">integration + eval</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Manual gate</div>
+              <div class="stage-desc">approval</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stage">
+              <div class="stage-title">Production</div>
+              <div class="stage-desc">blue-green/canary</div>
+            </div>
+          </div>
+          <p class="caption">Event phụ: cron retrain, drift alert, model registry promotion.</p>
+        </section>
+
+        <section>
+          <h2>GitOps với ArgoCD (điểm chốt)</h2>
+          <ul>
+            <li>“Git là nguồn sự thật” cho trạng thái hạ tầng/deploy.</li>
+            <li>ArgoCD sync manifest từ Git → cluster, hỗ trợ audit/rollback rõ ràng.</li>
+            <li>Rất phù hợp cho multi-env (dev/staging/prod) và multi-cluster.</li>
+            <li>Kết hợp tốt với model/version tags từ registry.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Quality gates (ví dụ)</h2>
+          <ul>
+            <li>Data checks pass (schema, nulls, ranges, drift bounds).</li>
+            <li>Offline metrics vượt baseline X%.</li>
+            <li>Latency/cost budget đạt.</li>
+            <li>Không vi phạm fairness/PII constraints (tuỳ dự án).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Testing trong ML pipeline: 4 lớp</h2>
+          <ul>
+            <li><strong>Code tests</strong>: unit/integration (ETL, feature transforms).</li>
+            <li><strong>Data tests</strong>: schema/constraints/distribution checks.</li>
+            <li><strong>Model tests</strong>: offline metrics + regression tests (so với model cũ).</li>
+            <li><strong>System tests</strong>: latency/load + end-to-end contracts.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ví dụ data tests (gợi ý)</h2>
+          <ul>
+            <li>Schema: kiểu dữ liệu, cột bắt buộc, giá trị null rate tối đa.</li>
+            <li>Constraints: range, regex, uniqueness, referential integrity.</li>
+            <li>Freshness/volume: dữ liệu “đến” đúng giờ? số bản ghi có tụt bất thường?</li>
+            <li>Distribution: PSI/K-S theo feature quan trọng (theo ngày/tuần).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Reproducible environment</h2>
+          <ul>
+            <li>Pin dependencies (requirements/lockfile).</li>
+            <li>Container hoá training/inference nếu có thể.</li>
+            <li>Build trong CI để đảm bảo “khai báo đủ deps”.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Artefact lineage</h2>
+          <ul>
+            <li>Model version ↔ training code commit ↔ data version ↔ config snapshot.</li>
+            <li>Khi incident: trace từ prediction → model → pipeline → data.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <ol>
+            <li>Quality gates nào là bắt buộc trong dự án bạn?</li>
+            <li>CI/CD nên chạy lại training toàn bộ hay incremental?</li>
+            <li>Không có data versioning, CI/CD sẽ “gãy” ở đâu?</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- 6. Monitoring + retraining -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">6.</span><br />
+            Monitoring &amp; retraining
+          </h1>
+        </section>
+
+        <section>
+          <h2>Vì sao ML monitoring khó?</h2>
+          <ul>
+            <li>Operational failures dễ thấy (timeout, 500…).</li>
+            <li>ML performance failures khó thấy vì thiếu/độ trễ ground truth labels.</li>
+            <li>Do đó ML systems thường “fail silently”.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Hai nhóm kỳ vọng (expectations)</h2>
+          <ul>
+            <li><strong>Operational</strong>: latency, throughput, uptime, error rate.</li>
+            <li><strong>ML performance</strong>: accuracy/F1/… hoặc business proxy metrics.</li>
+          </ul>
+          <p class="caption">Violation của ML performance thường cần monitoring + feedback loop.</p>
+        </section>
+
+        <section>
+          <h2>Monitoring checklist (tối thiểu)</h2>
+          <ul>
+            <li><strong>Service</strong>: p95/p99 latency, error rate, saturation.</li>
+            <li><strong>Data</strong>: schema drift, null rate, out-of-range, duplicates.</li>
+            <li><strong>Prediction</strong>: distribution drift, calibration drift.</li>
+            <li><strong>Business</strong>: conversion/CTR/cost per action (tuỳ bài toán).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Chiến lược “có label” trong production</h2>
+          <ul>
+            <li><strong>Natural labels</strong>: click, purchase, report… (nhưng có bias).</li>
+            <li><strong>Human review</strong>: sampling cho case rủi ro/edge cases.</li>
+            <li><strong>Delayed labels</strong>: thiết kế dashboard theo lag (1h/1d/7d).</li>
+            <li><strong>Golden set</strong>: tập benchmark cố định để so sánh phiên bản.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Alerting: tránh “bắn phá”</h2>
+          <ul>
+            <li>Phân cấp: warning vs critical; alert theo SLO, không theo “noise”.</li>
+            <li>Gắn context: model_version, data_version, feature offenders.</li>
+            <li>Rõ ownership: ai on-call? ai có quyền rollback?</li>
+            <li>Runbook: bước điều tra chuẩn hoá.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Nguyên nhân fail trong production</h2>
+          <ul>
+            <li><strong>Software failures</strong>: dependency, deployment error, hardware, downtime…</li>
+            <li><strong>ML-specific failures</strong>:
+              <ul>
+                <li>production data ≠ training data (train-serving skew)</li>
+                <li>data distribution shifts</li>
+                <li>edge cases</li>
+                <li>degenerate feedback loops</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Data distribution shifts: 3 dạng (nhận diện)</h2>
+          <ul>
+            <li><strong>Covariate shift</strong>: \(P(X)\) đổi, \(P(Y|X)\) giữ.</li>
+            <li><strong>Label shift</strong>: \(P(Y)\) đổi, \(P(X|Y)\) giữ.</li>
+            <li><strong>Concept drift</strong>: \(P(Y|X)\) đổi.</li>
+          </ul>
+          <p class="caption">Trong vận hành: thường tập trung “làm gì để xử lý” hơn là phân loại học thuật.</p>
+        </section>
+
+        <section>
+          <h2>Drift vs “bug nội bộ”</h2>
+          <ul>
+            <li>Nhiều dashboard drift thực ra do:
+              <ul>
+                <li>bug data pipeline</li>
+                <li>missing values sai</li>
+                <li>feature standardized bằng thống kê sai</li>
+                <li>deploy nhầm model version</li>
+              </ul>
+            </li>
+            <li>Vì vậy monitoring cần kết hợp: data quality + lineage + versioning.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Drift detection: 2 hướng</h2>
+          <ul>
+            <li><strong>Monitor metrics có label</strong>: accuracy/F1/AUC… (nếu có labels kịp thời).</li>
+            <li><strong>Monitor distributions</strong>: feature stats (mean/quantiles), two-sample tests…</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Statistical checks (thực dụng)</h2>
+          <ul>
+            <li>So sánh thống kê: min/max/mean/median/quantiles.</li>
+            <li>Hai-sample tests (K-S cho 1D; multivariate khó hơn).</li>
+            <li>Cảnh báo: “statistically significant” không luôn “practically important”.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Edge cases (vì sao quan trọng)</h2>
+          <ul>
+            <li>Model tốt 99.99% nhưng fail 0.01% có thể không dùng được nếu hậu quả nghiêm trọng.</li>
+            <li>Cần:
+              <ul>
+                <li>giám sát lỗi hiếm</li>
+                <li>guardrails không-ML</li>
+                <li>human-in-the-loop khi cần</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Degenerate feedback loops</h2>
+          <ul>
+            <li>Output của hệ thống ảnh hưởng input tương lai → khuếch đại bias.</li>
+            <li>Ví dụ: recommender chỉ đẩy item “đang hot” → càng hot hơn.</li>
+            <li>Giảm thiểu:
+              <ul>
+                <li>randomization/exploration</li>
+                <li>positional features (giảm bias do vị trí hiển thị)</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Retraining: khi nào kích hoạt?</h2>
+          <ul>
+            <li><strong>Schedule-based</strong>: hằng ngày/tuần/tháng.</li>
+            <li><strong>Drift-based</strong>: drift vượt ngưỡng.</li>
+            <li><strong>Performance-based</strong>: metrics/business KPI giảm.</li>
+            <li><strong>Event-based</strong>: đổi schema, thêm class mới, launch market mới.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>“How often can we update?”</h2>
+          <ul>
+            <li>Tần suất retrain không chỉ là lựa chọn ML, mà là năng lực hệ thống.</li>
+            <li>Phụ thuộc:
+              <ul>
+                <li>data freshness + labeling latency</li>
+                <li>compute budget</li>
+                <li>automation maturity + CI/CD</li>
+                <li>risk tolerance + approval process</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Testing in production</h2>
+          <ul>
+            <li>Offline eval không bắt hết vấn đề → cần test in prod.</li>
+            <li>Patterns:
+              <ul>
+                <li>shadow mode</li>
+                <li>canary</li>
+                <li>A/B testing</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Incident playbook (tối thiểu)</h2>
+          <ul>
+            <li><strong>Detect</strong>: alert drift/latency/errors.</li>
+            <li><strong>Diagnose</strong>: versioning + logs + lineage.</li>
+            <li><strong>Mitigate</strong>: fallback model, freeze updates, rollback.</li>
+            <li><strong>Recover</strong>: backfill data, retrain, redeploy.</li>
+            <li><strong>Prevent</strong>: thêm tests, tighten gates, improve observability.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <ol>
+            <li>Nếu không có label trong production, bạn monitor bằng gì?</li>
+            <li>Drift alert của bạn có thể là “false positive” do bug pipeline không?</li>
+            <li>Retraining trigger nào an toàn nhất cho dự án risk cao?</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- Tổng kết -->
+      <section>
+        <section>
+          <h2>Tổng kết</h2>
+          <ul>
+            <li><strong>MLOps</strong> = vận hành vòng đời ML: train → deploy → monitor → update.</li>
+            <li><strong>Experiment tracking</strong> + <strong>versioning</strong> là nền để tái lập và debug.</li>
+            <li><strong>Evaluation</strong> cần baseline + robustness + calibration.</li>
+            <li><strong>Deployment</strong> cần lựa chọn batch/online + rollout + rollback.</li>
+            <li><strong>Monitoring</strong> phải bắt được fail silently: drift, edge cases, loops.</li>
+            <li><strong>Retraining</strong> là năng lực hệ thống: “How often can we update?”</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Bài tập gợi ý (tuỳ chọn)</h2>
+          <ol>
+            <li>Thiết kế lifecycle MLOps cho 1 dự án AI bạn chọn (RAG/RecSys/Fraud) và chỉ rõ artifacts cần version.</li>
+            <li>Đề xuất 10 metrics/alerts cho monitoring (operational + ML) và cách điều tra khi alert xảy ra.</li>
+            <li>Đề xuất policy promotion model: staging → canary → production, kèm rollback plan.</li>
+          </ol>
+        </section>
+      </section>
+
+      <div class="footer">
+        Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §6: MLOps
+      </div>
+    </div>
+  </div>
+
+  <script src="revealjs/dist/reveal.js"></script>
+  <script src="plugin/notes/notes.js"></script>
+  <script src="plugin/markdown/markdown.js"></script>
+  <script src="plugin/highlight/highlight.js"></script>
+  <script src="plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+    });
+  </script>
+</body>
+
+</html>

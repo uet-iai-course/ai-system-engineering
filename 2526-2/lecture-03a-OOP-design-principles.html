@@ -54,7 +54,7 @@
         <!-- Slide 3: image1 -->
         <section>
           <h2>Một vài <em>mùi thiết kế</em></h2>
-          <img src="img/lec-06/tangled-wires.jpg" style="width:55%; display:block; margin:0 auto" />
+          <img src="img/lec-03a/tangled-wires.jpg" style="width:55%; display:block; margin:0 auto" />
           <p style="margin-top:0.8em; font-style:italic; color:#1b5e20; line-height:1.5">
             "Code cũng có thể rối rắm như thế này — mùi thiết kế là dấu hiệu sớm để nhận ra."
           </p>
@@ -65,7 +65,7 @@
           <h2>Sự phình to <span class="text-light">(Bloaters)</span></h2>
           <div style="display:grid; grid-template-columns:1fr 3fr; gap:0.5em; align-items:start">
             <div>
-              <img src="img/lec-06/image2.png" style="width:100%" />
+              <img src="img/lec-03a/image2.png" style="width:100%" />
             </div>
             <div>
               <pre><code class="language-cpp" data-trim>
@@ -131,7 +131,7 @@ class Person {
           <h2>Sự liên kết quá mức <span class="text-light">(Couplers)</span></h2>
           <div style="display:grid; grid-template-columns:1fr 3fr; gap:0.5em; align-items:start">
             <div>
-              <img src="img/lec-06/image4.png" style="width:100%" />
+              <img src="img/lec-03a/image4.png" style="width:100%" />
             </div>
             <div>
               <pre><code class="language-cpp" data-trim>
@@ -162,7 +162,7 @@ std::string region =
           <h2>Câu lệnh <span class="inline-code">switch</span> <span class="text-light">(Switch Statement)</span></h2>
           <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:0.5em; align-items:start">
             <div>
-              <img src="img/lec-06/image5.png" style="width:100%" />
+              <img src="img/lec-03a/image5.png" style="width:100%" />
             </div>
             <div>
               <pre><code class="language-cpp" data-trim>
@@ -253,7 +253,7 @@ void readData(DeviceType deviceType) {
         <!-- Slide 9: image6 — SRP intro -->
         <section>
           <h2>Khi một lớp biết làm tất cả</h2>
-          <img src="img/lec-06/image6.png" style="width:50%; display:block; margin:0 auto" />
+          <img src="img/lec-03a/image6.png" style="width:50%; display:block; margin:0 auto" />
           <p style="margin-top:0.8em; color:#1b5e20; font-style:italic; line-height:1.5">
             “Chỉ vì bạn có thể làm điều đó, không có nghĩa là bạn nên làm!”
           </p>
@@ -303,7 +303,7 @@ void readData(DeviceType deviceType) {
             <li><strong>CTO</strong> yêu cầu đổi database → sửa <span class="inline-code">store</span>.</li>
           </ul>
 
-          <img src="img/lec-06/image8.svg" style="width:60%; display:block; margin:0.3em auto 0.3em" />
+          <img src="img/lec-03a/image8.svg" style="width:60%; display:block; margin:0.3em auto 0.3em" />
           <ul style="margin-top:0.3em; padding-left:1.2em">
             <li>Hai actor, một lớp → <strong>hai lý do thay đổi</strong>.</li>
             <li>Đổi lương không nên bắt ta sửa cùng lớp đang lo lưu trữ.</li>
@@ -471,7 +471,7 @@ public:
         <!-- Slide 17: image9 — OCP intro -->
         <section>
           <h2>Mở rộng mà không sửa mã cũ</h2>
-          <img src="img/lec-06/image9.png" style="width:45%; display:block; margin:0 auto" />
+          <img src="img/lec-03a/image9.png" style="width:45%; display:block; margin:0 auto" />
           <p style="margin-top:0.8em; color:#1b5e20; font-style:italic; line-height:1.5">
             "Thêm tính năng bằng cách thêm code mới — không phải bằng cách sửa code cũ."
           </p>
@@ -494,7 +494,7 @@ public:
         <!-- Slide 19: image10 -->
         <section>
           <h2>So sánh các cách làm</h2>
-          <img src="img/lec-06/image10.png" style="width:80%; display:block; margin:0 auto" />
+          <img src="img/lec-03a/image10.png" style="width:80%; display:block; margin:0 auto" />
           <p style="margin-top:0.5em; font-style:italic; color:#555">
             Trên: sửa code cũ mỗi lần thêm <br />
             Dưới: thêm module mới mà không đụng code cũ.
@@ -517,7 +517,7 @@ public:
         <!-- Slide 21: image11 — strategy intro -->
         <section style="font-size:0.85em;">
           <h2>Ví dụ: chỉ đường</h2>
-          <img src="img/lec-06/image11.png" style="width:70%; display:block; margin:0 auto 0.4em" />
+          <img src="img/lec-03a/image11.png" style="width:70%; display:block; margin:0 auto 0.4em" />
           <ul style="margin-top:0.5em">
             <li>Cùng mục tiêu (đi đến đích) nhưng <strong>cách làm khác nhau</strong>.</li>
             <li>Phần cố định: <span class="inline-code">Navigator</span> điều phối lộ trình.</li>
@@ -530,7 +530,7 @@ public:
           <h2>Vấn đề của Navigator</h2>
           <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:0.8em; align-items:start">
             <div>
-              <img src="img/lec-06/image12.png" style="width:100%" />
+              <img src="img/lec-03a/image12.png" style="width:100%" />
               <p style="margin-top:0.3em; font-style:italic">Yêu cầu chính: lập lộ trình tự động.</p>
             </div>
             <div>
@@ -582,7 +582,7 @@ public:
           <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:0.8em; align-items:start">
 
             <div style="display:flex; flex-direction:column">
-              <img src="img/lec-06/image13.png" style="width:100%; border-radius: 4px" />
+              <img src="img/lec-03a/image13.png" style="width:100%; border-radius: 4px" />
 
               <p><strong>Gợi ý:</strong> Nhiều cách làm khác nhau → tách thành
                 nhiều lớp.</p>
@@ -745,7 +745,7 @@ public:
         <!-- Slide 31: LSP intro -->
         <section>
           <h2>Thay vào có an toàn không?</h2>
-          <img src="img/lec-06/image14.png" style="width:45%; display:block; margin:0 auto" />
+          <img src="img/lec-03a/image14.png" style="width:45%; display:block; margin:0 auto" />
           <p style="margin-top:0.8em; font-style:italic; line-height:1.5; color:#1b5e20">
             “Nếu nó trông như con vịt, kêu như con vịt, nhưng lại cần pin, thì có lẽ bạn đã thiết kế trừu tượng sai.”
           </p>
@@ -863,7 +863,7 @@ void g(Rectangle& r) {
                 chất hành vi của nó.</p>
             </div>
             <div>
-              <img src="img/lec-06/image15.png" style="width:100%" />
+              <img src="img/lec-03a/image15.png" style="width:100%" />
             </div>
           </div>
         </section>
@@ -939,7 +939,7 @@ public:
         <!-- Slide 40: image16 — ISP intro -->
         <section>
           <h2>Đừng bắt lớp làm việc thừa</h2>
-          <img src="img/lec-06/image16.png" style="width:50%; display:block; margin:0 auto" />
+          <img src="img/lec-03a/image16.png" style="width:50%; display:block; margin:0 auto" />
 
           <p style="margin-top:0.8em; color:#1b5e20; font-style:italic; line-height:1.5">
             “Mã sử dụng không nên phụ thuộc vào những giao diện mà nó không dùng!”
@@ -961,7 +961,7 @@ public:
               </ul>
             </div>
             <div>
-              <img src="img/lec-06/image17.png" style="width:100%" />
+              <img src="img/lec-03a/image17.png" style="width:100%" />
             </div>
           </div>
         </section>
@@ -1026,7 +1026,7 @@ public:
           <h2>Giải pháp: tách vai trò</h2>
           <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:0.8em; align-items:start">
             <div>
-              <img src="img/lec-06/image18.png" style="width:100%" />
+              <img src="img/lec-03a/image18.png" style="width:100%" />
               <p style="margin-top:0.3em">
                 <span class="inline-code">NormalDoor</span> không còn bị ép cài <span
                   class="inline-code">timeout()</span>.
@@ -1083,7 +1083,7 @@ struct Animal {
           <h2>Ví dụ: ATM</h2>
           <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:0.8em; align-items:start">
             <div>
-              <img src="img/lec-06/image19.png" style="width:100%" />
+              <img src="img/lec-03a/image19.png" style="width:100%" />
             </div>
             <div>
               <ul>
@@ -1101,7 +1101,7 @@ struct Animal {
           <h2>Giải pháp: tách giao diện</h2>
           <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:0.8em; align-items:start">
             <div>
-              <img src="img/lec-06/image20.png" style="width:100%" />
+              <img src="img/lec-03a/image20.png" style="width:100%" />
             </div>
             <div>
               <ul style="padding-left:1.2em; margin:0">
@@ -1132,7 +1132,7 @@ struct Animal {
         <!-- Slide 47: image21 — DIP intro -->
         <section>
           <h2>Ai nên phụ thuộc vào ai?</h2>
-          <img src="img/lec-06/image21.png" style="width:50%; display:block; margin:0 auto" />
+          <img src="img/lec-03a/image21.png" style="width:50%; display:block; margin:0 auto" />
 
 
           <p style="margin-top:0.8em; color:#1b5e20; font-style:italic; line-height:1.5">
@@ -1164,7 +1164,7 @@ struct Animal {
           <h2>Phụ thuộc kiểu cũ</h2>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start">
             <div>
-              <img src="img/lec-06/image22.png" style="width:100%" />
+              <img src="img/lec-03a/image22.png" style="width:100%" />
             </div>
             <div>
               <ul style="padding-left:1.2em; margin:0">
@@ -1185,7 +1185,7 @@ struct Animal {
           <h2>Khi phụ thuộc đảo chiều</h2>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start">
             <div>
-              <img src="img/lec-06/image23.png" style="width:100%" />
+              <img src="img/lec-03a/image23.png" style="width:100%" />
             </div>
             <div>
               <ul>

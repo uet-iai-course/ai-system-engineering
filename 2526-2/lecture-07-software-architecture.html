@@ -88,16 +88,6 @@
             <li>Có thể phác thảo kiến trúc end-to-end cho một sản phẩm AI production.</li>
           </ul>
         </section>
-
-        <section>
-          <h2>Thông điệp cốt lõi từ học liệu</h2>
-          <div class="question-box">
-            <div class="question-title">System-wide view</div>
-            Mô hình ML chỉ là <span class="keyword">một thành phần</span>. Giá trị sản phẩm phụ thuộc vào
-            <span class="keyword">toàn hệ thống</span>: giao diện, pipeline dữ liệu, dịch vụ backend, bảo mật,
-            giám sát, vận hành.
-          </div>
-        </section>
       </section>
 
       <!-- 1 -->
@@ -167,28 +157,8 @@
         </section>
 
         <section>
-          <h2>Tại sao “accuracy tăng” chưa chắc “system tốt hơn”?</h2>
-          <ul>
-            <li>Model tốt hơn nhưng chậm hơn → UX xấu.</li>
-            <li>Model tốt hơn nhưng cost inference quá cao.</li>
-            <li>Model tốt hơn nhưng khó giải thích → khó duyệt nghiệp vụ.</li>
-            <li>Model tốt hơn nhưng gây hiệu ứng “creepy” với người dùng.</li>
-          </ul>
-        </section>
-
-        <section>
           <h2>Một kiến trúc AI điển hình</h2>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Client</div><div class="stage-desc">web/mobile</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">API</div><div class="stage-desc">gateway/backend</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Inference</div><div class="stage-desc">model service</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Data</div><div class="stage-desc">DB/object store</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Obs</div><div class="stage-desc">logs/metrics/traces</div></div>
-          </div>
+          <img src="img/lec-07/ai-system.svg" style="width: 100%; display:block; margin: 0 auto">
         </section>
 
         <section>
@@ -237,21 +207,6 @@
         </section>
 
         <section>
-          <h2>Ví dụ Monolith trong dự án AI</h2>
-          <ul>
-            <li>Một backend Flask/Django chứa:
-              <ul>
-                <li>API user</li>
-                <li>business logic</li>
-                <li>feature preprocessing</li>
-                <li>model inference</li>
-              </ul>
-            </li>
-            <li>Phù hợp khi QPS thấp, ít team, yêu cầu thay đổi nhanh.</li>
-          </ul>
-        </section>
-
-        <section>
           <h2>Microservices architecture</h2>
           <ul>
             <li>Hệ thống tách thành nhiều service nhỏ theo bounded context.</li>
@@ -279,43 +234,10 @@
             <li>Yêu cầu kỷ luật kiến trúc cao.</li>
           </ul>
         </section>
-
-        <section>
-          <h2>Ví dụ Microservices cho AI product</h2>
-          <ul>
-            <li>`user-service`, `catalog-service`, `recommendation-service`</li>
-            <li>`feature-service`, `ranking-service`, `notification-service`</li>
-            <li>`monitoring-service`, `feedback-label-service`</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Khi nào chọn Monolith?</h2>
-          <ul>
-            <li>Team &lt; 6 người, domain còn thay đổi nhiều.</li>
-            <li>Sản phẩm ở giai đoạn tìm product-market fit.</li>
-            <li>Ops chưa đủ năng lực cho distributed systems.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Khi nào chuyển sang Microservices?</h2>
-          <ul>
-            <li>Traffic tăng mạnh, hotspot rõ ràng.</li>
-            <li>Release bottleneck do đụng nhau nhiều team.</li>
-            <li>Cần scale và deploy riêng model inference.</li>
-            <li>Cần isolation rủi ro cho thành phần critical.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Chiến lược chuyển đổi an toàn</h2>
-          <ul>
-            <li>Monolith-first, tách dần theo domain.</li>
-            <li>Dùng Strangler pattern để thay thế từng phần.</li>
-            <li>Không “big bang rewrite” nếu chưa có lý do kinh doanh rõ.</li>
-          </ul>
-        </section>
+		
+		<section>
+		<img src="https://www.clariontech.com/hubfs/Monolithic%20Architecture%20Vs.%20Microservices.jpg" style="width: 80%; display: block; margin: 0 auto">
+		</section>
 
         <section>
           <h2>Bảng so sánh nhanh</h2>
@@ -345,11 +267,16 @@
       <!-- 3 -->
       <section>
         <section>
-          <h1><span class="text-light">3.</span><br />RESTful API, gRPC, Event</h1>
+          <h1><span class="text-light">3.</span><br />Phương thức giao tiếp</h1>
+        </section>
+		
+		<section>
+          <h2>RESTful API (HTTP/JSON)</h2>
+		  <img src="img/lec-07/restful-api.png" style="width: 80%; display: block; margin: 0 auto">
         </section>
 
         <section>
-          <h2>RESTful API (HTTP/JSON)</h2>
+          <h2>RESTful API</h2>
           <ul>
             <li>Phổ biến, dễ dùng từ web/mobile/service.</li>
             <li>Resource-oriented: GET/POST/PUT/DELETE.</li>
@@ -366,8 +293,38 @@
           </ul>
         </section>
 
+        <section style="font-size:0.88em;">
+          <h2>REST qua HTTPS: SSL/TLS là gì?</h2>
+          <ul>
+            <li><strong>HTTPS</strong> = HTTP chạy trên kênh đã được <strong>mã hóa</strong> bằng <strong>TLS</strong> (Transport Layer Security).</li>
+            <li><strong>SSL</strong> (Secure Sockets Layer) là tiêu chuẩn cũ; ngày nay thực tế dùng <strong>TLS 1.2 / TLS 1.3</strong> — vẫn hay gọi chung “SSL/TLS”.</li>
+            <li><strong>Mục tiêu</strong>: <em>confidentiality</em> (bên thứ ba không đọc được payload), <em>integrity</em> (dữ liệu không bị sửa lén), <em>authentication</em> (xác thực server qua chứng chỉ).</li>
+            <li>REST API public nên luôn phục vụ qua <span class="inline-code">https://</span> (không gửi token/cookie trên HTTP thuần).</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>TLS hoạt động tóm tắt (handshake)</h2>
+          <ul>
+            <li><strong>Chứng chỉ (certificate)</strong>: server có cặp khóa; CA ký chứng chỉ → client tin “đúng domain”.</li>
+            <li><strong>Handshake</strong>: thỏa thuận phiên bản TLS, bộ mã hóa (<em>cipher suite</em>), trao đổi khóa phiên (thường dùng <strong>ECDHE</strong>…).</li>
+            <li>Sau handshake, dữ liệu ứng dụng (JSON REST, header…) được mã hóa bằng <strong>khóa đối xứng</strong> của phiên (nhanh); khóa công khai chủ yếu dùng ở giai đoạn bắt tay.</li>
+            <li><strong>mTLS</strong> (mutual TLS): client cũng có chứng chỉ — dùng nội bộ / B2B khi cần xác thực hai chiều mạnh.</li>
+          </ul>
+          <p class="caption">Triển khai: reverse proxy (NGINX, Envoy) hoặc cloud LB chấm dứt TLS; ứng dụng có thể chỉ nhận HTTP nội bộ sau TLS termination.</p>
+        </section>
+		
+		<section>
+		<img src="https://ecwebsitedata.blob.core.windows.net/encryption-consulting-website-data/2023/12/EC_TLS-SSL.png" style="width: 80%; display: block; margin: 0 auto">
+		</section>
+		
         <section>
           <h2>gRPC (HTTP/2 + Protobuf)</h2>
+		  <img src="img/lec-07/grpc.png" style="width: 80%; display: block; margin: 0 auto">
+        </section>
+
+        <section>
+          <h2>gRPC</h2>
           <ul>
             <li>Nhanh, binary protocol, strongly typed contracts.</li>
             <li>Hỗ trợ streaming hai chiều.</li>
@@ -382,6 +339,54 @@
             <li><strong>Nhược:</strong> khó debug thủ công hơn REST.</li>
             <li><strong>Phù hợp:</strong> low-latency microservices, realtime backend.</li>
           </ul>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>gRPC: tự động sinh code (Code Generation)</h2>
+          <ul>
+            <li>Contract được mô tả trong file <span class="inline-code">.proto</span> (Protobuf): <strong>service</strong>, <strong>rpc</strong>, <strong>message</strong>.</li>
+            <li>Toolchain <span class="inline-code">protoc</span> (protobuf compiler) + plugin đọc <span class="inline-code">.proto</span> → sinh <strong>stub client</strong> và <strong>skeleton server</strong> cho nhiều ngôn ngữ.</li>
+            <li><strong>Ví dụ ngôn ngữ</strong>: Java, Kotlin, Go, Python, C#, Node.js, Ruby, PHP… (tuỳ plugin).</li>
+            <li><strong>Lợi ích</strong>: một nguồn sự thật cho API; giảm lỗi tay khi viết client/server; đổi contract có kiểm soát (versioning).</li>
+          </ul>
+          <p class="caption">Luồng: định nghĩa <span class="inline-code">.proto</span> → chạy <span class="inline-code">protoc</span> → import code sinh ra trong project.</p>
+        </section>
+		
+		<section>
+		<img src="https://lh6.googleusercontent.com/eZJUxepo7Ath2NalDKS75Aezx7DFnZlt0IuvfteCIczCgZBkBg2sgdoMVxr8FSiQf6u4gDkEDFcewGyrvqZqzoYUzdZnGi_WoU8-lXKamFrnGudnZy31pmQkt1LaLNCTWOTB3y3v" style="width:80%; display:block; margin: 0 auto">
+		</section>
+
+        <section style="font-size:0.72em;">
+          <h2>Mẫu: file <span class="inline-code">.proto</span> và lệnh sinh code</h2>
+          <p style="margin-bottom:0.35em;"><strong>greeter.proto</strong> (định nghĩa service + message):</p>
+          <pre><code class="language-protobuf" data-trim>
+syntax = "proto3";
+
+package demo;
+
+// Service: compiler sẽ sinh GreeterStub (client) + GreeterServicer (server)
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+          </code></pre>
+          <p style="margin:0.4em 0 0.25em;"><strong>Gợi ý lệnh</strong> (Python — cần <span class="inline-code">grpcio-tools</span>):</p>
+          <pre><code class="language-bash" data-trim>
+python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. greeter.proto
+          </code></pre>
+          <p style="margin:0.4em 0 0.25em;"><strong>Go</strong> (plugin <span class="inline-code">protoc-gen-go</span> + <span class="inline-code">protoc-gen-go-grpc</span>):</p>
+          <pre><code class="language-bash" data-trim>
+protoc --go_out=. --go_opt=paths=source_relative \
+       --go-grpc_out=. --go-grpc_opt=paths=source_relative greeter.proto
+          </code></pre>
+          <p class="caption">Sau khi chạy, project sẽ có các file <span class="inline-code">*_pb2.py</span> / <span class="inline-code">*_pb2_grpc.py</span> (Python) hoặc <span class="inline-code">*.pb.go</span> (Go) để implement server và gọi client.</p>
         </section>
 
         <section>
@@ -400,63 +405,43 @@
         </section>
 
         <section>
-          <h2>Event-driven communication</h2>
-          <ul>
-            <li>Publisher phát sự kiện, subscriber xử lý bất đồng bộ.</li>
-            <li>Giảm coupling thời gian giữa các service.</li>
-            <li>Tăng khả năng scale theo throughput.</li>
-          </ul>
+          <h2>Queue vs Pub/Sub</h2>
+		  <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240927171909/Message-Queues-v-Publish-Subscribe-Systems-in-System-Design.png" style="width:80%; display:block; margin: 20px auto" />
+          <div>Ví dụ: RabbitMQ (queue), Kafka (event streaming/pub-sub).</div>
         </section>
 
-        <section>
-          <h2>Queue vs Pub/Sub (thực hành)</h2>
+        <section style="font-size:0.90em;">
+          <h2>MQTT là gì? (Pub/Sub nhẹ cho IoT)</h2>
           <ul>
-            <li><strong>Queue</strong>: một message thường được một consumer xử lý.</li>
-            <li><strong>Pub/Sub</strong>: một event có thể fan-out cho nhiều consumer.</li>
-            <li>Ví dụ: RabbitMQ (queue), Kafka (event streaming/pub-sub).</li>
+            <li><strong>MQTT</strong> (Message Queuing Telemetry Transport): giao thức pub/sub rất nhẹ, tối ưu cho thiết bị hạn chế và mạng không ổn định.</li>
+            <li>Mô hình: <strong>publisher</strong> → <strong>broker</strong> → <strong>subscriber</strong>.</li>
+            <li>Gửi theo <strong>topic</strong> dạng cây, ví dụ: <span class="inline-code">factory/line1/temperature</span>.</li>
+            <li>Dùng nhiều cho telemetry/sensor, device status, command/control.</li>
           </ul>
+          <p class="caption">Broker phổ biến: Mosquitto, EMQX, HiveMQ (managed/enterprise).</p>
         </section>
 
-        <section>
-          <h2>Khi nào dùng async?</h2>
+        <section style="font-size:0.84em;">
+          <h2>MQTT: QoS, retained, Last Will (các “chi tiết” quan trọng)</h2>
           <ul>
-            <li>Tác vụ nặng: xử lý file, trích xuất đặc trưng, batch scoring.</li>
-            <li>Tác vụ không cần phản hồi tức thì cho người dùng.</li>
-            <li>Cần chống backpressure và spike traffic.</li>
+            <li><strong>QoS 0</strong>: at most once (nhanh nhất, có thể mất).</li>
+            <li><strong>QoS 1</strong>: at least once (có thể gửi trùng → consumer cần idempotent).</li>
+            <li><strong>QoS 2</strong>: exactly once (đảm bảo cao hơn nhưng overhead lớn).</li>
+            <li><strong>Retained message</strong>: broker giữ message cuối của topic để subscriber mới nhận ngay “trạng thái hiện tại”.</li>
+            <li><strong>Last Will and Testament</strong> (LWT): nếu client rớt mạng, broker publish 1 message “tôi đã offline”.</li>
           </ul>
+          <pre><code class="language-bash" data-trim>
+# demo nhanh với Mosquitto (broker) + CLI tools
+mosquitto_sub -t "factory/line1/temperature"
+mosquitto_pub -t "factory/line1/temperature" -m "28.5"
+          </code></pre>
+          <p class="caption">Bảo mật: chạy qua TLS + auth (username/password hoặc mTLS) khi đưa vào production.</p>
         </section>
 
         <section>
           <h2>Mẫu kiến trúc giao tiếp hỗn hợp</h2>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Client</div><div class="stage-desc">REST</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Gateway</div><div class="stage-desc">auth/routing</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Services</div><div class="stage-desc">gRPC</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Queue/Event</div><div class="stage-desc">Kafka/RabbitMQ</div></div>
-          </div>
         </section>
-
-        <section>
-          <h2>API versioning</h2>
-          <ul>
-            <li>Không phá vỡ client cũ khi đổi schema.</li>
-            <li>Version qua path/header hoặc contract registry.</li>
-            <li>Deprecation policy rõ ràng cho đội tích hợp.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Idempotency và retry</h2>
-          <ul>
-            <li>Request lặp lại không tạo side effects sai.</li>
-            <li>Cần cho mạng không ổn định, timeout, retry tự động.</li>
-            <li>Dùng idempotency key cho các thao tác create/payment/order.</li>
-          </ul>
-        </section>
-      </section>
+	  </section>
 
       <!-- 4 -->
       <section>
@@ -467,10 +452,55 @@
         <section>
           <h2>Load Balancing là gì?</h2>
           <ul>
-            <li>Phân phối request tới nhiều instance backend.</li>
-            <li>Tăng availability, giảm điểm nghẽn.</li>
-            <li>Có thể L4 hoặc L7 tùy nhu cầu.</li>
+            <li><strong>Định nghĩa</strong>: phân phối request/connection từ client tới <strong>nhiều instance</strong> backend.</li>
+            <li><strong>Mục tiêu</strong>: tăng <em>availability</em>, tăng <em>throughput</em>, giảm <em>latency</em>, tránh “một điểm nghẽn”.</li>
+            <li><strong>Health check</strong>: chỉ route vào instance “healthy”; instance lỗi sẽ bị loại khỏi pool.</li>
+            <li><strong>L4 vs L7</strong>: L4 cân bằng theo TCP/UDP; L7 cân bằng theo HTTP (host/path/header), hỗ trợ routing linh hoạt.</li>
           </ul>
+        </section>
+
+        <section style="font-size:0.74em;">
+          <h2>Ví dụ NGINX: L4 vs L7 Load Balancer</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start;">
+            <div>
+              <div style="font-weight:bold; margin-bottom:0.25em;">L4 (TCP) — <span class="inline-code">stream</span></div>
+              <pre><code class="language-nginx" data-trim>
+# /etc/nginx/nginx.conf
+stream {
+  upstream grpc_backends {
+    server 10.0.0.11:50051;
+    server 10.0.0.12:50051;
+  }
+
+  server {
+    listen 50051;        # cân bằng kết nối TCP
+    proxy_pass grpc_backends;
+  }
+}
+              </code></pre>
+              <p class="caption" style="margin-top:0.2em;">Không nhìn thấy HTTP path/header; chỉ cân bằng theo connection.</p>
+            </div>
+            <div>
+              <div style="font-weight:bold; margin-bottom:0.25em;">L7 (HTTP) — <span class="inline-code">http</span></div>
+              <pre><code class="language-nginx" data-trim>
+# /etc/nginx/nginx.conf
+http {
+  upstream api_backends {
+    server 10.0.0.21:8080;
+    server 10.0.0.22:8080;
+  }
+
+  server {
+    listen 80;
+    location /api/ {
+      proxy_pass http://api_backends;
+    }
+  }
+}
+              </code></pre>
+              <p class="caption" style="margin-top:0.2em;">Có thể route theo URL/host/header; hợp API/Web.</p>
+            </div>
+          </div>
         </section>
 
         <section>
@@ -484,13 +514,9 @@
 
         <section>
           <h2>Thuật toán cân bằng tải phổ biến</h2>
-          <ul>
-            <li>Round-robin</li>
-            <li>Least connections</li>
-            <li>Weighted routing</li>
-            <li>Latency-aware / geo-aware routing</li>
-          </ul>
+		  <img src="img/lec-07/load-balancer.png" style="width:80%; display:block; margin: 20px auto">
         </section>
+		
 
         <section>
           <h2>API Gateway</h2>
@@ -498,6 +524,53 @@
             <li>Điểm vào thống nhất cho nhiều service phía sau.</li>
             <li>Chức năng: authN/authZ, rate limit, routing, transform, logging.</li>
             <li>Giảm phức tạp cho client.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.90em;">
+          <h2>API Gateway đặt ở đâu trong kiến trúc?</h2>
+          <ul>
+            <li><strong>Vị trí</strong>: “cổng” L7 ở biên hệ thống (edge) — trước các microservices.</li>
+            <li><strong>Client</strong> chỉ gọi 1 domain (ví dụ <span class="inline-code">api.example.com</span>), gateway route vào service phù hợp.</li>
+            <li><strong>Không thay thế LB</strong>: thường đi kèm LB/CDN/WAF; gateway tập trung vào <strong>policy</strong> và <strong>quản trị API</strong>.</li>
+            <li><strong>Gateway vs Reverse proxy</strong>: reverse proxy có thể làm gateway ở mức cơ bản; gateway “đúng nghĩa” có thêm plugin/policy, key management, analytics.</li>
+          </ul>
+          <p class="caption">Hình dung: CDN/WAF → LB → API Gateway → services.</p>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>API Gateway làm những việc gì? (checklist)</h2>
+          <ul>
+            <li><strong>AuthN</strong> (Authentication): xác thực — API key, JWT/OAuth2, mTLS.</li>
+            <li><strong>AuthZ</strong> (Authorization): phân quyền — scope/role, RBAC/ABAC.</li>
+            <li><strong>Rate limit / quota</strong>: chống abuse, bảo vệ backend (ví dụ 100 req/phút/user).</li>
+            <li><strong>Routing</strong>: theo host/path/header; canary route theo % traffic.</li>
+            <li><strong>Transform</strong>: chuẩn hoá request/response, header mapping, versioning.</li>
+            <li><strong>Observability</strong>: access logs, tracing id, metrics theo route/tenant.</li>
+          </ul>
+        </section>
+		
+		<section>
+		<h2>Minh họa API Gateway</h2>
+		<img src="img/lec-07/api-gateway.png" style="width:80%; display:block; margin: 20px auto"></img>
+		</section>
+
+        <section style="font-size:0.78em;">
+          <h2>Ví dụ policy ở Gateway (Kong / Envoy / NGINX)</h2>
+          <pre><code class="language-yaml" data-trim>
+# Ví dụ ý tưởng: route /api/v1/* → user-service, có auth + rate-limit
+route:
+  match: { path_prefix: "/api/v1/users" }
+  upstream: "http://user-service:8080"
+  plugins:
+    - jwt_auth: { issuer: "https://auth.example.com" }
+    - rate_limit: { per_minute: 100, by: "consumer" }
+    - request_id: true
+    - cors: { allow_origins: ["https://app.example.com"] }
+          </code></pre>
+          <ul>
+            <li><strong>Ý chính</strong>: policy để ở “cổng” → service phía sau tập trung business logic.</li>
+            <li><strong>Lưu ý</strong>: với nội bộ cluster, có thể tách <em>API Gateway (edge)</em> và <em>Service Mesh (east-west)</em>.</li>
           </ul>
         </section>
 
@@ -531,16 +604,17 @@
           </ul>
         </section>
 
-        <section>
-          <h2>Công nghệ caching phổ biến</h2>
+        <section style="font-size:0.90em;">
+          <h2>Cache: vì sao “nhanh hơn”?</h2>
           <ul>
-            <li>In-memory: Redis, Memcached.</li>
-            <li>HTTP cache: Varnish, NGINX cache.</li>
-            <li>Application cache frameworks: Caffeine (Java), cachetools (Python).</li>
-            <li>Distributed cache trên cloud: AWS ElastiCache, Azure Cache for Redis.</li>
+            <li><strong>Nguyên lý</strong>: lưu kết quả/đối tượng “hay dùng” ở nơi truy cập nhanh hơn (RAM/edge) so với DB/disk/network.</li>
+            <li><strong>Đổi lại</strong>: phải xử lý <em>staleness</em> (dữ liệu cũ), invalidation, và consistency.</li>
+            <li><strong>Workload phù hợp</strong>: đọc nhiều hơn ghi, truy cập lặp lại (hot keys), dữ liệu có thể chấp nhận trễ nhẹ.</li>
+            <li><strong>Ví dụ</strong>: profile người dùng, config, feature lookup, kết quả query phổ biến.</li>
           </ul>
+          <p class="caption">“There are only two hard things in Computer Science: cache invalidation…”</p>
         </section>
-
+		
         <section>
           <h2>Cache patterns</h2>
           <ul>
@@ -548,6 +622,62 @@
             <li>Read-through / Write-through</li>
             <li>Write-behind</li>
             <li>TTL + invalidation strategy</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>Cache-aside (lazy loading) — luồng phổ biến</h2>
+          <ul>
+            <li>App hỏi cache trước. Nếu <strong>hit</strong> → trả ngay.</li>
+            <li>Nếu <strong>miss</strong> → query DB → trả kết quả → ghi vào cache (kèm TTL).</li>
+            <li><strong>Ưu</strong>: đơn giản, cache chỉ chứa dữ liệu thật sự được dùng.</li>
+            <li><strong>Nhược</strong>: miss đầu tiên chậm; dễ bị “thundering herd” nếu nhiều request miss cùng lúc.</li>
+          </ul>
+          <p class="caption">Mitigation: request coalescing / lock theo key, hoặc warm-up cache.</p>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>TTL &amp; Invalidation: chọn chiến lược</h2>
+          <ul>
+            <li><strong>TTL</strong> (Time To Live): dữ liệu tự hết hạn sau \(t\) giây/phút.</li>
+            <li><strong>Invalidation</strong>: khi dữ liệu gốc thay đổi → xóa/refresh cache theo key/tag.</li>
+            <li><strong>Trade-off</strong>: TTL ngắn → ít stale nhưng tốn tải; TTL dài → rẻ nhưng stale nhiều hơn.</li>
+            <li><strong>Cache stampede</strong>: nhiều key cùng hết hạn → spike DB. Cách giảm: jitter TTL, stale-while-revalidate.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Cache hit vs cache miss (ví dụ code)</h2>
+          <pre><code class="language-python" data-trim>
+def get_user_profile(user_id: str):
+    key = f"user:{user_id}:profile"
+
+    cached = redis.get(key)
+    if cached is not None:
+        metrics.inc("cache_hit", 1)
+        return json.loads(cached)
+
+    metrics.inc("cache_miss", 1)
+    profile = db.query_user_profile(user_id)   # chậm hơn cache
+
+    # TTL 300s (5 phút); có thể thêm jitter để tránh stampede
+    redis.setex(key, 300, json.dumps(profile))
+    return profile
+          </code></pre>
+          <ul>
+            <li><strong>Hit</strong>: đọc từ cache → nhanh (ms) và giảm tải DB.</li>
+            <li><strong>Miss</strong>: phải xuống DB → chậm hơn; sau đó “làm nóng” cache cho các request sau.</li>
+          </ul>
+          <p class="caption">Theo dõi hit-rate = hit/(hit+miss) theo từng endpoint/key để quyết định có đáng cache không.</p>
+        </section>
+
+        <section>
+          <h2>Công nghệ caching phổ biến</h2>
+          <ul>
+            <li>In-memory: Redis, Memcached.</li>
+            <li>HTTP cache: Varnish, NGINX cache.</li>
+            <li>Application cache frameworks: Caffeine (Java), cachetools (Python).</li>
+            <li>Distributed cache trên cloud: AWS ElastiCache, Azure Cache for Redis.</li>
           </ul>
         </section>
 
@@ -577,6 +707,11 @@
             <li>Rất quan trọng cho frontend assets, media, model docs.</li>
           </ul>
         </section>
+		
+		<section>
+		<h2>CDN là gì?</h2>
+		<img src="https://ssl.com/wp-content/uploads/2019/04/CDN.png" style="width:80%; display:block; margin: 20px auto">
+		</section>
 
         <section>
           <h2>Công nghệ CDN phổ biến</h2>
@@ -596,6 +731,37 @@
             <li><strong>VPN</strong> (Virtual Private Network): kênh mạng riêng, mã hóa giữa các mạng.</li>
             <li>Dùng để bảo vệ truy cập admin, kết nối private giữa môi trường.</li>
           </ul>
+        </section>
+		
+        <section style="font-size:0.90em;">
+          <h2>SSH là gì? (truy cập admin an toàn)</h2>
+          <ul>
+            <li><strong>SSH</strong> (Secure Shell): giao thức để đăng nhập/điều khiển máy chủ từ xa qua kênh <strong>mã hóa</strong>.</li>
+            <li>Thường dùng để quản trị <strong>VPS</strong>: deploy, xem log, restart service, cấu hình firewall…</li>
+            <li><strong>Xác thực</strong>: password (không khuyến nghị) hoặc <strong>SSH key</strong> (khóa công khai/riêng).</li>
+            <li>Best practice: <strong>tắt password login</strong>, chỉ cho phép key + bật MFA ở tầng quản lý (cloud console/SSO).</li>
+          </ul>
+          <pre><code class="language-bash" data-trim>
+# tạo key (Ed25519)
+ssh-keygen -t ed25519 -C "admin@company"
+# đăng nhập VPS
+ssh -i ~/.ssh/id_ed25519 ubuntu@203.0.113.10
+          </code></pre>
+        </section>
+        <section style="font-size:0.82em;">
+          <h2>SSH tunneling: port forwarding (ví dụ)</h2>
+          <ul>
+            <li><strong>Local forward</strong>: mở cổng local → xuyên qua SSH → tới dịch vụ private (DB/Redis).</li>
+            <li>Dùng khi DB chỉ mở trong VPC/private network; bạn truy cập qua <strong>bastion</strong> (jump host).</li>
+            <li><strong>Lưu ý</strong>: tunneling không thay thế VPN; phù hợp debug/ops, hạn chế quyền và audit.</li>
+          </ul>
+          <pre><code class="language-bash" data-trim>
+# local port 15432 → (bastion) → private-db:5432
+ssh -N -L 15432:private-db.internal:5432 ubuntu@bastion.example.com
+# sau đó app local có thể connect: localhost:15432
+psql "postgresql://user:pass@localhost:15432/appdb"
+          </code></pre>
+          <p class="caption">Mô hình phổ biến: Internet → Bastion (SSH) → private subnet (DB/Redis/K8s control-plane).</p>
         </section>
 
         <section>
@@ -662,29 +828,13 @@
             <li>Có runbook giảm alert fatigue.</li>
           </ul>
         </section>
-
-        <section>
-          <h2>Sơ đồ thành phần hạ tầng</h2>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">CDN</div><div class="stage-desc">edge cache</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">LB</div><div class="stage-desc">traffic split</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">API Gateway</div><div class="stage-desc">auth/rate</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Services</div><div class="stage-desc">REST/gRPC</div></div>
-          </div>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Cache</div><div class="stage-desc">Redis</div></div>
-            <div class="arrow">↔</div>
-            <div class="stage"><div class="stage-title">Queue</div><div class="stage-desc">RabbitMQ/Kafka</div></div>
-            <div class="arrow">↔</div>
-            <div class="stage"><div class="stage-title">DB/Storage</div><div class="stage-desc">SQL/NoSQL/S3</div></div>
-          </div>
-        </section>
+		
+		<section>
+		<img src="https://miro.medium.com/1*6_VGV1hSBgo9lY0_4421-g.png" style="width:80%; display:block; margin:0 auto">
+		</section>
       </section>
 
-      <!-- 5 -->
+      <!-- 5 — Database: SQL/ORM, NoSQL, MinIO, Vector DB -->
       <section>
         <section>
           <h1><span class="text-light">5.</span><br />Database &amp; Storage cho AI systems</h1>
@@ -693,274 +843,291 @@
         <section>
           <h2>Vai trò data layer trong kiến trúc</h2>
           <ul>
-            <li>Lưu trạng thái nghiệp vụ.</li>
-            <li>Lưu log/sự kiện/feature/model artifacts.</li>
-            <li>Phục vụ cả OLTP và analytics/ML pipelines.</li>
+            <li>Lưu trạng thái nghiệp vụ (OLTP).</li>
+            <li>Lưu log, metadata, artifact model/dataset.</li>
+            <li>Phục vụ analytics và pipeline ML (OLAP / lake khi cần).</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Relational DB (SQL)</h2>
+        <section style="font-size:0.92em;">
+          <h2>Các loại database — tổng quan</h2>
           <ul>
-            <li>Ví dụ: PostgreSQL, MySQL.</li>
-            <li>Mạnh về transaction, consistency, query quan hệ.</li>
-            <li>Phù hợp user/account/order/billing.</li>
+            <li><strong>SQL (RDBMS)</strong>: bảng + quan hệ, ACID, SQL chuẩn.</li>
+            <li><strong>NoSQL</strong>: document, key-value, wide-column, graph — linh hoạt schema / scale theo mô hình.</li>
+            <li><strong>Object storage</strong>: file/blob theo API (thường S3-compatible), không phải DB quan hệ.</li>
+            <li><strong>Vector DB</strong>: lưu và tìm kiếm theo <em>embedding</em> (similarity) cho RAG, gợi ý, tìm kiếm ngữ nghĩa.</li>
           </ul>
+          <!-- Ảnh gợi ý: img/lec-07/db-taxonomy.png -->
         </section>
 
-        <section>
-          <h2>Ví dụ công nghệ relational phổ biến</h2>
+        <section style="font-size:0.88em;">
+          <h2>SQL — Relational DB (RDBMS)</h2>
           <ul>
-            <li>PostgreSQL, MySQL, MariaDB.</li>
-            <li>Managed SQL: AWS RDS/Aurora, Cloud SQL, Azure SQL.</li>
-            <li>Analytical SQL engines: Snowflake, BigQuery, Redshift.</li>
+            <li><strong>Đặc điểm</strong>: schema cố định, khóa ngoại, transaction, ACID.</li>
+            <li><strong>Khi nào dùng</strong>: user, đơn hàng, thanh toán, dữ liệu quan hệ rõ.</li>
+            <li><strong>Ví dụ</strong>: PostgreSQL, MySQL/MariaDB; managed: RDS, Cloud SQL, Azure SQL.</li>
+            <li><strong>OLTP vs OLAP</strong>: OLTP = giao dịch nhanh; OLAP/warehouse = báo cáo (Snowflake, BigQuery…).</li>
           </ul>
         </section>
 
-        <section>
-          <h2>NoSQL</h2>
+        <section style="font-size:0.86em;">
+          <h2>ORM là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <strong>ORM</strong> (Object–Relational Mapping) ánh xạ <strong>object trong code</strong> ↔ <strong>bảng/hàng trong SQL</strong>, cho phép thao tác dữ liệu bằng API ngôn ngữ thay vì viết SQL thuần cho mọi thao tác.
+          </div>
+          <ul style="margin-top:0.5em;">
+            <li><strong>Lợi ích</strong>: giảm boilerplate, migration/schema-as-code, type-safe (một số stack).</li>
+            <li><strong>Rủi ro</strong>: query “ẩn” kém hiệu năng nếu không hiểu SQL sinh ra.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.84em;">
+          <h2>ORM — cách hoạt động (ý tưởng)</h2>
           <ul>
-            <li>Document (MongoDB), key-value (Redis), wide-column, graph.</li>
-            <li>Linh hoạt schema, scale ngang tốt cho một số workload.</li>
-            <li>Phù hợp session, catalog, metadata lớn.</li>
+            <li><strong>Model</strong> (class) ↔ <strong>Table</strong>; field ↔ cột.</li>
+            <li>ORM dịch các thao tác lọc/lấy dữ liệu trong code → câu <span class="inline-code">SELECT</span> / <span class="inline-code">JOIN</span> tương ứng.</li>
+            <li><strong>Migration</strong>: đổi schema qua file versioned (Alembic, Django migrations, Prisma migrate…).</li>
           </ul>
         </section>
+		
+		<section>
+			<h2>ORM</h2>
+			<img src="https://www.fullstackpython.com/img/visuals/orms-bridge.png" style="width:80%; display:block; margin: 0 auto">
+		</section>
 
-        <section>
-          <h2>Ví dụ công nghệ NoSQL phổ biến</h2>
-          <ul>
-            <li>Document: MongoDB, Couchbase.</li>
-            <li>Key-value: Redis, DynamoDB.</li>
-            <li>Wide-column: Cassandra, HBase.</li>
-            <li>Graph: Neo4j, Amazon Neptune.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Realtime DB</h2>
-          <ul>
-            <li>Ví dụ: Firebase Realtime Database / Firestore.</li>
-            <li>Đồng bộ theo thời gian thực cho mobile/web.</li>
-            <li>Phù hợp chat, trạng thái online, collaboration.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Ví dụ công nghệ realtime backend</h2>
-          <ul>
-            <li>Firebase Realtime Database, Cloud Firestore.</li>
-            <li>Supabase Realtime.</li>
-            <li>Ably, Pusher (managed realtime messaging).</li>
-            <li>Socket.IO + Redis adapter (self-host).</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Object storage (file)</h2>
-          <ul>
-            <li>Ví dụ: Amazon S3, Google Cloud Storage, MinIO.</li>
-            <li>Lưu media, dataset, model artifact, backup.</li>
-            <li>Chi phí tốt cho lưu trữ lớn, durability cao.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Ví dụ công nghệ file/object storage</h2>
-          <ul>
-            <li>Amazon S3, Google Cloud Storage, Azure Blob Storage.</li>
-            <li>MinIO (S3-compatible on-prem).</li>
-            <li>Lưu model artifacts: MLflow artifact store trên S3/GCS.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Data warehouse / lake / lakehouse</h2>
-          <ul>
-            <li>Warehouse: phân tích có cấu trúc, BI tốt.</li>
-            <li>Lake: linh hoạt dữ liệu thô, chi phí thấp.</li>
-            <li>Lakehouse: kết hợp ưu điểm hai bên.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>OLTP vs OLAP</h2>
+        <section style="font-size:0.84em;">
+          <h2>ORM — ví dụ stack thường gặp</h2>
           <table>
-            <thead><tr><th>Tiêu chí</th><th>OLTP</th><th>OLAP</th></tr></thead>
+            <thead>
+              <tr><th>Ngôn ngữ / framework</th><th>ORM / layer</th><th>Ghi chú</th></tr>
+            </thead>
             <tbody>
-              <tr><td>Mục tiêu</td><td>giao dịch realtime</td><td>phân tích/báo cáo</td></tr>
-              <tr><td>Khối lượng query</td><td>nhiều query nhỏ</td><td>ít query nặng</td></tr>
-              <tr><td>Độ trễ mong muốn</td><td>ms</td><td>s-phút</td></tr>
+              <tr><td>Python + Django</td><td>Django ORM</td><td>Migration tích hợp</td></tr>
+              <tr><td>Python (FastAPI/Flask)</td><td>SQLAlchemy + Alembic</td><td>Linh hoạt, phổ biến backend hiện đại</td></tr>
+              <tr><td>Node.js</td><td>Prisma, TypeORM, Sequelize</td><td>Prisma: schema + generate type</td></tr>
+              <tr><td>Java</td><td>Hibernate / JPA</td><td>Enterprise</td></tr>
+              <tr><td>C#</td><td>Entity Framework</td><td>.NET</td></tr>
             </tbody>
           </table>
         </section>
 
-        <section>
-          <h2>Polyglot persistence</h2>
+        <section style="font-size:0.82em;">
+          <h2>ORM — N+1 query và cách tránh</h2>
           <ul>
-            <li>Mỗi dịch vụ chọn DB phù hợp workload của nó.</li>
-            <li>Không ép “một DB cho tất cả”.</li>
-            <li>Đổi lại: tăng độ phức tạp vận hành và nhất quán dữ liệu.</li>
+            <li>Lỗi phổ biến: vòng lặp khiến mỗi bản ghi cha gọi thêm query con → <strong>N+1</strong> round-trip.</li>
+            <li><strong>Xử lý</strong>: eager loading — Django <span class="inline-code">select_related</span> / <span class="inline-code">prefetch_related</span>; SQLAlchemy <span class="inline-code">joinedload</span>; Prisma/TypeORM <span class="inline-code">include</span>.</li>
+            <li>Luôn kiểm tra SQL thực tế (log, EXPLAIN) khi tối ưu production.</li>
+          </ul>
+          <p class="caption">ORM tiện khi prototype; production cần chủ động index và kiểm soát query.</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>NoSQL — các mô hình</h2>
+          <ul>
+            <li><strong>Document</strong>: MongoDB, Couchbase — JSON/BSON, nested.</li>
+            <li><strong>Key–value</strong>: Redis, DynamoDB — cache, session, đơn giản theo khóa.</li>
+            <li><strong>Wide-column</strong>: Cassandra, HBase — write/scale phân tán.</li>
+            <li><strong>Graph</strong>: Neo4j, Neptune — mạng quan hệ.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Data consistency trong hệ phân tán</h2>
+        <section style="font-size:0.86em;">
+          <h2>NoSQL — khi nào cân nhắc</h2>
           <ul>
-            <li>Strong consistency vs eventual consistency.</li>
-            <li>Saga pattern cho transaction liên service.</li>
-            <li>Outbox pattern để đồng bộ DB và event queue.</li>
+            <li>Schema đổi nhanh hoặc dữ liệu bán cấu trúc.</li>
+            <li>Scale ngang / pattern truy cập theo khóa rõ ràng.</li>
+            <li>Trade-off: mô hình consistency khác SQL; thiết kế access pattern trước (đặc biệt DynamoDB/Cassandra).</li>
+          </ul>
+          <p class="caption">[Vị trí ảnh: SQL vs NoSQL — use case]</p>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>Object storage &amp; MinIO</h2>
+          <ul>
+            <li><strong>Object storage</strong>: bucket + key; API HTTP(S); dataset, ảnh, checkpoint, artifact ML.</li>
+            <li><strong>S3</strong> là chuẩn thực tế; nhiều công cụ dùng SDK S3-compatible.</li>
+            <li><strong>MinIO</strong>: triển khai <strong>S3-compatible</strong> on-prem / private cloud; lab, air-gapped, chi phí dự đoán.</li>
+            <li>Tích hợp MLflow, pipeline ML: artifact store trỏ MinIO hoặc S3.</li>
+          </ul>
+          <p class="caption">[Vị trí ảnh: MinIO — bucket / kiến trúc]</p>
+        </section>
+
+        <section style="font-size:0.84em;">
+          <h2>Vector DB — vai trò trong AI</h2>
+          <ul>
+            <li>Lưu <strong>embedding</strong> và <strong>similarity search</strong> (cosine, L2, inner product).</li>
+            <li>RAG, tìm kiếm ngữ nghĩa, gợi ý, dedup.</li>
+            <li>Bổ sung cho full-text search: ưu tiên “gần” trong không gian vector.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Schema management</h2>
-          <ul>
-            <li>Schema versioning cho API, events, database.</li>
-            <li>Backward/forward compatibility cho message.</li>
-            <li>Migration có rollback plan.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Backup, restore, disaster recovery</h2>
-          <ul>
-            <li>RPO/RTO rõ ràng theo mức độ critical.</li>
-            <li>Backup định kỳ + test restore thường xuyên.</li>
-            <li>Multi-AZ/region nếu yêu cầu sẵn sàng cao.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Bảo mật dữ liệu</h2>
-          <ul>
-            <li>Mã hóa at-rest và in-transit.</li>
-            <li>Phân quyền tối thiểu (least privilege).</li>
-            <li>Secrets management, audit logs, key rotation.</li>
-          </ul>
+        <section style="font-size:0.78em;">
+          <h2>Vector DB — Milvus vs Qdrant</h2>
+          <table>
+            <thead>
+              <tr><th>Khía cạnh</th><th>Milvus</th><th>Qdrant</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Hệ sinh thái</td><td>LF AI, hướng cluster/partition</td><td>Rust, REST/gRPC, deploy nhẹ</td></tr>
+              <tr><td>Đặc điểm</td><td>Metadata filter, nhiều loại index (HNSW, IVF…)</td><td>Filter + payload JSON, hybrid search</td></tr>
+              <tr><td>Gợi ý chọn</td><td>Workload lớn, team quen vận hành distributed</td><td>Prototyping nhanh, self-host đơn giản</td></tr>
+            </tbody>
+          </table>
+          <p class="caption">Tích hợp thường gặp: LangChain, LlamaIndex… [Vị trí ảnh: luồng embedding → Milvus/Qdrant → top-k]</p>
         </section>
       </section>
 
       <!-- 6 -->
       <section>
         <section>
-          <h1><span class="text-light">6.</span><br />Reference Architecture cho AI Product</h1>
+          <h1><span class="text-light">6.</span><br />Mẫu kiến trúc theo kịch bản (AI systems)</h1>
         </section>
 
-        <section>
-          <h2>Use case mẫu: hệ gợi ý sản phẩm</h2>
+        <section style="font-size:0.92em;">
+          <h2>Ý tưởng của mục này</h2>
           <ul>
-            <li>Client web/mobile gửi request tìm kiếm/gợi ý.</li>
-            <li>Backend trả danh sách item + score + lý do ngắn.</li>
-            <li>Hệ thống thu feedback click/purchase để cải thiện model.</li>
+            <li>Không có “một kiến trúc đúng cho mọi hệ AI”.</li>
+            <li>Mỗi kịch bản có <strong>nút thắt</strong> riêng: concurrency, latency, streaming, cost, tính nhất quán, quan sát.</li>
+            <li>Ta chọn thành phần: CDN/LB/Gateway/Cache/Queue/DB/Vector DB/Monitoring… theo <strong>vấn đề</strong> cần giải.</li>
           </ul>
-        </section>
-
-        <section style="font-size: 0.82em;">
-          <h2>Sơ đồ kiến trúc tổng thể (gợi ý)</h2>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Client</div><div class="stage-desc">Web/Mobile</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">CDN + WAF</div><div class="stage-desc">edge security</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">LB + Gateway</div><div class="stage-desc">auth/rate</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">App Services</div><div class="stage-desc">REST/gRPC</div></div>
-          </div>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Feature/Rank Service</div><div class="stage-desc">inference</div></div>
-            <div class="arrow">↔</div>
-            <div class="stage"><div class="stage-title">Redis Cache</div><div class="stage-desc">hot data</div></div>
-            <div class="arrow">↔</div>
-            <div class="stage"><div class="stage-title">SQL + NoSQL + S3</div><div class="stage-desc">state + artifacts</div></div>
-          </div>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Kafka/RabbitMQ</div><div class="stage-desc">event bus</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Data/ML Pipeline</div><div class="stage-desc">train/retrain</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Monitoring</div><div class="stage-desc">logs/metrics/traces</div></div>
+          <div class="question-box" style="margin-top:0.6em;">
+            <div class="question-title">Bài tập tư duy</div>
+            Với mỗi kịch bản: viết 3 thứ — <strong>SLA</strong>, <strong>bottleneck</strong>, <strong>pattern</strong> để xử lý.
           </div>
         </section>
 
+        <!-- Scenario 1 -->
         <section>
-          <h2>Luồng request online inference</h2>
-          <ol>
-            <li>Client gọi API qua gateway.</li>
-            <li>Gateway xác thực + route tới recommendation service.</li>
-            <li>Service lấy feature (cache/DB), gọi ranking model.</li>
-            <li>Trả kết quả và ghi log để quan sát + học lại.</li>
-          </ol>
-        </section>
-
-        <section>
-          <h2>Luồng dữ liệu học lại mô hình</h2>
-          <ol>
-            <li>Sự kiện người dùng đẩy vào Kafka/RabbitMQ.</li>
-            <li>Job xử lý tạo training dataset/labels.</li>
-            <li>Training + evaluation + model registry.</li>
-            <li>Promote model mới qua canary/blue-green.</li>
-          </ol>
-        </section>
-
-        <section>
-          <h2>Nút thắt thường gặp và xử lý</h2>
+          <h2>Kịch bản 1: Online inference có nhiều user đồng thời</h2>
           <ul>
-            <li>p95 latency cao → thêm cache + tối ưu query + tách service nóng.</li>
-            <li>DB quá tải → read replica, partition, CQRS.</li>
-            <li>Queue backlog → scale consumers + backpressure control.</li>
+            <li><strong>Triệu chứng</strong>: QPS tăng, p95/p99 latency tăng, DB nóng, timeout.</li>
+            <li><strong>Mục tiêu</strong>: phục vụ nhanh, ổn định, autoscale, có rollback.</li>
+            <li><strong>Ví dụ</strong>: gợi ý sản phẩm, xếp hạng feed, fraud scoring realtime.</li>
+          </ul>
+          <p class="caption">[Vị trí ảnh: kiến trúc online inference — CDN/LB/Gateway → inference → cache/DB]</p>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>Kịch bản 1: Kiến trúc gợi ý</h2>
+          <ul>
+            <li><strong>Edge</strong>: CDN/WAF → LB → API Gateway (auth, rate limit, routing).</li>
+            <li><strong>Inference service</strong>: stateless để scale ngang; timeout/retry/circuit breaker.</li>
+            <li><strong>Cache</strong>: cache-aside cho profile/feature/hot keys; giảm DB read.</li>
+            <li><strong>Data</strong>: SQL cho nghiệp vụ; NoSQL cho session; read replica nếu cần.</li>
+            <li><strong>Observability</strong>: tracing end-to-end (request id), p95/p99, saturation.</li>
+          </ul>
+          <p class="caption">Pattern chính: rate limiting + caching + stateless scaling + graceful degradation.</p>
+        </section>
+		
+		<section>
+		<img src="https://media.licdn.com/dms/image/v2/D5612AQF5gnGZOGrHZg/article-cover_image-shrink_720_1280/B56ZbdOn5sH4AI-/0/1747468321016?e=2147483647&v=beta&t=yEPa0apKISg7lpkHY-f4OOFYy-A7X16jQTQNdVHprMs" style="width:80%; display:block; margin:0 auto">
+		</section>
+
+        <!-- Scenario 2 -->
+        <section>
+          <h2>Kịch bản 2: Streaming realtime (sự kiện liên tục)</h2>
+          <ul>
+            <li><strong>Triệu chứng</strong>: event đến liên tục, cần xử lý gần realtime; backlog tăng.</li>
+            <li><strong>Mục tiêu</strong>: throughput cao, xử lý bất đồng bộ, có replay, idempotent.</li>
+            <li><strong>Ví dụ</strong>: clickstream, IoT telemetry, log inference, feature streaming.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Pattern hỗ trợ độ tin cậy</h2>
+        <section style="font-size:0.86em;">
+          <h2>Kịch bản 2: Kiến trúc gợi ý</h2>
           <ul>
-            <li>Timeout, retry, circuit breaker</li>
-            <li>Bulkhead isolation</li>
-            <li>Rate limiting và load shedding</li>
-            <li>Graceful degradation (fallback rule-based)</li>
+            <li><strong>Transport</strong>: Kafka / Pub/Sub / Kinesis; partition theo key để scale.</li>
+            <li><strong>Consumers</strong>: scale theo lag; xử lý <strong>idempotent</strong> (tránh double count).</li>
+            <li><strong>Stream processing</strong>: window/sliding aggregation (Flink/Spark Streaming) nếu cần feature realtime.</li>
+            <li><strong>Sink</strong>: ghi vào warehouse/lake + cập nhật cache/online store khi cần.</li>
+            <li><strong>Guardrails</strong>: backpressure, DLQ (dead-letter), schema registry/versioning.</li>
+          </ul>
+          <p class="caption">Pattern chính: decoupling + replay + exactly/at-least-once trade-off.</p>
+        </section>
+		
+		<section>
+		<img src="https://daxg39y63pxwu.cloudfront.net/images/blog/spark-streaming-example/image_795716530101640689003007.png" style="width:80%; display:block; margin:0 auto">
+		</section>
+
+        <!-- Scenario 3 -->
+        <section>
+          <h2>Kịch bản 3: Batch scoring / Offline jobs</h2>
+          <ul>
+            <li><strong>Triệu chứng</strong>: job chạy định kỳ, xử lý dữ liệu lớn; không cần trả ngay.</li>
+            <li><strong>Mục tiêu</strong>: throughput + cost efficiency + reliability + retry.</li>
+            <li><strong>Ví dụ</strong>: chấm điểm toàn bộ user mỗi đêm, tạo embedding định kỳ, ETL/feature pipelines.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Blue-Green cho software architecture</h2>
+        <section style="font-size:0.86em;">
+          <h2>Kịch bản 3: Kiến trúc gợi ý</h2>
           <ul>
-            <li>Deploy bản mới lên môi trường Green.</li>
-            <li>Switch traffic qua LB/Gateway.</li>
-            <li>Nếu lỗi: route lại Blue trong vài giây.</li>
-            <li>Phù hợp component critical API/inference.</li>
+            <li><strong>Orchestrator</strong>: Airflow/Argo/Temporal — DAG + retry + backfill.</li>
+            <li><strong>Compute</strong>: Spark/Ray/Dask; autoscale theo batch size.</li>
+            <li><strong>Storage</strong>: object store (S3/MinIO) cho dataset/artifacts; warehouse cho analytics.</li>
+            <li><strong>Output</strong>: ghi kết quả vào DB/Redis để app đọc nhanh (batch-to-online).</li>
+            <li><strong>Data quality</strong>: schema checks, null rate, outlier; lineage để debug.</li>
+          </ul>
+          <p class="caption">Pattern chính: “batch trước, online sau” (precompute) để giảm latency và cost.</p>
+        </section>
+		
+		<section>
+		<img src="https://miro.medium.com/0*iiBiIT9mQPayPaLd.png" style="width:80%; display:block; margin:0 auto">
+		</section>
+
+        <!-- Scenario 4 -->
+        <section>
+          <h2>Kịch bản 4: RAG / Tìm kiếm ngữ nghĩa (Vector DB)</h2>
+          <ul>
+            <li><strong>Triệu chứng</strong>: cần truy xuất “gần nghĩa” theo embedding + lọc theo metadata.</li>
+            <li><strong>Mục tiêu</strong>: top-k nhanh, cập nhật index hợp lý, quality + guardrails.</li>
+            <li><strong>Ví dụ</strong>: chatbot nội bộ, search tài liệu, semantic retrieval cho sản phẩm.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Auto scaling trong kiến trúc dịch vụ</h2>
+        <section style="font-size:0.86em;">
+          <h2>Kịch bản 4: Kiến trúc gợi ý</h2>
           <ul>
-            <li>Scale app/inference service theo QPS, CPU, p95 latency.</li>
-            <li>Scale consumer theo queue lag.</li>
-            <li>Giới hạn max để kiểm soát cost.</li>
-            <li>Warm-up để giảm cold start.</li>
+            <li><strong>Ingestion</strong>: crawl/ETL → chunk → embedding → upsert vào Milvus/Qdrant.</li>
+            <li><strong>Query</strong>: embed query → vector search top-k + metadata filter → rerank (tuỳ).</li>
+            <li><strong>Cache</strong>: cache embedding của query phổ biến / cache top-k.</li>
+            <li><strong>Observability</strong>: latency vector search, recall@k proxy, drift của embedding distribution.</li>
+            <li><strong>Safety</strong>: allowlist data sources, PII filtering, audit truy vấn.</li>
           </ul>
+          <p class="caption">Pattern chính: tách “index build” (offline/async) khỏi “retrieve” (online/low latency).</p>
+        </section>
+		
+		<section>
+		<img src="https://media.geeksforgeeks.org/wp-content/uploads/20250606143320733415/RAG-architecture.webp" style="width:80%; display:block; margin:0 auto">
+		</section>
+
+        <!-- Scenario 5 -->
+        <section>
+          <h2>Kịch bản 5: Edge / On-device inference</h2>
+          <ul>
+            <li><strong>Triệu chứng</strong>: mạng không ổn định; cần phản hồi tức thì tại thiết bị.</li>
+            <li><strong>Mục tiêu</strong>: latency thấp, riêng tư dữ liệu, cập nhật model an toàn.</li>
+            <li><strong>Ví dụ</strong>: camera, mobile app, xe tự hành, kiosk/offline app.</li>
+          </ul>
+          <p class="caption">[Vị trí ảnh: device inference — model on device + sync + telemetry]</p>
         </section>
 
-        <section>
-          <h2>Quan sát hệ thống theo lớp</h2>
+        <section style="font-size:0.86em;">
+          <h2>Kịch bản 5: Kiến trúc gợi ý</h2>
           <ul>
-            <li>Edge: CDN hit ratio, TLS errors</li>
-            <li>Gateway: auth failures, 4xx/5xx</li>
-            <li>Service: p95 latency, saturation</li>
-            <li>Data: query latency, replication lag</li>
-            <li>ML: prediction drift, quality proxy metrics</li>
+            <li><strong>On-device runtime</strong>: TFLite / ONNX Runtime Mobile; quantization để chạy nhanh.</li>
+            <li><strong>Update</strong>: OTA model update theo phiên bản + rollout; rollback nếu lỗi.</li>
+            <li><strong>Telemetry</strong>: gửi log/metrics/feedback về server theo batch khi có mạng.</li>
+            <li><strong>Privacy</strong>: hạn chế gửi raw data; chỉ gửi thống kê/embedding (tuỳ chính sách).</li>
+            <li><strong>Fallback</strong>: nếu model lỗi → rule-based hoặc “cloud assist” khi có kết nối.</li>
           </ul>
+          <p class="caption">Pattern chính: tối ưu model + kiểm soát rollout + quan sát từ xa.</p>
         </section>
-
-        <section>
-          <h2>Security architecture checklist</h2>
-          <ul>
-            <li>Network segmentation (private subnets, VPN/bastion).</li>
-            <li>Zero-trust cho service-to-service (mTLS nếu cần).</li>
-            <li>Secrets vault và rotation.</li>
-            <li>Audit trail cho admin/model changes.</li>
-          </ul>
-        </section>
+		
+		<section>
+		<img src="https://docs.devicewise.com/Content/Resources/Images/AWS.png" style="width:80%; display:block; margin:0 auto">
+		</section>
       </section>
 
       <!-- 7 -->

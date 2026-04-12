@@ -56,6 +56,11 @@
       padding: 0.15rem 0.45rem;
       border-radius: 0.25rem;
     }
+
+    .arch-example-figure img {
+      max-width: 100%;
+      height: auto;
+    }
   </style>
 </head>
 
@@ -73,6 +78,7 @@
           <li class="nav-item"><a class="nav-link" href="#thong-tin-chung">Thông tin chung</a></li>
           <li class="nav-item"><a class="nav-link" href="#nhiem-vu">Nhiệm vụ</a></li>
           <li class="nav-item"><a class="nav-link" href="#yeu-cau">Yêu cầu kỹ thuật</a></li>
+          <li class="nav-item"><a class="nav-link" href="#vi-du-kien-truc">Ví dụ kiến trúc</a></li>
           <li class="nav-item"><a class="nav-link" href="#rubric">Rubric</a></li>
         </ul>
       </div>
@@ -211,6 +217,19 @@
     <section id="yeu-cau" class="section-anchor mb-5">
       <h2>II) Công việc cần thực hiện</h2>
 
+      <div id="vi-du-kien-truc" class="section-anchor mb-4">
+        <figure class="arch-example-figure border rounded-3 p-3 mb-0 bg-light">
+          <figcaption class="h6 mb-2">Ví dụ: kiến trúc phần mềm (full-stack)</figcaption>
+          <p class="small text-muted mb-3 mb-md-4">
+            Minh họa một hướng phân tầng (giao diện, API, worker, lưu trữ, message queue, v.v.). Đề bài không bắt buộc
+            giống hệt sơ đồ; mỗi nhóm tự mô tả kiến trúc phù hợp use case trong README.
+          </p>
+          <img src="img/project/fullstack.drawio.svg"
+            alt="Sơ đồ kiến trúc phần mềm full-stack minh họa (Draw.io)" class="img-fluid d-block mx-auto" loading="lazy"
+            decoding="async" />
+        </figure>
+      </div>
+
       <div class="task-block">
         <h5 id="muc-21">1. Phát triển ứng dụng</h5>
         <p>
@@ -324,6 +343,17 @@
               <td><strong>Tài liệu</strong></td>
               <td>README rõ ràng, bao gồm mô tả dự án và các nội dung cần thiết để tái hiện và đánh giá hệ thống.</td>
               <td class="text-end"><strong>2</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Giao diện người dùng</strong></td>
+              <td>Giao diện Frontend đơn giản, dễ sử dụng (Sinh viên có thể làm giao diện CLI nhưng cách dùng cũng cần dễ dàng và cover các tình huống lỗi)
+                <ul class="mb-0 small">
+                  <li><strong>1:</strong> Giao diện rõ ràng thân thiện </li>
+                  <li><strong>0.5:</strong> Giao diện cơ bản nhưng UX kém </li>
+                  <li><strong>0:</strong> Không có giao diện </li>
+                </ul>
+              </td>
+              <td class="text-end"><strong>1</strong></td>
             </tr>
             <tr class="table-success">
               <td><strong>Điểm cộng</strong></td>

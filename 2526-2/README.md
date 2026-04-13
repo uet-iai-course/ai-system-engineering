@@ -1,20 +1,42 @@
-# README for 2526-2
+# Kỹ nghệ hệ thống Trí tuệ nhân tạo — Học kì 2, năm học 2025–2026
 
-**@Lecturers:** Please update the lecture-xx.html files for each lecture as needed. You can use the existing lectures as references.
+**@Giảng viên:** Vui lòng cập nhật các file `lecture-XX.html` cho từng buổi học khi cần. Bạn có thể dùng các bài giảng hiện có làm tham khảo.
 
-# Serving Lectures
+## Nội dung học kì
 
-This directory contains lecture slides written with Reveal.js that can be served via either GitHub Pages or a local web server.
+| Tuần | Bài giảng | Ghi chú |
+|------|-----------|---------|
+| 1 | Bài 1a: Giới thiệu về Thiết kế phần mềm; Bài 1b: Các loại biểu đồ UML | |
+| 2 | Bài 2a: Giới thiệu Lập trình hướng đối tượng; Bài 2b: Tư duy hướng đối tượng | |
+| 3 | Bài 3a: Các nguyên tắc thiết kế OOP; Bài 3b: Mẫu thiết kế OOP | |
+| 4 | Bài 4a: RUP và Agile; Bài 4b: Ước lượng dự án TTNT | |
+| 5 | Bài 5: Vận hành Dữ liệu | |
+| 6 | Bài 6: Vận hành Hệ thống TTNT | |
+| 7 | Bài 7: Kiến trúc phần mềm | |
+| 8 | Bài 8: Cơ sở hạ tầng hệ thống TTNT | |
+| 9 | Bài 9: Bảo mật hệ thống TTNT | |
+| 10 | Bài 10: Đạo đức học máy | |
 
-## Serving Locally (Recommended for Development)
+## Chạy slide
 
-Serving the slides locally allows several advantages, such as the ability to see **speaker notes** and **automatic reloading** when you make changes to the slides.
+Thư mục này chứa slide bài giảng viết bằng Reveal.js, có thể serve qua GitHub Pages hoặc máy chủ web cục bộ.
+Hai cách chạy dưới đây dùng hai cổng mặc định khác nhau theo cấu hình hiện tại: Node.js dùng `8000`, còn Python dùng `8765`.
 
-1. Install Node.js.
-1. Go to this directory in your terminal and run `npm install` to install dependencies.
-1. Serve the presentation by running `npm start`.
-1. Open your web browser and navigate to http://localhost:8000 to view the slides.
+### Cách 1: Node.js (hỗ trợ ghi chú giảng viên & tự động tải lại)
 
-## Serving via GitHub Pages
+1. Cài [Node.js](https://nodejs.org/).
+2. Trong thư mục `2526-2`, chạy `npm install` để cài dependencies.
+3. Chạy `npm start` để khởi động server (port 8000).
+4. Mở trình duyệt và truy cập http://localhost:8000.
 
-Nothing special is needed. Just push your changes to the `main` branch, and GitHub Pages will automatically serve the content.
+### Cách 2: Python (không cần cài thêm gì)
+
+```bash
+# Chạy từ thư mục gốc của repo (dùng cấu hình .claude/launch.json)
+.conda/bin/python -m http.server 8765 --directory .
+# Mở http://localhost:8765
+```
+
+### Serve qua GitHub Pages
+
+Không cần cấu hình gì thêm. Chỉ cần push thay đổi lên nhánh `main`, GitHub Pages sẽ tự động serve nội dung.

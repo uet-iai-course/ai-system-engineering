@@ -1289,7 +1289,7 @@ networks:
                 </section>
 
                 <section>
-                    <h3 style="margin-bottom: 25px;">Thực hành: Docker Compose</h3>
+                    <h3 style="margin-bottom: 25px;">Thực hành 1: Docker Compose</h3>
 
                     <div style="display: flex; flex-direction: column; gap: 20px; font-size: 0.6em; text-align: left;">
 
@@ -1330,6 +1330,165 @@ networks:
                             Dọn dẹp bằng:
                             <code
                                 style="background: #eee; padding: 2px 5px; border-radius: 4px;">docker compose down -v</code>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>
+                    <h3 style="margin-bottom: 20px;">Thực hành 2: Docker Compose</h3>
+
+                    <div style="
+                        display: grid;
+                        grid-template-columns: 1.0fr 1.0fr;
+                        gap: 28px;
+                        font-size: 0.6em;
+                        align-items: start;
+                    ">
+
+                        <!-- LEFT -->
+                        <div>
+
+                            <!-- Mục tiêu -->
+                            <div>
+                                <div style="font-weight:600; margin-bottom:8px;">
+                                    🎯 Mục tiêu
+                                </div>
+
+                                <ul style="
+                                    margin:0;
+                                    padding-left:18px;
+                                    line-height:1.6;
+                                ">
+                                    <li>Backend: API model AI (Linear Regression đơn giản)</li>
+                                    <li>Frontend: Giao diện HTML gọi API</li>
+                                    <li>Build và chạy container riêng (frontend, backend)</li>
+                                    <li>Kết nối các container với nhau</li>
+                                    <li>Chạy chung với Docker Compose</li>
+                                    <li>So sánh chạy riêng và Docker Compose</li>
+                                </ul>
+                            </div>
+
+                            <!-- Chạy hệ thống -->
+                            <div style="margin-top:20px;">
+                                <div style="font-weight:600; margin-bottom:6px;">
+                                    🚀 Chạy hệ thống
+                                </div>
+
+                                <code style="
+                                    background:#f4f4f4;
+                                    padding:6px 10px;
+                                    border-radius:6px;
+                                    display:inline-block;
+                                    font-size:0.95em;
+                                ">
+                                    docker compose up -d --build
+                                </code>
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT -->
+                        <div>
+
+                            <div style="font-weight:600; margin-bottom:8px;">
+                                📁 Cấu trúc thư mục
+                            </div>
+
+                            <pre style="
+                                background:#1e1e1e;
+                                color:#eee;
+                                padding:12px;
+                                border-radius:8px;
+                                font-size:0.8em;
+                                line-height:1.4;
+                                margin:0;
+                                overflow-x:auto;
+                            ">
+project/
+├── docker-compose.yml
+├── backend/
+│   ├── app.py
+│   ├── model.py
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── data/
+│       └── input.csv
+└── frontend/
+    ├── index.html
+    └── Dockerfile
+            </pre>
+
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>
+                    <h3 style="margin-bottom: 25px;">Thực hành 2: Docker Compose</h3>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; font-size: 0.55em; text-align: left;">
+
+                        <!-- Backend -->
+                        <div
+                            style="background: #e3f2fd; padding: 16px; border-radius: 12px; border-left: 5px solid #2196f3;">
+
+                            <div style="font-weight:600; color:#0d47a1; margin-bottom:8px;">
+                                ⚙️ Backend
+                            </div>
+
+                            <div style="font-weight:600; margin-top:6px;">
+                                1. Model AI
+                            </div>
+
+                            <ul style="margin:0; padding-left:18px; line-height:1.6;">
+                                <li>Load dữ liệu CSV</li>
+                                <li>Train Linear Regression</li>
+                                <li>Tính MSE (Loss)</li>
+                                <li>Lưu model: model.pkl</li>
+                            </ul>
+
+                            <div style="font-weight:600; margin-top:10px;">
+                                2. API Service
+                            </div>
+
+                            <ul style="margin:0; padding-left:18px; line-height:1.6;">
+                                <li>Tạo endpoint: <strong>/predict</strong></li>
+                                <li>Input: { "value": number }</li>
+                                <li>Output: { "prediction": number }</li>
+                                <li>Load model.pkl để dự đoán</li>
+                                <li>Chạy port 5000</li>
+                                <li>Cho phép CORS</li>
+                            </ul>
+
+                        </div>
+
+                        <!-- Frontend -->
+                        <div
+                            style="background: #e8f5e9; padding: 16px; border-radius: 12px; border-left: 5px solid #4caf50;">
+
+                            <div style="font-weight:600; color:#1b5e20; margin-bottom:8px;">
+                                🎨 Frontend
+                            </div>
+
+                            <ul style="margin:0; padding-left:18px; line-height:1.6;">
+                                <li>Tạo HTML test Linear Regression API</li>
+                                <li>Input numeric value</li>
+                                <li>Nút Predict</li>
+                                <li>Hiển thị prediction result</li>
+                                <li>Hiển thị loading message</li>
+                                <li>Hiển thị error message</li>
+                                <li>POST http://localhost:5000/predict</li>
+                                <li>Request body: { "value": number }</li>
+                                <li>Handle errors</li>
+                                <li>Support Enter key</li>
+                            </ul>
+
+                            <div style="margin-top:8px; font-size:0.85em; color:#666;">
+                                💡 Gợi ý: Sinh viên có thể dùng AI để tạo nhanh HTML
+                            </div>
+
                         </div>
 
                     </div>

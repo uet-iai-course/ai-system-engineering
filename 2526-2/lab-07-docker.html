@@ -61,7 +61,7 @@
             <section>
                 <section>
                     <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
-                    <h3>Lab 07: Bài thực hành về Docker</h3>
+                    <h3>Lab 07: Docker</h3>
                     <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội
                     <p>Giảng viên: Trịnh Ngọc Huỳnh</p>
                 </section>
@@ -114,8 +114,7 @@
                             </h4>
                             <ul style="list-style-type: none; padding-left: 0; margin: 0;">
                                 <li style="margin-bottom: 15px;">
-                                    ✅ <strong>Môi trường chuẩn:</strong> Docker Image giúp chuẩn hóa môi trường
-                                    (standardized environment).
+                                    ✅ <strong>Môi trường chuẩn:</strong> Docker Image giúp chuẩn hóa môi trường.
                                 </li>
                                 <li style="margin-bottom: 15px;">
                                     🛠️ <strong>Khắc phục triệt để:</strong> Lỗi kinh điển <em>"chạy được trên máy
@@ -206,6 +205,11 @@
                                 <td><strong>Cô lập</strong></td>
                                 <td>Cô lập hoàn toàn (cấp OS)</td>
                                 <td>Cô lập cấp process</td>
+                            </tr>
+                            <tr>
+                                <td><strong>UI</strong></td>
+                                <td>Chủ yếu GUI, có CLI</td>
+                                <td>Chủ yếu CLI, có GUI</td>
                             </tr>
                             <tr>
                                 <td><strong>Ví dụ tiêu biểu</strong></td>
@@ -318,11 +322,36 @@
                 </section>
 
                 <section>
-                    <h3>Cấu trúc Tầng lớp của Image</h3>
-                    <div style="text-align: center; margin-top: 20px;">
-                        <img src="img/lab-07/image-layers.png"
-                            alt="Minh họa cấu trúc tầng lớp (Layered) của Docker Image"
-                            style="max-height: 500px; max-width: 100%; object-fit: contain; border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.15);">
+                    <h3 style="margin-bottom: 25px; color: #1565c0;">🖼️ Docker Image & Cấu trúc Layer</h3>
+
+                    <div style="display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 30px; align-items: center;">
+
+                        <div style="text-align: left; font-size: 0.6em;">
+                            <div style="line-height: 1.8;">
+                                <div>💾 <strong>Tiết kiệm:</strong> Chia sẻ layer chung.</div>
+                                <div>⚡ <strong>Build nhanh:</strong> Nhờ Layer Cache.</div>
+                                <div>🔄 <strong>Tái sử dụng:</strong> Dùng chung Base Image.</div>
+                                <div>🚀 <strong>Push/Pull:</strong> Chỉ tải layer thiếu.</div>
+                                <div>⏪ <strong>Rollback:</strong> Quay về bản cũ tức thì.</div>
+                                <div>🛠️ <strong>Bảo trì:</strong> Quản lý theo từng tầng.</div>
+                            </div>
+
+                            <div class="fragment"
+                                style="margin-top: 25px; padding: 10px; background: #fff3e0; border-radius: 8px; border: 1px dashed #ff9800; text-align: center;">
+                                💡 <strong>Image (Class) ➜ Container (Object)</strong>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center;">
+                            <div
+                                style="background: white; padding: 10px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                                <img src="img/lab-07/image-layers.png" alt="Docker Image Layers"
+                                    style="width: 100%; max-height: 500px; object-fit: contain;">
+                            </div>
+                            <p style="font-size: 0.35em; color: #888; margin-top: 15px; font-style: italic;">
+                                Cấu trúc Layered tối ưu hóa lưu trữ và truyền tải dữ liệu
+                            </p>
+                        </div>
                     </div>
                 </section>
 
@@ -370,7 +399,7 @@
                             <p style="margin: 0; line-height: 1.5;">
                                 Container có thể ghi file tạm, nhưng dữ liệu này <strong>sẽ mất hoàn toàn</strong> khi
                                 bị xóa.<br /><br />
-                                <em>&rarr; Cần dùng Volume để lưu trữ vĩnh viễn (Sẽ học ở bài sau).</em>
+                                <em>&rarr; Cần dùng Volume để lưu trữ vĩnh viễn.</em>
                             </p>
                         </div>
 
@@ -415,18 +444,23 @@
                                     Dockerfile</div>
                             </div>
                             <div
-                                style="padding: 20px; font-family: 'Consolas', monospace; font-size: 0.85em; line-height: 1.7; color: #d4d4d4;">
+                                style="padding: 20px; font-family: 'Consolas', monospace; font-size: 0.85em; line-height: 1.7; color: #d4d4d4; background: #282c34; border-radius: 10px;">
                                 <div><span style="color: #c678dd; font-weight: bold;">FROM</span> <span
                                         style="color: #98c379;">python:3.10-slim</span></div>
                                 <div style="margin-top: 8px;"><span
                                         style="color: #c678dd; font-weight: bold;">WORKDIR</span> <span
                                         style="color: #98c379;">/app</span></div>
-                                <div style="margin-top: 8px;"><span
-                                        style="color: #c678dd; font-weight: bold;">COPY</span> <span
-                                        style="color: #98c379;">. .</span></div>
+
+                                <div
+                                    style="margin-top: 8px; background: rgba(244, 67, 54, 0.2); border-left: 4px solid #f44336; padding-left: 10px;">
+                                    <span style="color: #c678dd; font-weight: bold;">COPY</span> <span
+                                        style="color: #98c379;">. .</span>
+                                </div>
+
                                 <div style="margin-top: 8px;"><span
                                         style="color: #c678dd; font-weight: bold;">RUN</span> <span
                                         style="color: #98c379;">pip install torch numpy</span></div>
+
                                 <div style="margin-top: 8px;"><span
                                         style="color: #c678dd; font-weight: bold;">CMD</span> <span
                                         style="color: #e5c07b;">["python", "train.py"]</span></div>
@@ -536,7 +570,7 @@
                     </div>
 
                     <div
-                        style="background: #1e1e1e; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); overflow: hidden; text-align: left;">
+                        style="background: #1e1e1e; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); overflow: hidden; text-align: left; font-size: 0.9em;">
                         <div
                             style="background: #333; padding: 10px 15px; display: flex; align-items: center; gap: 8px;">
                             <div style="width: 12px; height: 12px; border-radius: 50%; background: #ff5f56;"></div>
@@ -581,10 +615,10 @@
                 <section>
                     <h3 style="margin-bottom: 25px;">Thực hành: Image & Container</h3>
 
-                    <div style="display: flex; gap: 20px; text-align: left; font-size: 0.65em; align-items: stretch;">
+                    <div
+                        style="display: flex; gap: 20px; text-align: left; font-size: 0.65em; align-items: flex-start;">
 
                         <div style="flex: 1; display: flex; flex-direction: column; gap: 20px;">
-
                             <div>
                                 <div style="font-weight: bold; margin-bottom: 8px; color: #1565c0; font-size: 1.1em;">1.
                                     Chạy Web Server (Nginx)</div>
@@ -607,45 +641,41 @@
                                                 style="color: #569cd6;">docker pull</span> nginx:latest</div>
                                         <div><span style="color: #4af626; font-weight: bold;">$</span> <span
                                                 style="color: #569cd6;">docker run</span> -d -p 8080:80 nginx</div>
-
                                         <div class="fragment" style="margin-top: 8px;"><span
                                                 style="color: #4af626; font-weight: bold;">$</span> <span
-                                                style="color: #569cd6;">docker ps</span> <span
-                                                style="color: #6a9955; float: right;"># Xem container ID</span></div>
+                                                style="color: #569cd6;">docker ps</span></div>
                                         <div class="fragment"><span style="color: #4af626; font-weight: bold;">$</span>
-                                            <span style="color: #569cd6;">docker logs</span> &lt;container_id&gt; <span
-                                                style="color: #6a9955; float: right;"># Xem log</span>
+                                            <span style="color: #569cd6;">docker logs</span> &lt;ID&gt;
                                         </div>
                                     </div>
                                 </div>
                                 <div class="fragment"
                                     style="color: #e65100; font-style: italic; margin-top: 10px; padding-left: 5px;">
-                                    &rarr; 🌐 Mở trình duyệt: <strong>http://localhost:8080</strong>
+                                    &rarr; 🌐 Check: <strong>http://localhost:8080</strong>
                                 </div>
                             </div>
 
                             <div class="fragment">
                                 <div style="font-weight: bold; margin-bottom: 8px; color: #c62828; font-size: 1.1em;">2.
-                                    Dọn dẹp (Kết thúc)</div>
+                                    Dọn dẹp</div>
                                 <div
                                     style="background: #1e1e1e; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
                                     <div
                                         style="padding: 12px 15px; font-family: 'Consolas', monospace; color: #d4d4d4; line-height: 1.6;">
                                         <div><span style="color: #4af626; font-weight: bold;">$</span> <span
-                                                style="color: #569cd6;">docker stop</span> &lt;container_id&gt;</div>
+                                                style="color: #569cd6;">docker stop</span> &lt;ID&gt;</div>
                                         <div><span style="color: #4af626; font-weight: bold;">$</span> <span
-                                                style="color: #569cd6;">docker rm</span> &lt;container_id&gt;</div>
+                                                style="color: #569cd6;">docker rm</span> &lt;ID&gt;</div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
-                        <div class="fragment" style="flex: 1;">
-                            <div style="font-weight: bold; margin-bottom: 8px; color: #2e7d32; font-size: 1.1em;">3. Tự
-                                build Image từ Dockerfile</div>
+                        <div class="fragment" style="flex: 1; align-self: flex-start;">
+                            <div style="font-weight: bold; margin-bottom: 8px; color: #2e7d32; font-size: 1.1em;">3.
+                                Build Image từ Dockerfile</div>
                             <div
-                                style="background: #1e1e1e; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 12px rgba(0,0,0,0.2); height: calc(100% - 30px);">
+                                style="background: #1e1e1e; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 12px rgba(0,0,0,0.2);">
                                 <div
                                     style="background: #333; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;">
                                     <div style="display: flex; gap: 6px;">
@@ -659,34 +689,30 @@
                                             style="width: 10px; height: 10px; border-radius: 50%; background: #27c93f;">
                                         </div>
                                     </div>
-                                    <div style="color: #a9b7c6; font-size: 0.8em; font-family: monospace;">Dockerfile &
-                                        Terminal</div>
+                                    <div style="color: #a9b7c6; font-size: 0.8em; font-family: monospace;">Dockerfile
+                                    </div>
                                 </div>
                                 <div
-                                    style="padding: 15px; font-family: 'Consolas', monospace; color: #d4d4d4; line-height: 1.7;">
-
-                                    <div style="color: #6a9955;"># Tạo file 'Dockerfile' với nội dung:</div>
+                                    style="padding: 15px; font-family: 'Consolas', monospace; color: #d4d4d4; line-height: 1.6;">
+                                    <div style="color: #6a9955;"># Tạo file Dockerfile</div>
                                     <div
-                                        style="background: #252526; padding: 10px; border-radius: 6px; border: 1px solid #333; margin: 8px 0 15px 0;">
+                                        style="background: #252526; padding: 8px; border-radius: 6px; border: 1px solid #333; margin: 5px 0 12px 0;">
                                         <div><span style="color: #c678dd; font-weight: bold;">FROM</span> <span
                                                 style="color: #98c379;">alpine</span></div>
                                         <div><span style="color: #c678dd; font-weight: bold;">CMD</span> <span
-                                                style="color: #e5c07b;">["echo", "Hello từ Docker Lab!"]</span></div>
+                                                style="color: #e5c07b;">["echo", "Hello Docker!"]</span></div>
                                     </div>
 
-                                    <div style="color: #6a9955;"># Build image (Nhớ dấu chấm ở cuối):</div>
+                                    <div style="color: #6a9955;"># Build và Chạy</div>
                                     <div><span style="color: #4af626; font-weight: bold;">$</span> <span
-                                            style="color: #569cd6;">docker build</span> -t hello-lab .</div>
-
-                                    <div style="color: #6a9955; margin-top: 15px;"># Chạy container:</div>
+                                            style="color: #569cd6;">docker build</span> -t hello .</div>
                                     <div><span style="color: #4af626; font-weight: bold;">$</span> <span
-                                            style="color: #569cd6;">docker run</span> hello-lab</div>
+                                            style="color: #569cd6;">docker run</span> hello</div>
 
                                     <div class="fragment"
-                                        style="color: #ce9178; font-style: italic; margin-top: 8px; background: #252526; padding: 5px 10px; border-left: 3px solid #ce9178;">
-                                        Hello từ Docker Lab!
+                                        style="color: #ce9178; font-style: italic; margin-top: 10px; background: #252526; padding: 5px 10px; border-left: 3px solid #ce9178; font-size: 0.9em;">
+                                        Hello Docker!
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -700,7 +726,7 @@
                     <h1>
                         <h1>
                             <span class="text-light">3.</span><br />
-                            Docker Image & Container
+                            Docker Storage & Network
                         </h1>
                     </h1>
                 </section>
@@ -1263,7 +1289,7 @@ networks:
                 </section>
 
                 <section>
-                    <h3 style="margin-bottom: 25px;">Thực hành: Docker Compose</h3>
+                    <h3 style="margin-bottom: 25px;">Thực hành 1: Docker Compose</h3>
 
                     <div style="display: flex; flex-direction: column; gap: 20px; font-size: 0.6em; text-align: left;">
 
@@ -1304,6 +1330,165 @@ networks:
                             Dọn dẹp bằng:
                             <code
                                 style="background: #eee; padding: 2px 5px; border-radius: 4px;">docker compose down -v</code>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>
+                    <h3 style="margin-bottom: 20px;">Thực hành 2: Docker Compose</h3>
+
+                    <div style="
+                        display: grid;
+                        grid-template-columns: 1.0fr 1.0fr;
+                        gap: 28px;
+                        font-size: 0.6em;
+                        align-items: start;
+                    ">
+
+                        <!-- LEFT -->
+                        <div>
+
+                            <!-- Mục tiêu -->
+                            <div>
+                                <div style="font-weight:600; margin-bottom:8px;">
+                                    🎯 Mục tiêu
+                                </div>
+
+                                <ul style="
+                                    margin:0;
+                                    padding-left:18px;
+                                    line-height:1.6;
+                                ">
+                                    <li>Backend: API model AI (Linear Regression đơn giản)</li>
+                                    <li>Frontend: Giao diện HTML gọi API</li>
+                                    <li>Build và chạy container riêng (frontend, backend)</li>
+                                    <li>Kết nối các container với nhau</li>
+                                    <li>Chạy chung với Docker Compose</li>
+                                    <li>So sánh chạy riêng và Docker Compose</li>
+                                </ul>
+                            </div>
+
+                            <!-- Chạy hệ thống -->
+                            <div style="margin-top:20px;">
+                                <div style="font-weight:600; margin-bottom:6px;">
+                                    🚀 Chạy hệ thống
+                                </div>
+
+                                <code style="
+                                    background:#f4f4f4;
+                                    padding:6px 10px;
+                                    border-radius:6px;
+                                    display:inline-block;
+                                    font-size:0.95em;
+                                ">
+                                    docker compose up -d --build
+                                </code>
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT -->
+                        <div>
+
+                            <div style="font-weight:600; margin-bottom:8px;">
+                                📁 Cấu trúc thư mục
+                            </div>
+
+                            <pre style="
+                                background:#1e1e1e;
+                                color:#eee;
+                                padding:12px;
+                                border-radius:8px;
+                                font-size:0.8em;
+                                line-height:1.4;
+                                margin:0;
+                                overflow-x:auto;
+                            ">
+project/
+├── docker-compose.yml
+├── backend/
+│   ├── app.py
+│   ├── model.py
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── data/
+│       └── input.csv
+└── frontend/
+    ├── index.html
+    └── Dockerfile
+            </pre>
+
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>
+                    <h3 style="margin-bottom: 25px;">Thực hành 2: Docker Compose</h3>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; font-size: 0.55em; text-align: left;">
+
+                        <!-- Backend -->
+                        <div
+                            style="background: #e3f2fd; padding: 16px; border-radius: 12px; border-left: 5px solid #2196f3;">
+
+                            <div style="font-weight:600; color:#0d47a1; margin-bottom:8px;">
+                                ⚙️ Backend
+                            </div>
+
+                            <div style="font-weight:600; margin-top:6px;">
+                                1. Model AI
+                            </div>
+
+                            <ul style="margin:0; padding-left:18px; line-height:1.6;">
+                                <li>Load dữ liệu CSV</li>
+                                <li>Train Linear Regression</li>
+                                <li>Tính MSE (Loss)</li>
+                                <li>Lưu model: model.pkl</li>
+                            </ul>
+
+                            <div style="font-weight:600; margin-top:10px;">
+                                2. API Service
+                            </div>
+
+                            <ul style="margin:0; padding-left:18px; line-height:1.6;">
+                                <li>Tạo endpoint: <strong>/predict</strong></li>
+                                <li>Input: { "value": number }</li>
+                                <li>Output: { "prediction": number }</li>
+                                <li>Load model.pkl để dự đoán</li>
+                                <li>Chạy port 5000</li>
+                                <li>Cho phép CORS</li>
+                            </ul>
+
+                        </div>
+
+                        <!-- Frontend -->
+                        <div
+                            style="background: #e8f5e9; padding: 16px; border-radius: 12px; border-left: 5px solid #4caf50;">
+
+                            <div style="font-weight:600; color:#1b5e20; margin-bottom:8px;">
+                                🎨 Frontend
+                            </div>
+
+                            <ul style="margin:0; padding-left:18px; line-height:1.6;">
+                                <li>Tạo HTML test Linear Regression API</li>
+                                <li>Input numeric value</li>
+                                <li>Nút Predict</li>
+                                <li>Hiển thị prediction result</li>
+                                <li>Hiển thị loading message</li>
+                                <li>Hiển thị error message</li>
+                                <li>POST http://localhost:5000/predict</li>
+                                <li>Request body: { "value": number }</li>
+                                <li>Handle errors</li>
+                                <li>Support Enter key</li>
+                            </ul>
+
+                            <div style="margin-top:8px; font-size:0.85em; color:#666;">
+                                💡 Gợi ý: Sinh viên có thể dùng AI để tạo nhanh HTML
+                            </div>
+
                         </div>
 
                     </div>
@@ -1350,8 +1535,13 @@ networks:
                     <div style="display: flex; flex-direction: column; gap: 15px;">
                         <div
                             style="background: #282c34; padding: 15px; border-radius: 10px; color: #abb2bf; font-family: 'Consolas', monospace; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-                            <h4 style="margin: 0 0 10px 0; color: #61afef; font-family: sans-serif;">💻 Docker CLI Cheat
-                                Sheet</h4>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <h4 style="margin:0; color:#61afef;">💻 Docker CLI Cheat Sheet</h4>
+                                <a href="https://docs.docker.com/get-started/docker_cheatsheet.pdf" target="_blank"
+                                    style="background:#61afef; color:white; padding:4px 10px; border-radius:6px; font-size:0.6em; text-decoration:none;">
+                                    Open
+                                </a>
+                            </div>
                             <div style="display: grid; grid-template-columns: 1fr; gap: 5px;">
                                 <div><span style="color: #98c379;">build -t app .</span> <span style="color: #5c6370;">#
                                         Tạo image</span></div>

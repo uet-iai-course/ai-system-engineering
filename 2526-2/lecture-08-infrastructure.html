@@ -52,6 +52,60 @@
     .reveal .footer {
       font-size: 0.9rem;
     }
+
+    .sec1-compact {
+      font-size: 0.82em;
+    }
+
+    .sec1-compact h2 {
+      margin-bottom: 0.3em;
+    }
+
+    .sec1-two-col {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 0.75em;
+      align-items: start;
+      margin-top: 0.25em;
+    }
+
+    .sec1-figure-placeholder {
+      border: 2px dashed #1E93AB;
+      border-radius: 12px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6em;
+      background: #f8f9fa;
+      color: #555;
+      text-align: center;
+      line-height: 1.35;
+      font-size: 0.92em;
+    }
+
+    .sec1-figure-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .sec1-figure-placeholder .fig-cap {
+      margin-top: 0.35em;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .four-layers-detail {
+      margin: 0.25em 0 0;
+      padding-left: 1.05em;
+    }
+
+    .four-layers-detail li {
+      margin-bottom: 0.35em;
+    }
   </style>
 </head>
 
@@ -63,7 +117,7 @@
       <section>
         <section>
           <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
-          <h3>Bài 8a: Infrastructure &amp; Tooling</h3>
+          <h3>Bài 8: Infrastructure &amp; Tooling</h3>
           <p>Cơ sở hạ tầng và công cụ trong dự án phần mềm AI</p>
           <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
         </section>
@@ -71,14 +125,11 @@
         <section>
           <h2>Nội dung</h2>
           <ol>
-            <li>Tổng quan Infrastructure cho AI</li>
-            <li>Compute: CPU/GPU/TPU</li>
-            <li>Storage: disk, object storage, cloud</li>
-            <li>Virtualization: VM/KVM</li>
-            <li>Containers, Docker, Kubernetes</li>
-            <li>Cloud và mô hình IaaS/PaaS/SaaS</li>
-            <li>Networking: IP/DNS/HTTP/TCP/Proxy/LB/CDN</li>
-            <li>Dev environment &amp; tooling (notebook)</li>
+            <li>Tổng quan CSHT cho AI</li>
+            <li>Lưu trữ &amp; Tính toán</li>
+            <li>Quản lý tài nguyên</li>
+            <li>Môi trường phát triển</li>
+            <li>Nền tảng ML</li>
           </ol>
         </section>
 
@@ -90,832 +141,652 @@
             <li>Phác thảo được bản thiết kế hạ tầng khả thi cho dự án AI ở quy mô vừa.</li>
           </ul>
         </section>
-
-        <section>
-          <h2>Thông điệp từ học liệu</h2>
-          <div class="question-box">
-            <div class="question-title">Core Idea</div>
-            Nhiều đội “biết làm đúng” nhưng không làm được vì <span class="keyword">infrastructure chưa sẵn sàng</span>.
-            Hạ tầng tốt sẽ giảm lỗi, tăng tốc phát triển, và mở ra use case mới.
-          </div>
-        </section>
       </section>
 
       <!-- 1 -->
       <section>
         <section>
-          <h1><span class="text-light">1.</span><br />Tổng quan Infrastructure cho AI</h1>
+          <h1><span class="text-light">1.</span><br />Tổng quan CSHT cho AI</h1>
         </section>
 
-        <section>
-          <h2>Vì sao AI infrastructure quan trọng?</h2>
+        <section class="sec1-compact">
+          <h2>Vì sao phải nói về CSHT?</h2>
           <ul>
-            <li>ML systems phức tạp hơn app CRUD truyền thống.</li>
-            <li>Cần vận hành đồng thời data pipeline + training + serving + monitoring.</li>
-            <li>Tốc độ lặp mô hình phụ thuộc trực tiếp vào hạ tầng.</li>
+            <li>Tới đây ta thường giả định “đã có đủ công cụ và hạ tầng”; thực tế <strong>xa như vậy</strong>: nhiều người biết cần làm gì cho hệ ML nhưng <span class="keyword">không làm được</span> vì hạ tầng không hỗ trợ.</li>
+            <li>Hệ ML càng phức tạp càng hưởng lợi từ hạ tầng đúng: tự động hóa, giảm thời gian kỹ sư chuyên sâu, rút ngắn phát triển, giảm diện tích lỗi, mở thêm use case.</li>
+            <li>Hạ tầng sai: khó dùng, đắt để thay thế.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Infrastructure là gì trong ngữ cảnh ML?</h2>
+        <section class="sec1-compact">
+          <h2>Nhu cầu CSHT phụ thuộc điều gì?</h2>
           <ul>
-            <li>Tập các “facility” nền tảng để phát triển và bảo trì hệ ML.</li>
-            <li>Bao gồm cả tài nguyên vật lý/ảo và công cụ quản trị vòng đời.</li>
-            <li>Mức đầu tư phụ thuộc quy mô và mức đặc thù bài toán.</li>
+            <li><strong>Số lượng</strong> ứng dụng ML bạn phát triển.</li>
+            <li><strong>Mức đặc thù</strong> của từng bài toán (phân tích ad hoc vs hệ production khắt khe).</li>
+            <li>“Cơ sở nền tảng” cần có <strong>khác nhau rất lớn</strong> giữa các công ty — không có một blueprint duy nhất.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Phổ nhu cầu hạ tầng</h2>
+        <section class="sec1-compact" style="font-size:0.78em;">
+          <h2>CSHT ở công ty lớn &amp; bài toán cực đặc thù</h2>
           <ul>
-            <li><strong>Đơn giản</strong>: notebook + Python + 1 máy.</li>
-            <li><strong>Trung bình</strong>: nhiều use case, scale GB/TB, cần platform chung.</li>
-            <li><strong>Đặc thù cao</strong>: tự xây hạ tầng chuyên biệt (search/autonomous).</li>
+            <li><strong>Xe tự lái:</strong> độ trễ tính bằng mili-giây, độ chính xác gần như tuyệt đối — dự đoán sai có hậu quả nghiêm trọng.</li>
+            <li><strong>Tìm kiếm quy mô toàn cầu:</strong> ví dụ khoảng <strong>63.000</strong> truy vấn/giây (hàng trăm triệu truy vấn/giờ) — đa số công ty không ở mức đó.</li>
+            <li>Thường phải <strong>tự phát triển hạ tầng nội bộ rất chuyên biệt</strong> (Google cho search; Tesla, Waymo cho tự lái).</li>
+            <li>Một phần hạ tầng chuyên biệt sau đó có thể <strong>đưa ra ngoài</strong> và được công ty khác dùng — ví dụ mở rộng cloud nội bộ thành <strong>Google Cloud Platform</strong>.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>4 lớp infrastructure điển hình (Ch.10)</h2>
-          <ol>
-            <li>Storage &amp; Compute</li>
-            <li>Resource Management (scheduler/orchestrator)</li>
-            <li>ML Platform (deployment/model store/feature store)</li>
-            <li>Development Environment</li>
-          </ol>
-        </section>
-
-
-        <section>
-          <h2>Các quality attributes cần theo dõi</h2>
-          <ul>
-            <li>Performance (latency/throughput)</li>
-            <li>Reliability (SLO/uptime)</li>
-            <li>Scalability và elasticity</li>
-            <li>Security &amp; compliance</li>
-            <li>Developer productivity</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Sơ đồ khối tổng quan hạ tầng AI</h2>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Dev Env</div><div class="stage-desc">IDE/notebook/CI</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Resource Mgmt</div><div class="stage-desc">scheduler/K8s</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Compute</div><div class="stage-desc">CPU/GPU/TPU</div></div>
-            <div class="arrow">↔</div>
-            <div class="stage"><div class="stage-title">Storage</div><div class="stage-desc">DB/Object/Lake</div></div>
+        <section class="sec1-compact" style="font-size:0.80em;">
+          <h2>CSHT theo quy mô (nhìn toàn cảnh)</h2>
+          <div class="sec1-two-col">
+            <div>
+              <ul>
+                <li><strong>Đầu “nhẹ”</strong>: analytics ad hoc → Jupyter/Python/Pandas là đủ.</li>
+                <li><strong>Đầu “đặc thù”</strong>: yêu cầu rất khắt khe (latency/accuracy/scale) → thường phải tự phát triển CSHT chuyên biệt.</li>
+                <li><strong>Đa số ở giữa</strong>: nhiều ứng dụng ML phổ biến, quy mô hợp lý → hưởng lợi từ CSHT tổng quát đang dần chuẩn hóa.</li>
+              </ul>
+              <p style="margin:0.35em 0 0; font-size:0.95em;"><em>(Minh họa theo Figure 10-1)</em></p>
+            </div>
+            <div>
+              <div class="sec1-figure-placeholder" aria-label="Khung chèn ảnh Figure 10-1">
+                <img src="img/lec-08/infra-scale.png" alt="Figure 10-1 — Nhu cầu CSHT theo quy mô production">
+              </div>
+            </div>
           </div>
         </section>
+
+        <section class="sec1-compact">
+          <h2>CSHT trong thế giới ML là gì?</h2>
+          <ul>
+            <li>Trong đời thực, “infrastructure” (CSHT) là các cơ sở nền tảng giúp tổ chức vận hành bền vững.</li>
+            <li>Trong ML, <strong>CSHT</strong> là tập các cơ sở nền tảng để phát triển và duy trì hệ ML. Vì khác nhau theo công ty, ta dùng mô hình <strong>4 lớp</strong> (Figure 10-2).</li>
+          </ul>
+        </section>
+
+        <section class="sec1-compact" style="font-size:0.86em;">
+          <h2>Bốn lớp CSHT</h2>
+          <div class="sec1-two-col">
+            <div>
+              <ol>
+                <li><strong>Lưu trữ &amp; Tính toán</strong></li>
+                <li><strong>Quản lý tài nguyên</strong> (lập lịch/điều phối)</li>
+                <li><strong>Nền tảng ML</strong> (lưu trữ model/feature/giám sát)</li>
+                <li><strong>Môi trường phát triển</strong> (code/thử nghiệm)</li>
+              </ol>
+            </div>
+            <div>
+              <div class="sec1-figure-placeholder" aria-label="Khung chèn ảnh Figure 10-2">
+                <img src="img/lec-08/infra-layers.png" alt="Figure 10-2 — Các lớp CSHT cho ML">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sec1-compact" style="font-size:0.82em;">
+          <h2>4 lớp CSHT (1/2): Lưu trữ &amp; Tính toán, Quản lý tài nguyên</h2>
+          <ul>
+            <li><strong>Lưu trữ &amp; Tính toán</strong>: nơi thu thập/lưu dữ liệu và tài nguyên chạy workload ML (huấn luyện, tính feature, …). Đây là <strong>nền móng</strong> của mọi dự án ML.</li>
+            <li><strong>Quản lý tài nguyên</strong>: lập lịch + điều phối workload để tận dụng tài nguyên tính toán (vd. Airflow, Kubeflow, Metaflow).</li>
+          </ul>
+        </section>
+
+        <section class="sec1-compact" style="font-size:0.82em;">
+          <h2>4 lớp CSHT (2/2): Nền tảng ML, Môi trường phát triển</h2>
+          <ul>
+            <li><strong>Môi trường phát triển</strong>: nơi viết code/chạy thí nghiệm; code cần version &amp; test; thử nghiệm cần được theo dõi. Đây là lớp DS tương tác <strong>hàng ngày</strong>.</li>
+            <li><strong>Nền tảng ML</strong>: model store, feature store, monitoring… (vd. SageMaker, MLflow). Thường cần đầu tư ban đầu nhưng giúp nhiều use case dùng chung nền tảng.</li>
+          </ul>
+          <p style="margin-top:0.25em; font-size:0.95em;"><em>Gợi ý mạch trình bày (theo sách):</em> Lưu trữ/Tính toán → Môi trường phát triển → Quản lý tài nguyên → Nền tảng ML.</p>
+        </section>
+
+        <section class="sec1-compact" style="font-size:0.84em;">
+          <h2>Tự xây vs mua/thuê &amp; sơ đồ gợi nhớ</h2>
+          <ul>
+            <li>Hai công ty có cùng nhu cầu vẫn có thể ra kiến trúc khác nhau tùy quyết định <strong>tự xây vs mua/thuê</strong> từ bên ngoài.</li>
+            <li>Phần sau của chương (học liệu) còn bàn thêm chuẩn hóa abstraction — ta sẽ đi sâu từng lớp trong các mục tiếp theo.</li>
+          </ul>
+          <div class="pipeline">
+            <div class="stage"><div class="stage-title">Dev</div><div class="stage-desc">code / thử nghiệm</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Quản lý</div><div class="stage-desc">lập lịch / điều phối</div></div>
+            <div class="arrow">→</div>
+            <div class="stage"><div class="stage-title">Tính toán</div><div class="stage-desc">huấn luyện / suy luận</div></div>
+            <div class="arrow">↔</div>
+            <div class="stage"><div class="stage-title">Lưu trữ</div><div class="stage-desc">dữ liệu / artifacts</div></div>
+          </div>
+          <p style="margin-top:0.4em; font-size:0.92em;">Vận hành production còn cần theo dõi hiệu năng, độ tin cậy, mở rộng, bảo mật, năng suất đội — sẽ lồng ghép khi đi vào từng lớp.</p>
+        </section>
       </section>
 
-      <!-- 2 Compute -->
+      <!-- 2 Storage & Compute -->
       <section>
         <section>
-          <h1><span class="text-light">2.</span><br />Compute: CPU, GPU, TPU</h1>
+          <h1><span class="text-light">2.</span><br />Lưu trữ &amp; Tính toán</h1>
         </section>
 
+        <!-- Phần 1: Định nghĩa -->
         <section>
-          <h2>Compute layer là gì?</h2>
+          <h2>Định nghĩa: lớp lưu trữ (storage layer)</h2>
           <ul>
-            <li>Lớp tài nguyên thực thi workload: training, feature jobs, inference.</li>
-            <li>Ảnh hưởng trực tiếp tới tốc độ, chi phí và khả năng mở rộng.</li>
-            <li>Thường đến từ cloud compute (EC2/GCE/Azure VM).</li>
+            <li>Lớp lưu trữ là nơi dữ liệu được <strong>thu thập</strong> và <strong>lưu</strong> để phục vụ huấn luyện, suy luận và phân tích.</li>
+            <li>Dạng đơn giản nhất: HDD/SSD; ở quy mô lớn có thể là object storage / data warehouse / lakehouse.</li>
+            <li>Storage có thể tập trung một nơi hoặc phân tán nhiều nơi tùy kiến trúc.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>Lưu trữ trong doanh nghiệp: NAS và SAN</h2>
+          <ul>
+            <li><strong>NAS (Network Attached Storage)</strong>: lưu trữ theo kiểu “file” qua mạng (SMB/NFS). Thường dùng để chia sẻ thư mục/dataset như một file server.</li>
+            <li><strong>SAN (Storage Area Network)</strong>: lưu trữ theo kiểu “block” qua mạng chuyên dụng (FC/iSCSI). Máy chủ thấy như gắn “ổ đĩa” từ xa, phù hợp workload cần IOPS/độ trễ tốt.</li>
+            <li>Trong ML: NAS hay gặp ở chia sẻ dữ liệu và home directory; SAN hay gặp cho hệ thống cần truy cập block storage hiệu năng cao (VD: DB, VM storage).</li>
           </ul>
         </section>
 
         <section>
-          <h2>Compute unit và các abstraction</h2>
+          <h2>Định nghĩa: lớp tính toán (compute layer)</h2>
           <ul>
-            <li>Core/thread (mức máy)</li>
-            <li>Instance/VM (mức cloud)</li>
-            <li>Container/pod (mức orchestrator)</li>
-            <li>Job/task (mức workflow tools)</li>
+            <li>Lớp tính toán là toàn bộ <strong>tài nguyên tính toán</strong> mà tổ chức có thể dùng và <strong>cơ chế</strong> quyết định cách dùng chúng.</li>
+            <li>Compute là “động cơ” để thực thi job: feature jobs, huấn luyện, suy luận.</li>
+            <li>Lượng compute sẵn có quyết định khả năng mở rộng của workload.</li>
           </ul>
         </section>
 
         <section>
-          <h2>2 metric cơ bản của compute unit</h2>
+          <h2>Định nghĩa: đơn vị tính toán (compute unit)</h2>
           <ul>
-            <li><strong>Memory</strong>: bao nhiêu dữ liệu load được vào RAM/VRAM.</li>
-            <li><strong>Operation speed</strong>: tốc độ thực thi phép tính.</li>
-            <li>Bên cạnh đó: I/O bandwidth cũng cực kỳ quan trọng.</li>
+            <li>Compute layer thường được “cắt” thành các <strong>đơn vị tính toán</strong> để dùng đồng thời.</li>
+            <li>Ví dụ đơn vị: thread/core, instance/VM, hoặc đơn vị trừu tượng như job (Spark/Ray) hay pod (Kubernetes).</li>
+            <li>Đơn vị tính toán có thể ngắn hạn theo job hoặc “permanent” như instance.</li>
+          </ul>
+        </section>
+
+        <!-- Phần 2: So sánh on-prem và cloud -->
+        <section style="font-size:0.86em;">
+          <h2>So sánh: on-prem vs cloud (lưu trữ &amp; tính toán)</h2>
+          <ul>
+            <li><strong>On-prem</strong>: kiểm soát cao, phù hợp ràng buộc dữ liệu/pháp lý; nhưng cần đầu tư ban đầu và vận hành (capex + ops).</li>
+            <li><strong>Cloud</strong>: triển khai nhanh, mở rộng linh hoạt, trả theo mức dùng; đổi lại phụ thuộc nhà cung cấp và tối ưu chi phí đòi hỏi kỷ luật vận hành.</li>
+            <li>Hai lựa chọn này áp dụng cho cả storage và compute.</li>
           </ul>
         </section>
 
         <section>
-          <h2>CPU: điểm mạnh</h2>
+          <h2>Ảnh: on-prem vs cloud</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh on-prem vs cloud">
+            <img src="img/lec-08/infra-on-prem-vs-cloud.png" alt="Ảnh on-prem vs cloud" style="max-width:100%; height:auto;">
+          </div>
+        </section>
+
+        <!-- Phần 3: Xu hướng chuyển từ on-prem lên cloud -->
+        <section style="font-size:0.86em;">
+          <h2>Xu hướng: chuyển từ on-prem lên cloud</h2>
           <ul>
-            <li>Đa dụng, phù hợp backend logic và preprocessing.</li>
-            <li>Đơn giản triển khai, chi phí thấp hơn GPU.</li>
-            <li>Phù hợp inference nhẹ, batch ETL, orchestration.</li>
+            <li>Trong thập kỷ gần đây, lưu trữ và tính toán ngày càng được “commoditized”.</li>
+            <li>Nhiều tổ chức chọn cloud để bắt đầu nhanh, giảm gánh nặng vận hành hạ tầng.</li>
+            <li>Cloud đặc biệt hợp workload ML vì tải thường “bursty” theo giai đoạn thử nghiệm và huấn luyện.</li>
           </ul>
         </section>
 
         <section>
-          <h2>GPU: điểm mạnh</h2>
+          <h2>Ảnh: xu hướng chuyển dịch lên cloud</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh xu hướng chuyển dịch lên cloud">
+            <img src="img/lec-08/infra-cost-trend.png" alt="Ảnh xu hướng chuyển dịch lên cloud" style="max-width:100%; height:auto;">
+          </div>
+        </section>
+
+        <!-- Phần 4: FLOPS, utilization và tham số đánh giá compute unit -->
+        <section>
+          <h2>Đánh giá một compute unit: các tham số chính</h2>
           <ul>
-            <li>Song song dữ liệu tốt cho tensor ops.</li>
-            <li>Hiệu quả cao cho deep learning training/inference.</li>
-            <li>Tối ưu với CUDA/cuDNN/TensorRT.</li>
+            <li><strong>Memory</strong> (RAM/VRAM): nạp được bao nhiêu dữ liệu vào bộ nhớ để tính toán.</li>
+            <li><strong>Băng thông I/O của bộ nhớ</strong>: tốc độ nạp/xuất dữ liệu ảnh hưởng trực tiếp throughput.</li>
+            <li><strong>Tốc độ thực thi phép toán</strong>: thường được quảng cáo bằng FLOPS.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>FLOPS: vì sao không đủ để dự đoán tốc độ?</h2>
+          <ul>
+            <li>FLOPS là chỉ số lý thuyết và cách “đếm phép toán” có thể khác nhau.</li>
+            <li>Hiệu năng thực phụ thuộc vào việc <strong>cấp dữ liệu</strong> đủ nhanh cho compute (I/O) và cách workload tận dụng phần cứng.</li>
+            <li>Vì vậy cần nhìn thêm utilization.</li>
           </ul>
         </section>
 
         <section>
-          <h2>TPU: điểm mạnh</h2>
+          <h2>GPU utilization</h2>
           <ul>
-            <li>ASIC tối ưu cho tensor workloads quy mô lớn.</li>
-            <li>Hiệu năng/watt tốt trong một số bài toán.</li>
-            <li>Thường gắn chặt ecosystem cloud nhất định.</li>
+            <li>Utilization = mức độ workload “điền đầy” khả năng tính toán của GPU (so với khả năng tối đa).</li>
+            <li>Utilization thấp thường do nghẽn I/O, data loader, kích thước batch, hoặc kernel chưa tối ưu.</li>
+            <li>Đánh giá compute cần đi kèm đo utilization và throughput thực tế.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>Thực tế: cores + RAM vẫn rất hữu dụng</h2>
+          <ul>
+            <li>Trong nhiều tình huống, so sánh “số core + RAM” giúp chọn nhanh compute unit.</li>
+            <li>Với cloud, cần hiểu đơn vị như vCPU và các giới hạn/quota theo tài khoản.</li>
           </ul>
         </section>
 
         <section>
-          <h2>CPU vs GPU vs TPU (định tính)</h2>
-          <table>
-            <thead>
-              <tr><th>Tiêu chí</th><th>CPU</th><th>GPU</th><th>TPU</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Đa dụng</td><td>Cao</td><td>Trung bình</td><td>Thấp hơn</td></tr>
-              <tr><td>DL training</td><td>Thấp</td><td>Cao</td><td>Rất cao</td></tr>
-              <tr><td>Chi phí bắt đầu</td><td>Thấp</td><td>Trung bình-cao</td><td>Cao</td></tr>
-              <tr><td>Vendor lock-in</td><td>Thấp</td><td>Trung bình</td><td>Cao hơn</td></tr>
-            </tbody>
-          </table>
+          <h2>Ảnh: ví dụ cores &amp; memory (Figure 10-3)</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Figure 10-3">
+            <img src="img/lec-08/infra-cores-memory.png" alt="Figure 10-3: Cores &amp; memory" style="max-width:100%; height:auto;">
+          </div>
         </section>
 
-        <section>
-          <h2>FLOPS và utilization</h2>
+        <section style="font-size:0.86em;">
+          <h2>IaaS / PaaS / SaaS (tóm tắt)</h2>
           <ul>
-            <li>FLOPS chỉ là “khả năng lý thuyết”.</li>
-            <li>Hiệu năng thật phụ thuộc utilization + data pipeline.</li>
-            <li>Tối ưu đầu vào/I/O thường quan trọng như tối ưu model.</li>
-          </ul>
-        </section>
-
-
-        <section>
-          <h2>Ví dụ công nghệ compute phổ biến</h2>
-          <ul>
-            <li>CPU instances: AWS EC2 c/m/r series, GCP E2/N2</li>
-            <li>GPU instances: AWS g5/p4, GCP A2, Azure NC</li>
-            <li>TPU: Google Cloud TPU v4/v5</li>
-            <li>Distributed engines: Ray, Spark, Dask</li>
-          </ul>
-        </section>
-
-      </section>
-
-      <!-- 3 Storage -->
-      <section>
-        <section>
-          <h1><span class="text-light">3.</span><br />Storage: Disk và Cloud</h1>
-        </section>
-
-        <section>
-          <h2>Storage layer trong dự án AI</h2>
-          <ul>
-            <li>Nơi lưu data thô, data đã xử lý, model artifacts, logs.</li>
-            <li>Có thể tập trung 1 nơi hoặc phân tán đa hệ thống.</li>
-            <li>Thiết kế storage ảnh hưởng lớn tới cost và tốc độ.</li>
+            <li><strong>IaaS (Hạ tầng như dịch vụ)</strong>: thuê máy ảo/mạng/lưu trữ; bạn tự quản hệ điều hành và runtime. Ví dụ: AWS EC2, GCE, Azure VM.</li>
+            <li><strong>PaaS (Nền tảng như dịch vụ)</strong>: vendor quản nhiều phần runtime/triển khai; bạn tập trung vào code. Ví dụ: Cloud Run, Azure App Service, Heroku.</li>
+            <li><strong>SaaS (Phần mềm như dịch vụ)</strong>: dùng dịch vụ hoàn chỉnh qua web/API; ít vận hành nhất nhưng ít tùy biến hơn.</li>
+            <li>Trong dev environment trên cloud, lựa chọn thường là IaaS (instance + SSH) hoặc môi trường managed kiểu PaaS/Studio tuỳ nhu cầu và quyền truy cập dữ liệu.</li>
           </ul>
         </section>
 
         <section>
-          <h2>Disk local: HDD vs SSD</h2>
-          <ul>
-            <li>HDD: rẻ, dung lượng lớn, IOPS thấp.</li>
-            <li>SSD/NVMe: nhanh, đắt hơn, hợp workload ngẫu nhiên.</li>
-            <li>Training cache cục bộ thường ưu tiên SSD/NVMe.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Object storage (cloud)</h2>
-          <ul>
-            <li>Lưu trữ file quy mô lớn, độ bền cao.</li>
-            <li>Phù hợp data lake, backup, model artifacts.</li>
-            <li>Đổi lại: latency cao hơn local disk/memory.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Hot/Warm/Cold tiers</h2>
-          <ul>
-            <li>Hot: truy cập liên tục, latency thấp, giá cao.</li>
-            <li>Warm: cân bằng chi phí và tần suất truy cập.</li>
-            <li>Cold/Archive: rẻ, truy xuất chậm.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Data formats và hiệu năng</h2>
-          <ul>
-            <li>Text formats: CSV/JSON dễ đọc, kém tối ưu.</li>
-            <li>Columnar/binary: Parquet/Avro tối ưu analytics.</li>
-            <li>Chọn format đúng có thể giảm mạnh chi phí truy vấn.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Storage locality và data loading</h2>
-          <ul>
-            <li>Dữ liệu càng xa compute thì latency càng cao.</li>
-            <li>Cân nhắc co-locate compute và storage theo vùng.</li>
-            <li>Dùng prefetch/caching để giảm bottleneck I/O.</li>
-          </ul>
-        </section>
-
-
-        <section>
-          <h2>Ví dụ công nghệ storage phổ biến</h2>
-          <ul>
-            <li>Object storage: AWS S3, GCS, Azure Blob, MinIO</li>
-            <li>Block storage: EBS, Persistent Disk</li>
-            <li>Warehouse/Lakehouse: BigQuery, Snowflake, Databricks</li>
-            <li>File system distributed: HDFS, CephFS</li>
-          </ul>
-        </section>
-
-      </section>
-
-      <!-- 4 Virtualization -->
-      <section>
-        <section>
-          <h1><span class="text-light">4.</span><br />Virtualization: VM và KVM</h1>
-        </section>
-
-        <section>
-          <h2>Virtualization là gì?</h2>
-          <ul>
-            <li>Tạo máy ảo chạy trên cùng phần cứng vật lý.</li>
-            <li>Tăng hiệu suất sử dụng tài nguyên.</li>
-            <li>Cho phép cô lập workload và quản trị linh hoạt.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Hypervisor type 1 vs type 2</h2>
-          <ul>
-            <li>Type 1 (bare metal): hiệu năng tốt hơn, dùng datacenter.</li>
-            <li>Type 2 (hosted): chạy trên OS thường, hợp dev/test.</li>
-            <li>Cloud lớn chủ yếu dùng kiến trúc kiểu type 1.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>KVM là gì?</h2>
-          <ul>
-            <li>KVM (Kernel-based Virtual Machine) là virtualization module của Linux.</li>
-            <li>Biến Linux kernel thành hypervisor.</li>
-            <li>Nhiều cloud/private cloud dựa trên KVM.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>VM phù hợp cho bài toán nào?</h2>
-          <ul>
-            <li>Workload cần isolation mạnh.</li>
-            <li>Hệ thống legacy hoặc cần kernel riêng.</li>
-            <li>Khi chưa cần tốc độ startup rất nhanh.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>VM vs Container (khái quát)</h2>
-          <table>
-            <thead><tr><th>Tiêu chí</th><th>VM</th><th>Container</th></tr></thead>
-            <tbody>
-              <tr><td>Isolation</td><td>Mạnh</td><td>Nhẹ hơn</td></tr>
-              <tr><td>Startup</td><td>Chậm hơn</td><td>Nhanh</td></tr>
-              <tr><td>Overhead</td><td>Cao</td><td>Thấp</td></tr>
-              <tr><td>Use case</td><td>hệ điều hành đầy đủ</td><td>app packaging</td></tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section>
-          <h2>Ví dụ công nghệ virtualization phổ biến</h2>
-          <ul>
-            <li>KVM/QEMU</li>
-            <li>VMware ESXi/vSphere</li>
-            <li>Microsoft Hyper-V</li>
-            <li>Xen</li>
-          </ul>
+          <h2>Ảnh: IaaS / PaaS / SaaS</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh IaaS/PaaS/SaaS">
+            <img src="img/lec-08/iaas-paas-saas.jpg" >
+          </div>
         </section>
 
       </section>
 
-      <!-- 5 Containers/K8s -->
       <section>
         <section>
-          <h1><span class="text-light">5.</span><br />Containers, Docker, Kubernetes</h1>
+          <h1><span class="text-light">3.</span><br />Quản lý tài nguyên</h1>
         </section>
 
-        <section>
-          <h2>Vì sao cần container?</h2>
+        <section style="font-size:0.86em;">
+          <h2>Quản lý tài nguyên để làm gì?</h2>
           <ul>
-            <li>Môi trường production thường stateless và thay đổi liên tục.</li>
-            <li>Cần cách tái tạo môi trường nhất quán trên mọi máy.</li>
-            <li>Container giải quyết “works on my machine”.</li>
+            <li>Trong “thế giới trước cloud” (và cả các công ty tự vận hành data center), <strong>lưu trữ &amp; tính toán là hữu hạn</strong>.</li>
+            <li>Quản lý tài nguyên tập trung vào việc <strong>tận dụng tối đa tài nguyên giới hạn</strong>.</li>
+            <li>Tăng tài nguyên cho một ứng dụng có thể đồng nghĩa giảm tài nguyên cho ứng dụng khác → cần logic phức tạp để tối ưu utilization.</li>
           </ul>
         </section>
 
         <section>
-          <h2>Dockerfile, image, container</h2>
+          <h2>Hai đặc trưng của workflow ML</h2>
           <ul>
-            <li>Dockerfile: công thức dựng môi trường.</li>
-            <li>Image: kết quả build từ Dockerfile.</li>
-            <li>Container: instance đang chạy từ image.</li>
+            <li>Hai đặc trưng ảnh hưởng tới quản lý tài nguyên của workflow ML: <strong>tính lặp lại</strong> và <strong>phụ thuộc giữa các bước</strong>.</li>
+            <li>Từ đó kéo theo nhu cầu về các công cụ để <strong>lập lịch</strong> và <strong>điều phối</strong> workload.</li>
           </ul>
         </section>
 
-        <section style="font-size:0.85em;">
-          <h2>Ví dụ Dockerfile tối giản</h2>
-          <pre><code class="language-dockerfile" data-trim>
-FROM python:3.11-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-CMD ["python", "serve.py"]
+        <section style="font-size:0.86em;">
+          <h2>Lập lịch vs điều phối (và có thể tách rời)</h2>
+          <ul>
+            <li>Một số hệ (HashiCorp Nomad, Kubernetes) có sẵn một phần năng lực lập lịch.</li>
+            <li>Có thể tách scheduler và orchestrator: ví dụ chạy <strong>job scheduler của Spark</strong> trên Kubernetes, hoặc <strong>AWS Batch scheduler</strong> trên EKS.</li>
+            <li>Các orchestrator như Nomad và các orchestrator “hướng data science” như Airflow, Argo, Prefect, Dagster… cũng có scheduler riêng.</li>
+          </ul>
+        </section>
+
+        <!-- (1) Kubernetes và cơ chế lập lịch -->
+        <section>
+          <h2>Kubernetes: pod và cơ chế lập lịch</h2>
+          <div class="question-box">
+            <div class="question-title">Ý chính</div>
+            <ul>
+              <li><strong>Pod</strong> là đơn vị triển khai nhỏ nhất, bọc một hoặc nhiều container.</li>
+              <li>Pod khai báo <strong>requests/limits</strong> (CPU/RAM/GPU). Scheduler chọn node phù hợp dựa trên tài nguyên và ràng buộc.</li>
+              <li>Mỗi bước pipeline (training/feature/validation) thường chạy trong <strong>pod riêng</strong> với <strong>image riêng</strong>.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>Kubernetes scheduler hoạt động như thế nào?</h2>
+          <ul>
+            <li><strong>Filter</strong>: loại các node không đủ tài nguyên hoặc vi phạm ràng buộc (CPU/RAM/GPU, node selectors, affinity/anti-affinity, taints/tolerations…).</li>
+            <li><strong>Score</strong>: chấm điểm các node còn lại để chọn node “tốt nhất” (cân bằng tải, phân bổ tài nguyên, ưu tiên policy…).</li>
+            <li><strong>Bind</strong>: “gắn” pod vào node đã chọn; sau đó kubelet trên node sẽ kéo image và chạy container.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.84em;">
+          <h2>Requests/limits và QoS (vì sao ảnh hưởng lập lịch?)</h2>
+          <ul>
+            <li><strong>Requests</strong> = tài nguyên tối thiểu để scheduler đặt pod lên node.</li>
+            <li><strong>Limits</strong> = trần tài nguyên pod được phép dùng (CPU throttling / OOM kill nếu vượt).</li>
+            <li>Kubernetes gán <strong>QoS class</strong> (Guaranteed/Burstable/BestEffort) → ảnh hưởng thứ tự “bị hy sinh” khi node thiếu tài nguyên.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Ví dụ: khai báo tài nguyên cho pod (CPU/RAM/GPU)</h2>
+          <pre><code class="language-yaml" data-trim>
+resources:
+  requests:
+    cpu: "4"
+    memory: "16Gi"
+    nvidia.com/gpu: "1"
+  limits:
+    cpu: "8"
+    memory: "24Gi"
+    nvidia.com/gpu: "1"
           </code></pre>
         </section>
 
         <section>
-          <h2>Container registry</h2>
+          <h2>Ảnh: kiến trúc Kubernetes (control plane → scheduler → nodes)</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh kiến trúc Kubernetes">
+            <img src="img/lec-08/kubernetes.jpg" alt="Ảnh kiến trúc Kubernetes" style="max-width:100%; height:auto;">
+          </div>
+        </section>
+
+        <!-- (2) SLURM và cơ chế lập lịch -->
+        <section style="font-size:0.86em;">
+          <h2>SLURM là gì?</h2>
           <ul>
-            <li>Nơi lưu và phân phối images.</li>
-            <li>Giúp CI/CD pull/push image theo version.</li>
-            <li>Cần policy scan lỗ hổng trước deploy.</li>
+            <li><strong>SLURM</strong> (Simple Linux Utility for Resource Management) là job scheduler phổ biến trong HPC/cluster on-prem (đặc biệt môi trường GPU).</li>
+            <li>Người dùng gửi <strong>job</strong> vào hàng đợi; scheduler cấp phát node/CPU/RAM/GPU theo policy (fairshare, ưu tiên, backfill…).</li>
+            <li>Khái niệm thường gặp: <strong>partition</strong> (nhóm node), <strong>job queue</strong>, <strong>time limit</strong>, <strong>account/QoS</strong>.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>SLURM scheduling (tóm tắt cơ chế)</h2>
+          <ul>
+            <li><strong>squeue</strong> xem hàng đợi; <strong>sbatch</strong> nộp job; <strong>srun</strong> chạy interactive; <strong>scancel</strong> hủy job.</li>
+            <li>Scheduler chọn job theo <strong>priority</strong> (fairshare, age, size, QoS, partition…) và cấp phát tài nguyên khi node rảnh.</li>
+            <li><strong>Backfill</strong>: tận dụng “khe trống” thời gian để chạy job nhỏ mà không làm trễ job ưu tiên cao.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.80em;">
+          <h2>Ví dụ: SLURM job script cho training GPU</h2>
+          <pre><code class="language-bash" data-trim>
+#!/bin/bash
+#SBATCH --job-name=train-bert
+#SBATCH --partition=gpu
+#SBATCH --nodes=1
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=32G
+#SBATCH --time=02:00:00
+#SBATCH --output=logs/%x-%j.out
+
+module load cuda
+srun python train.py --config configs/bert.yaml
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Ảnh: SLURM scheduler (queue → allocate → run)</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh SLURM">
+            <img src="img/lec-08/slurm.gif" alt="Ảnh SLURM scheduler" style="max-width:100%; height:auto;">
+          </div>
+        </section>
+
+        <!-- (3) Kubeflow: điều phối + lập lịch pipeline -->
+        <section style="font-size:0.86em;">
+          <h2>Kubeflow Pipelines: điều phối workflow ML</h2>
+          <ul>
+            <li>Kubeflow Pipelines định nghĩa workflow dưới dạng <strong>DAG</strong> gồm nhiều bước (component).</li>
+            <li>Mỗi bước chạy như một <strong>containerized step</strong>: bạn đóng gói code + deps thành <strong>Docker image</strong>.</li>
+            <li>Khi chạy, mỗi step thường tương ứng một <strong>pod</strong> trên Kubernetes → scheduler của K8s sẽ quyết định đặt pod lên node nào.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>Vì sao “mỗi bước là một Docker image” quan trọng?</h2>
+          <ul>
+            <li><strong>Tái lập</strong>: mỗi step có môi trường bất biến (image tag).</li>
+            <li><strong>Tách tài nguyên</strong>: bước feature engineering dùng CPU/RAM; bước training dùng GPU; bước evaluation dùng CPU.</li>
+            <li><strong>Giảm xung đột dependency</strong>: mỗi step có deps riêng, không ép toàn pipeline chung một environment.</li>
           </ul>
         </section>
 
         <section>
-          <h2>Ví dụ registry phổ biến</h2>
-          <ul>
-            <li>Docker Hub</li>
-            <li>AWS ECR</li>
-            <li>Google Artifact Registry</li>
-            <li>GitHub Container Registry</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Container orchestration là gì?</h2>
-          <ul>
-            <li>Quản lý nhiều container trên nhiều host.</li>
-            <li>Tự động scheduling, scaling, self-healing.</li>
-            <li>Đảm bảo HA cho service production.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Kubernetes (K8s) cơ bản</h2>
-          <ul>
-            <li>Pod là đơn vị deploy nhỏ nhất.</li>
-            <li>Deployment quản số replica và rollout.</li>
-            <li>Service/Ingress để expose ra mạng.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>K8s trong workload AI</h2>
-          <ul>
-            <li>Inference services scale theo traffic.</li>
-            <li>Batch jobs/training jobs qua operators.</li>
-            <li>Tách node pools CPU/GPU để tối ưu chi phí.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>K8s managed services</h2>
-          <ul>
-            <li>AWS EKS</li>
-            <li>Google GKE</li>
-            <li>Azure AKS</li>
-            <li>OpenShift (enterprise platform)</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Docker Compose vs Kubernetes</h2>
-          <ul>
-            <li>Compose: tốt cho local/dev, 1 host.</li>
-            <li>K8s: production đa host, scale lớn.</li>
-            <li>Nhiều đội dùng Compose cho dev, K8s cho prod.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Pitfalls khi dùng containers/K8s</h2>
-          <ul>
-            <li>Image quá lớn, startup chậm.</li>
-            <li>Không có resource limits → noisy neighbors.</li>
-            <li>Thiếu readiness/liveness probes.</li>
-            <li>Secret quản lý không an toàn.</li>
-          </ul>
-        </section>
-      </section>
-
-      <!-- 6 Resource mgmt -->
-      <section>
-        <section>
-          <h1><span class="text-light">6.</span><br />Resource Management</h1>
-        </section>
-
-        <section>
-          <h2>Bản chất workload ML</h2>
-          <ul>
-            <li>Repetitive jobs: retrain định kỳ, batch scoring, data prep.</li>
-            <li>Phụ thuộc giữa các bước (DAG dependencies).</li>
-            <li>Nên cần scheduler/orchestrator phù hợp.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Cron</h2>
-          <ul>
-            <li>Chạy script theo lịch cố định.</li>
-            <li>Đơn giản nhưng không xử lý dependency phức tạp.</li>
-            <li>Phù hợp job nhỏ, ít ràng buộc.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Scheduler</h2>
-          <ul>
-            <li>Hiểu DAG, dependency, retry, priority.</li>
-            <li>Có thể trigger theo time hoặc event.</li>
-            <li>Quản hàng đợi jobs và phân bổ tài nguyên.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Orchestrator</h2>
-          <ul>
-            <li>Quan tâm tới máy/cluster/replication/provisioning.</li>
-            <li>Bổ sung hoặc thu hồi tài nguyên theo tải.</li>
-            <li>Thường kết hợp chặt với scheduler.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Scheduler vs Orchestrator</h2>
-          <table>
-            <thead><tr><th>Khía cạnh</th><th>Scheduler</th><th>Orchestrator</th></tr></thead>
-            <tbody>
-              <tr><td>Trọng tâm</td><td>khi nào/chạy gì</td><td>chạy ở đâu/tài nguyên nào</td></tr>
-              <tr><td>Abstraction</td><td>job, DAG, queue</td><td>machine, cluster, pod</td></tr>
-              <tr><td>Ví dụ</td><td>Airflow, Prefect</td><td>Kubernetes, Nomad</td></tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section>
-          <h2>Workflow tools cho data science</h2>
-          <ul>
-            <li>Airflow, Argo, Prefect, Dagster</li>
-            <li>Kubeflow Pipelines, Metaflow</li>
-            <li>Mỗi tool có trade-off về UX, ecosystem, deployment target</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Nguyên tắc chọn workflow tool</h2>
-          <ul>
-            <li>Đội ngũ quen code-first hay config-first?</li>
-            <li>Cần chạy local + cloud liền mạch không?</li>
-            <li>K8s là bắt buộc hay optional?</li>
-            <li>Tích hợp sẵn cloud/data stack nào?</li>
-          </ul>
+          <h2>Ảnh: Kubeflow pipeline (DAG → pods/images)</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh Kubeflow pipeline">
+            <img src="img/lec-08/kubeflow.webp" alt="Ảnh Kubeflow pipeline" style="max-width:100%; height:auto;">
+          </div>
         </section>
 
       </section>
 
-      <!-- 7 Cloud + service models -->
+      <!-- 4 Development environment -->
       <section>
         <section>
-          <h1><span class="text-light">7.</span><br />Cloud và AI Infrastructure Models</h1>
+          <h1><span class="text-light">4.</span><br />Môi trường phát triển</h1>
         </section>
 
-        <section>
-          <h2>Public cloud vs private data center</h2>
+        <section style="font-size:0.86em;">
+          <h2>Tổng quan</h2>
           <ul>
-            <li>Cloud: khởi động nhanh, elastic, capex thấp.</li>
-            <li>Private DC: kiểm soát cao, có thể tối ưu cost dài hạn.</li>
-            <li>Nhiều doanh nghiệp chọn hybrid.</li>
+            <li>Môi trường phát triển là nơi kỹ sư ML viết code, chạy thử nghiệm, và tương tác với production (champion/challenger).</li>
+            <li>Ba thành phần cốt lõi: <strong>IDE</strong>, <strong>versioning</strong>, <strong>CI/CD</strong>.</li>
+          </ul>
+          <div class="question-box" style="margin-top:0.5em;">
+            <div class="question-title">Trích ý</div>
+            Theo Ville Tuulos (Effective Data Science Infrastructure): nhiều công ty có hạ tầng production tốt nhưng quá trình phát triển/debug/test lại ad-hoc;
+            nếu chỉ làm tốt một mảnh hạ tầng, hãy ưu tiên <span class="keyword">môi trường phát triển</span>.
+          </div>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>IDE &amp;</h2>
+          <ul>
+            <li><strong>IDE</strong>: native IDE (VS Code, PyCharm…), terminal editor (Vim), browser IDE (Cloud9/Codespaces), remote IDE (VS Code Remote/SSH).</li>
+            <li>Chức năng quan trọng: code intelligence, debugging, lint/format/type-check, extension ecosystem (Python/SSH/Docker/K8s/notebook).</li>
+            <li><strong>Notebook</strong> hữu ích cho EDA + phân tích kết quả vì chứa được code + bảng + biểu đồ + diễn giải; lại giữ state để thử nghiệm nhanh.</li>
+            <li>Môi trường notebook: Jupyter/JupyterLab, Colab, SageMaker Studio, notebook trong VS Code.</li>
           </ul>
         </section>
 
-
-        <section>
-          <h2>IaaS là gì?</h2>
+        <section style="font-size:0.86em;">
+          <h2>IDE có trợ giúp AI: Cursor, Claude Code…</h2>
           <ul>
-            <li>Cung cấp máy ảo, mạng, lưu trữ ở mức hạ tầng.</li>
-            <li>Người dùng tự quản OS/runtime/app.</li>
-            <li>Linh hoạt cao, cần vận hành nhiều hơn.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>PaaS là gì?</h2>
-          <ul>
-            <li>Cung cấp nền tảng chạy ứng dụng, giảm gánh vận hành.</li>
-            <li>Scale, networking, deploy được quản lý nhiều hơn.</li>
-            <li>Đổi lại linh hoạt thấp hơn IaaS.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>SaaS là gì?</h2>
-          <ul>
-            <li>Dùng dịch vụ hoàn chỉnh qua web/API.</li>
-            <li>Ít vận hành nhất, time-to-value nhanh.</li>
-            <li>Phụ thuộc vendor và giới hạn tùy biến.</li>
+            <li><strong>Điểm mạnh</strong>: sinh/biến đổi code nhanh, giải thích codebase, gợi ý refactor, tạo test, viết script glue (Docker/K8s/CI), tìm lỗi theo ngữ cảnh.</li>
+            <li><strong>Cách dùng hiệu quả</strong>: giao nhiệm vụ rõ ràng (đầu vào/đầu ra), chia nhỏ bước, yêu cầu “test plan”, và luôn chạy lint/tests/format như bình thường.</li>
+            <li><strong>Rủi ro</strong>: có thể bịa API/logic, tạo thay đổi lan rộng hoặc lộ dữ liệu nhạy cảm nếu dán log/secret → cần review và chính sách chia sẻ.</li>
+            <li>Trong workflow ML: hữu ích khi “đóng gói thử nghiệm → module hóa → container hóa → pipeline hóa”.</li>
           </ul>
         </section>
 
         <section>
-          <h2>IaaS / PaaS / SaaS cho AI</h2>
-          <table>
-            <thead><tr><th>Mô hình</th><th>Bạn quản</th><th>Vendor quản</th></tr></thead>
-            <tbody>
-              <tr><td>IaaS</td><td>hầu hết stack</td><td>hạ tầng vật lý</td></tr>
-              <tr><td>PaaS</td><td>code + config</td><td>runtime + phần lớn ops</td></tr>
-              <tr><td>SaaS</td><td>chủ yếu nghiệp vụ</td><td>toàn bộ nền tảng</td></tr>
-            </tbody>
-          </table>
+          <h2>Ảnh ví dụ: notebook</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh ví dụ notebook">
+            <img src="img/lec-08/notebook.webp" alt="Ví dụ notebook" style="max-width:100%; height:auto;">
+          </div>
         </section>
 
-        <section>
-          <h2>Ví dụ dịch vụ theo mô hình</h2>
+        <section style="font-size:0.86em;">
+          <h2>Notebook: điểm mạnh và điểm yếu</h2>
           <ul>
-            <li>IaaS: AWS EC2, GCE, Azure VM</li>
-            <li>PaaS: Cloud Run, Azure App Service, Heroku</li>
-            <li>SaaS: OpenAI API, Notion AI, Salesforce Einstein</li>
+            <li><strong>Điểm mạnh</strong>: stateful → nếu fail ở bước 4, có thể chạy lại đúng bước đó; dữ liệu lớn chỉ cần load 1 lần.</li>
+            <li><strong>Điểm yếu</strong>: stateful cũng cho phép chạy cell không theo thứ tự → khó tái lập nếu không có quy ước “run all / run order”.</li>
+            <li>Thực hành tốt: cell idempotent, chạy được từ trên xuống; phần core đóng gói thành module để reuse + test.</li>
           </ul>
         </section>
 
         <section>
-          <h2>Managed ML platform examples</h2>
-          <ul>
-            <li>AWS SageMaker</li>
-            <li>Google Vertex AI</li>
-            <li>Azure ML</li>
-            <li>Databricks ML / MLflow ecosystem</li>
-          </ul>
-        </section>
-      </section>
-
-      <!-- 8 Networking -->
-      <section>
-        <section>
-          <h1><span class="text-light">8.</span><br />Networking Fundamentals</h1>
-        </section>
-
-        <section>
-          <h2>Vì sao networking quan trọng cho AI infra?</h2>
-          <ul>
-            <li>Model serving là bài toán network-heavy.</li>
-            <li>Data movement thường là bottleneck chi phí và latency.</li>
-            <li>Bảo mật hạ tầng gắn chặt với thiết kế mạng.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>IP address</h2>
-          <ul>
-            <li>Định danh thiết bị trong mạng.</li>
-            <li>IPv4/IPv6, private/public ranges.</li>
-            <li>NAT giúp map private ra public.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>DNS</h2>
-          <ul>
-            <li>Phân giải tên miền thành IP.</li>
-            <li>Rất quan trọng cho service discovery và failover.</li>
-            <li>TTL ảnh hưởng tốc độ cập nhật route.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>TCP vs UDP</h2>
-          <ul>
-            <li>TCP: tin cậy, có kiểm soát thứ tự, dùng cho HTTP.</li>
-            <li>UDP: nhanh, không đảm bảo đầy đủ, hợp realtime media.</li>
-            <li>Nhiều AI API production dùng TCP-based protocols.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>HTTP/HTTPS</h2>
-          <ul>
-            <li>HTTP là giao thức ứng dụng phổ biến cho APIs.</li>
-            <li>HTTPS = HTTP + TLS mã hóa đường truyền.</li>
-            <li>HTTP/2 giúp multiplexing, giảm overhead.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Proxy và Reverse Proxy</h2>
-          <ul>
-            <li>Forward proxy: đại diện client.</li>
-            <li>Reverse proxy: đại diện server, route và bảo vệ backend.</li>
-            <li>Dùng cho TLS termination, caching, rate limiting.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Load Balancer</h2>
-          <ul>
-            <li>Phân phối request nhiều backend nodes.</li>
-            <li>Hỗ trợ health checks và failover.</li>
-            <li>Kết hợp autoscaling để giữ SLO.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>CDN</h2>
-          <ul>
-            <li>Đưa nội dung đến edge gần người dùng.</li>
-            <li>Giảm RTT và tải cho origin.</li>
-            <li>Hữu ích cho static assets và model-related artifacts.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Sơ đồ đường đi request</h2>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">DNS</div><div class="stage-desc">resolve</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">CDN</div><div class="stage-desc">edge</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">LB/Proxy</div><div class="stage-desc">route</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">API Service</div><div class="stage-desc">inference</div></div>
+          <h2>Ảnh minh họa: rerun step (Figure 10-5)</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Figure 10-5">
+            <img src="img/lec-08/infra-rerun.png" alt="Figure 10-5" style="max-width:100%; height:auto;">
           </div>
         </section>
 
         <section>
-          <h2>Công nghệ networking phổ biến</h2>
+          <h2>Ảnh minh họa: reproducibility (Figure 10-6)</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Figure 10-6">
+            <img src="img/lec-08/infra-notebook-meme.png" alt="Figure 10-6" style="max-width:100%; height:auto;">
+          </div>
+        </section>
+
+        <section style="font-size:0.84em;">
+          <h2>Notebook trong tổ chức (Netflix)</h2>
+          <p style="margin-top:0;">“Beyond Interactive: Notebook Innovation at Netflix”</p>
           <ul>
-            <li>Proxy/LB: NGINX, HAProxy, Envoy, Traefik</li>
-            <li>DNS: Route53, Cloud DNS, CoreDNS</li>
-            <li>CDN: CloudFront, Cloudflare, Fastly</li>
-            <li>Service mesh: Istio, Linkerd</li>
+            <li><strong>Papermill</strong>: chạy nhiều notebook theo nhiều bộ tham số, chạy song song, tổng hợp metrics.</li>
+            <li><strong>Commuter</strong>: notebook hub để xem/tìm/chia sẻ notebook.</li>
+            <li><strong>nbdev</strong>: viết tài liệu và tests ngay trong notebook.</li>
           </ul>
         </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Chuẩn hóa môi trường phát triển</h2>
+          <ul>
+            <li>Chuẩn hóa tối thiểu theo team: pin <strong>package + version</strong> và <strong>Python version</strong> để tránh “works on my machine”.</li>
+            <li>Thực tế có thể vướng phần cứng/tooling (vd. chip mới) → chuyển sang <strong>cloud dev environment</strong> để chuẩn hóa cả “loại máy”.</li>
+            <li>Cloud dev: cloud IDE (Cloud9/SageMaker Studio) hoặc local IDE + SSH; có thể auto shutdown (vd. 30 phút) và chi phí cỡ $0.1/giờ cho 4 vCPU + 8GB.</li>
+            <li>Lợi ích: IT support dễ hơn, làm việc từ xa thuận tiện, kiểm soát truy cập tốt hơn, giảm gap dev–prod khi production ở cloud.</li>
+          </ul>
+        </section>
+
+    
+
+        <section style="font-size:0.82em;">
+          <h2>Từ phát triển đến sản phẩm: containers</h2>
+          <ul>
+            <li>Dev thường “stateful” (cài deps một lần). Production “stateless” và scale theo tải (ví dụ traffic tăng 10×) → instance mới phải chạy được ngay.</li>
+            <li>Docker giải quyết bằng <strong>Dockerfile</strong> (hướng dẫn dựng môi trường) → build ra <strong>image</strong> → chạy thành <strong>container</strong>.</li>
+            <li>Base image/registry giúp tái sử dụng và chia sẻ (Docker Hub, AWS ECR…).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Docker: Dockerfile, image, container</h2>
+          <div class="question-box">
+            <div class="question-title">Khái niệm cốt lõi</div>
+            <ul>
+              <li><strong>Dockerfile</strong>: tập hướng dẫn dựng môi trường chạy (cài dependency, copy code, set env…).</li>
+              <li><strong>Image</strong>: kết quả sau khi build từ Dockerfile (một môi trường bất biến, có version/tag).</li>
+              <li><strong>Container</strong>: một instance đang chạy, được tạo từ image.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section style="font-size:0.84em;">
+          <h2>Docker: build → run → push</h2>
+          <ul>
+            <li><strong>Build</strong>: tạo image theo tag để tái lập.</li>
+            <li><strong>Run</strong>: chạy container như một deploy unit có thể tạo mới ở bất kỳ máy/instance nào.</li>
+            <li><strong>Push</strong>: đẩy image lên registry để CI/CD và production kéo về.</li>
+          </ul>
+          <pre><code class="language-bash" data-trim>
+docker build -t fancy-nlp:1.0 .
+docker run --rm fancy-nlp:1.0
+docker tag fancy-nlp:1.0 registry.example.com/fancy-nlp:1.0
+docker push registry.example.com/fancy-nlp:1.0
+          </code></pre>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Ví dụ Dockerfile</h2>
+          <pre><code class="language-dockerfile" data-trim>
+# Dockerfile
+FROM pytorch/pytorch:latest
+RUN git clone https://github.com/NVIDIA/apex
+RUN cd apex && \
+    python3 setup.py install && \
+    pip install -v --no-cache-dir --global-option="--cpp_ext" \
+    --global-option="--cuda_ext" ./
+WORKDIR /fancy-nlp-project
+RUN git clone https://github.com/huggingface/transformers.git && \
+    cd transformers && \
+    python3 -m pip install --no-cache-dir .
+          </code></pre>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Nhiều container &amp; orchestration</h2>
+          <ul>
+            <li>Tách container để tối ưu tài nguyên (vd. featurizing cần RAM cao chạy CPU; training cần GPU) hoặc khi dependencies xung đột.</li>
+            <li>Nhiều service → nhiều containers: Docker Compose hợp 1 host; Kubernetes chạy multi-host, tạo network, scale up/down và giữ HA.</li>
+          </ul>
+        </section>
+
       </section>
 
-      <!-- 9 Dev env -->
+      <!-- 5 ML platform -->
       <section>
         <section>
-          <h1><span class="text-light">9.</span><br />Dev Environment &amp; Tooling</h1>
+          <h1><span class="text-light">5.</span><br />Nền tảng AI (AI Platform)</h1>
         </section>
 
-        <section>
-          <h2>Dev environment gồm những gì?</h2>
+        <section style="font-size:0.86em;">
+          <h2>Nền tảng AI (AI platform) là gì?</h2>
           <ul>
-            <li>IDE/notebook</li>
-            <li>Versioning cho code/data/experiments</li>
-            <li>CI/CD test suite</li>
-            <li>Kết nối an toàn tới môi trường staging/prod</li>
+            <li>Một tập các <strong>thành phần hạ tầng + công cụ</strong> để xây, huấn luyện, triển khai và vận hành ML theo cách <strong>lặp lại được</strong> và <strong>mở rộng được</strong>.</li>
+            <li>Mục tiêu: “chuẩn hoá” đường đi của AI từ <strong>data → feature → model → deploy</strong>, để nhiều team/use case dùng chung.</li>
+            <li>Một cách nhìn thực dụng: AI platform là “xương sống” gồm các tầng dưới đây.</li>
           </ul>
         </section>
 
-
-        <section>
-          <h2>IDE và notebook</h2>
+        <section style="font-size:0.86em;">
+          <h2>1) Data Layer (Tầng dữ liệu)</h2>
           <ul>
-            <li>IDE: VS Code, PyCharm, Vim, IntelliJ...</li>
-            <li>Notebook: Jupyter, Colab, SageMaker Studio.</li>
-            <li>Notebook mạnh cho khám phá nhưng dễ giảm tái lập nếu chạy cell không thứ tự.</li>
+            <li>Đây là nền tảng của mọi thứ — <strong>ML mà không có data thì vô nghĩa</strong>.</li>
+            <li><strong>Data sources</strong>: database, log, API, IoT, user events…</li>
+            <li><strong>Data storage</strong>: data lake (S3, HDFS), data warehouse (BigQuery, Snowflake)</li>
+            <li><strong>Data processing</strong>: batch (Spark), streaming (Kafka, Flink)</li>
+            <li><strong>Mục tiêu</strong>: thu thập + làm sạch + chuẩn hoá dữ liệu</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Ưu/nhược của notebook stateful</h2>
+        <section style="font-size:0.86em;">
+          <h2>2) Feature Engineering &amp; Feature Store</h2>
           <ul>
-            <li><strong>Ưu:</strong> chạy lại từng bước nhanh, tiện EDA.</li>
-            <li><strong>Nhược:</strong> khó tái lập nếu state ngầm.</li>
-            <li>Khuyến nghị: convert flow chính thành script/pipeline.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Standardize dev environments</h2>
-          <ul>
-            <li>Pin phiên bản Python và dependencies.</li>
-            <li>Dùng lockfile/conda env/poetry.</li>
-            <li>Giảm bug kiểu “chạy máy A được, máy B lỗi”.</li>
-          </ul>
-        </section>
-
-
-        <section>
-          <h2>Versioning stack điển hình</h2>
-          <ul>
-            <li>Code: Git/GitHub/GitLab</li>
-            <li>Data: DVC/LakeFS (tuỳ dự án)</li>
-            <li>Experiments: MLflow, W&amp;B, Comet</li>
-            <li>Artifacts: S3/GCS + model store</li>
+            <li><strong>Tạo feature</strong> từ raw data để phục vụ model.</li>
+            <li><strong>Feature store</strong>: lưu trữ và tái sử dụng feature, đảm bảo <strong>train</strong> và <strong>inference</strong> dùng cùng logic.</li>
+            <li><strong>Ví dụ</strong>: <code>user_age</code> → <code>bucket_age</code>; click history → embedding</li>
+            <li><strong>Công cụ phổ biến</strong>: Feast, Tecton</li>
           </ul>
         </section>
 
         <section>
-          <h2>CI/CD cho dev environment</h2>
+          <h2>Ảnh: Stitch Fix feature store (Figure 10-13)</h2>
+          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Figure 10-13">
+            <img src="img/lec-08/stitch-fix.png" alt="Artifacts Stitch Fix theo dõi">
+          </div>
+        </section>
+
+        <section style="font-size:0.86em;">
+          <h2>3) Model Development (Training)</h2>
           <ul>
-            <li>PR checks: lint, tests, security scan.</li>
-            <li>Build container reproducible.</li>
-            <li>Deploy staging trước production.</li>
-            <li>Có rollback và release notes rõ ràng.</li>
+            <li>Nơi data scientist/ML engineer làm việc: thử nghiệm (notebook/script), huấn luyện, tuning, đánh giá.</li>
+            <li><strong>Training</strong>: chạy job huấn luyện (GPU/CPU) và quản lý tài nguyên đi kèm.</li>
+            <li><strong>Hyperparameter tuning</strong> và <strong>evaluation</strong> là phần “tốn compute” và cần chuẩn hoá pipeline.</li>
+            <li><strong>Framework</strong>: PyTorch, TensorFlow</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Tooling examples</h2>
+        <section style="font-size:0.86em;">
+          <h2>4) Experiment Tracking &amp; Versioning</h2>
           <ul>
-            <li>CI/CD: GitHub Actions, CircleCI, GitLab CI</li>
-            <li>Workflow: Airflow, Argo, Prefect, Dagster</li>
-            <li>MLOps stack: Kubeflow, Metaflow, MLflow</li>
-            <li>Infra as Code: Terraform, Pulumi, Ansible</li>
-          </ul>
-        </section>
-      </section>
-
-      <!-- 10 ML platform -->
-      <section>
-        <section>
-          <h1><span class="text-light">10.</span><br />ML Platform Components</h1>
-        </section>
-
-        <section>
-          <h2>ML Platform là gì?</h2>
-          <ul>
-            <li>Bộ công cụ dùng chung cho nhiều ứng dụng ML.</li>
-            <li>Giảm trùng lặp hạ tầng giữa các team.</li>
-            <li>Tăng tốc delivery và consistency.</li>
+            <li>Không track thì <strong>không reproduce</strong> được model.</li>
+            <li><strong>Log metrics</strong> (accuracy, loss), lưu config, so sánh runs.</li>
+            <li><strong>Version</strong> model + dataset + code để truy vết và rollback.</li>
+            <li><strong>Tools</strong>: MLflow, Weights &amp; Biases</li>
           </ul>
         </section>
 
-        <section>
-          <h2>3 thành phần phổ biến</h2>
+        <section style="font-size:0.86em;">
+          <h2>5) Model Registry</h2>
           <ul>
-            <li>Deployment service</li>
-            <li>Model store</li>
-            <li>Feature store</li>
+            <li>Lưu trữ và quản lý model theo vòng đời.</li>
+            <li><strong>Versioning</strong>: v1, v2…; <strong>Stage</strong>: staging, production</li>
+            <li><strong>Metadata</strong>: owner, data lineage, metrics, approval, compat notes…</li>
+            <li>Trực giác: như <strong>“Git cho model”</strong>.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Deployment services</h2>
+        <section style="font-size:0.86em;">
+          <h2>6) Deployment / Serving</h2>
           <ul>
-            <li>Đóng gói model + expose endpoint online/batch.</li>
-            <li>Cần hỗ trợ test in production (shadow/canary/A-B).</li>
-            <li>Theo dõi metric và rollback thuận tiện.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Model store</h2>
-          <ul>
-            <li>Không chỉ lưu binary model.</li>
-            <li>Cần lưu artifacts để tái lập và debug.</li>
-            <li>Model lineage là bài toán khó trong thực tế.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Artifacts nên lưu trong model store</h2>
-          <ul>
-            <li>Model definition + parameters</li>
-            <li>Featurize/predict functions</li>
-            <li>Dependencies/container</li>
-            <li>Data pointers/version</li>
-            <li>Code commit, experiment artifacts, owner tags</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Feature store</h2>
-          <ul>
-            <li>Feature management (catalog, sharing, governance)</li>
-            <li>Feature computation (materialization)</li>
-            <li>Feature consistency giữa training và serving</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Ví dụ công nghệ ML platform</h2>
-          <ul>
-            <li>Managed: SageMaker, Vertex AI, Azure ML</li>
-            <li>Open ecosystem: MLflow, Feast, Seldon, Ray Serve</li>
-            <li>Feature catalog: DataHub, Amundsen</li>
+            <li>Đưa model ra production theo hai kiểu chính:</li>
+            <li><strong>Batch inference</strong> (offline) và <strong>real-time inference</strong> (API)</li>
+            <li><strong>Công nghệ</strong>: REST/gRPC service, TensorFlow Serving, KServe, Triton</li>
           </ul>
         </section>
 
@@ -923,63 +794,11 @@ CMD ["python", "serve.py"]
 
       <!-- 11 -->
       <section>
-        <section>
-          <h1><span class="text-light">11.</span><br />Reference Infrastructure Blueprint</h1>
-        </section>
-
-        <section style="font-size:0.84em;">
-          <h2>Sơ đồ blueprint cho AI product (quy mô vừa)</h2>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Dev Env</div><div class="stage-desc">VSCode/Jupyter</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">CI/CD</div><div class="stage-desc">build/test/image</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Registry</div><div class="stage-desc">container+model</div></div>
-          </div>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">K8s/EKS</div><div class="stage-desc">serving pods</div></div>
-            <div class="arrow">↔</div>
-            <div class="stage"><div class="stage-title">Redis + DB</div><div class="stage-desc">online state</div></div>
-            <div class="arrow">↔</div>
-            <div class="stage"><div class="stage-title">S3 + Warehouse</div><div class="stage-desc">offline data</div></div>
-          </div>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Kafka</div><div class="stage-desc">events</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Airflow</div><div class="stage-desc">pipelines</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Monitoring</div><div class="stage-desc">Prom+Graf+OTel</div></div>
-          </div>
-        </section>
-
-        <section>
-          <h2>Lộ trình triển khai 3 giai đoạn</h2>
-          <ul>
-            <li><strong>Stage 1</strong>: cloud-first, containerize, metrics tối thiểu.</li>
-            <li><strong>Stage 2</strong>: scheduler + model store + feature consistency.</li>
-            <li><strong>Stage 3</strong>: optimize cost, autoscaling tinh chỉnh, governance.</li>
-          </ul>
-        </section>
-
-
-        <section>
-          <h2>Thực hành tốt cốt lõi</h2>
-          <ul>
-            <li>Standardize dev env trước khi “platform hóa” lớn.</li>
-            <li>Containerize sớm, đo benchmark thật, không chỉ spec.</li>
-            <li>Theo dõi cả cost và quality metrics song song.</li>
-            <li>Xây “small paved road” để team dùng dễ.</li>
-          </ul>
-        </section>
-      </section>
-
-      <!-- 12 -->
-      <section>
         <section style="font-size: 0.82em;">
           <h2>Tổng kết</h2>
           <ul>
-            <li>Infrastructure tốt là nền tảng của MLOps tốt.</li>
-            <li>Compute và storage là lớp gốc; resource management quyết định hiệu quả vận hành.</li>
+            <li>CSHT tốt là nền tảng của MLOps tốt.</li>
+            <li>Lưu trữ và tính toán là lớp gốc; quản lý tài nguyên quyết định hiệu quả vận hành.</li>
             <li>Containers + Kubernetes giúp chuẩn hóa từ dev sang prod.</li>
             <li>Cloud cho tốc độ, private cho kiểm soát; đa số chọn hybrid theo giai đoạn.</li>
             <li>Networking và dev tooling là “điểm nghẽn vô hình” nhưng tác động rất lớn.</li>
@@ -990,7 +809,7 @@ CMD ["python", "serve.py"]
         <section>
           <h2>Bài tập gợi ý</h2>
           <ol>
-            <li>Thiết kế infrastructure cho 1 app AI realtime 50K DAU, budget hữu hạn.</li>
+            <li>Thiết kế CSHT cho 1 app AI realtime 50K DAU, budget hữu hạn.</li>
             <li>Chọn stack IaaS/PaaS/SaaS và giải thích trade-off.</li>
             <li>Đề xuất kế hoạch tối ưu cloud bill trong 6 tháng.</li>
           </ol>

@@ -1,0 +1,181 @@
+Storage and Compute
+8
+ML systems work with a lot of data, and this data needs to be stored
+somewhere. The storage layer is where data is collected and stored. At its
+simplest form, the storage layer can be a hard drive disk (HDD) or a solid
+state disk (SSD). The storage layer can be in one place, e.g., you might have
+all your data in Amazon S3 or in Snowflake, or spread out over multiple
+locations. Your storage layer can be on-prem in a private data center or on
+the cloud. In the past, companies might have tried to manage their own
+storage layer. However, in the last decade, the storage layer has been mostly
+commoditized and moved to the cloud. Data storage has become so cheap
+that most companies just store all the data they have without the cost.
+9
+We’ve covered the data layer intensively in Chapter 3, so in this chapter,
+we’ll focus on the compute layer.
+The compute layer refers to all the compute resources a company has access
+to and the mechanism to determine how these resources can be used. The
+amount of compute resources available determines the scalability of your
+workloads. You can think of the compute layer as the engine to execute
+your jobs. At its simplest form, the compute layer can just be a single CPU
+core or a GPU core that does all your computation. Its most common form
+is cloud compute managed by a cloud provider such as AWS Elastic
+Compute Cloud (EC2) or GCP.
+The compute layer can usually be sliced into smaller compute units to be
+used concurrently. For example, a CPU core might support two concurrent
+threads; each thread is used as a compute unit to execute its own job. Or
+multiple CPU cores might be joined together to form a larger compute unit
+to execute a larger job. A compute unit can be created for a specific short
+lived job such as an AWS Step Function or a GCP Cloud Run—the unit will
+be eliminated after the job finishes. A compute unit can also be created to
+be more “permanent,” aka without being tied to a job, like a virtual
+machine. A more permanent compute unit is sometimes called an
+“instance.”
+However, the compute layer doesn’t always use threads or cores as compute
+units. There are compute layers that abstract away the notions of cores and
+use other units of computation. For example, computation engines like
+Spark and Ray use “job” as their unit, and Kubernetes uses “pod,” a
+wrapper around containers, as its smallest deployable unit. While you can
+have multiple containers in a pod, you can’t independently start or stop
+different containers in the same pod.
+To execute a job, you first need to load the required data into your compute
+unit’s memory, then execute the required operations—addition,
+multiplication, division, convolution, etc.—on that data. For example, to
+add two arrays, you will first need to load these two arrays into memory,
+and then perform addition on the two arrays. If the compute unit doesn’t
+have enough memory to load these two arrays, the operation will be
+impossible without an algorithm to handle out-of-memory computation.
+Therefore, a compute unit is mainly characterized by two metrics: how
+much memory it has and how fast it runs an operation.
+10
+The memory metric can be specified using units like GB, and it’s generally
+straightforward to evaluate: a compute unit with 8 GB of memory can
+handle more data in memory than a compute unit with only 2 GB, and it is
+generally more expensive. Some companies care not only how much
+memory a compute unit has but also how fast it is to load data in and out of
+memory, so some cloud providers advertise their instances as having “high
+bandwidth memory” or specify their instances’ I/O bandwidth.
+The operation speed is more contentious. The most common metric is
+FLOPS—floating point operations per second. As the name suggests, this
+metric denotes the number of float point operations a compute unit can run
+per second. You might see a hardware vendor advertising that their GPUs or
+TPUs or IPUs (intelligence processing units) have teraFLOPS (one trillion
+FLOPS) or another massive number of FLOPS.
+11
+However, this metric is contentious because, first, companies that measure
+this metric might have different ideas on what is counted as an operation.
+For example, if a machine fuses two operations into one and executes this
+fused operation, does this count as one operation or two? Second, just
+because a compute unit is capable of doing a trillion FLOPS doesn’t mean
+you’ll be able to execute your job at the speed of a trillion FLOPS. The
+ratio of the number of FLOPS a job can run to the number of FLOPs a
+compute unit is capable of handling is called utilization. If an instance is
+capable of doing a million FLOPs and your job runs with 0.3 million
+FLOPS, that’s a 30% utilization rate. Of course, you’d want to have your
+utilization rate as high as possible. However, it’s near impossible to achieve
+100% utilization rate. Depending on the hardware backend and the
+application, the utilization rate of 50% might be considered good or bad.
+Utilization also depends on how fast you can load data into memory to
+perform the next operations—hence the importance of I/O bandwidth.
+12
+When evaluating a new compute unit, it’s important to evaluate how long it
+will take this compute unit to do common workloads. For example, MLPerf
+is a popular benchmark for hardware vendors to measure their hardware
+performance by showing how long it will take their hardware to train a
+ResNet-50 model on the ImageNet dataset or use a BERT-large model to
+generate predictions for the SQuAD dataset.
+Because thinking about FLOPS is not very useful, to make things easier,
+when evaluating compute performance, many people just look into the
+number of cores a compute unit has. So you might use an instance with 4
+CPU cores and 8 GB of memory. Keep in mind that AWS uses the concept
+of vCPU, which stands for virtual CPU and which, for practical purposes,
+can be thought of as half a physical core. You can see the number of cores
+and memory offered by some AWS EC2 and GCP instances in Figure 10-3.
+13
+Figure 10-3. Examples of GPU and TPU instances available on AWS and GCP as of February 2022.
+Screenshotted from AWS and GCP websites.
+Public Cloud Versus Private Data Centers
+Like data storage, the compute layer is largely commoditized. This means
+that instead of setting up their own data centers for storage and compute,
+companies can pay cloud providers like AWS and Azure for the exact
+amount of compute they use. Cloud compute makes it extremely easy for
+companies to start building without having to worry about the compute
+layer. It’s especially appealing to companies that have variable-sized
+workloads. Imagine if your workloads need 1,000 CPU cores one day of the
+year and only 10 CPU cores the rest of the year. If you build your own data
+centers, you’ll need to pay for 1,000 CPU cores up front. With cloud
+compute, you only need to pay for 1,000 CPU cores one day of the year and
+10 CPU cores the rest of the year. It’s convenient to be able to just add more
+compute or shut down instances as needed—most cloud providers even do
+that automatically for you—reducing engineering operational overhead.
+This is especially useful in ML as data science workloads are bursty. Data
+scientists tend to run experiments a lot for a few weeks during development,
+which requires a surge of compute power. Later on, during production, the
+workload is more consistent.
+14
+15
+Keep in mind that cloud compute is elastic but not magical. It doesn’t
+actually have infinite compute. Most cloud providers offer limits on the
+compute resources you can use at a time. Some, but not all, of these limits
+can be raised through petitions. For example, as of writing this book, AWS
+EC2’s largest instance is X1e with 128 vCPUs and almost 4 TB of
+memory. Having a lot of compute resources doesn’t mean that it’s always
+easy to use them, especially if you have to work with spot instances to save
+cost.
+Due to the cloud’s elasticity and ease of use, more and more companies are
+choosing to pay for the cloud over building and maintaining their own
+storage and compute layer. Synergy Research Group’s research shows that
+in 2020, “enterprise spending on cloud infrastructure services [grew] by
+35% to reach almost $130 billion” while “enterprise spending on data
+[centers] dropped by 6% to under $90 billion,” as shown in Figure 10-4.
+16
+Figure 10-4. In 2020, enterprise spending on cloud infrastructure services grew by 35% while
+spending on data centers dropped by 6%
+While leveraging the cloud tends to give companies higher returns than
+building their own storage and compute layers early on, however, this
+becomes less defensible as a company grows. Based on disclosed cloud
+infrastructure spending by public software companies, the venture capital
+firm a16z shows that cloud spending accounts for approximately 50% cost
+of revenue of these companies.
+17
+The high cost of the cloud has prompted companies to start moving their
+workloads back to their own data centers, a process called “cloud
+repatriation.” Dropbox’s S-1 filing in 2018 shows that the company was
+able to save $75M over the two years prior to IPO due to their infrastructure
+optimization overhaul—a large chunk of it consisted of moving their
+workloads from public cloud to their own data centers. Is the high cost of
+cloud unique to Dropbox because Dropbox is in the data storage business?
+Not quite. In the same analysis mentioned above, a16z estimated that
+“across 50 of the top public software companies currently utilizing cloud
+infrastructure, an estimated $100B of market value is being lost among
+18
+them due to cloud impact on margins—relative to running the infrastructure
+themselves.”
+While getting started with the cloud is easy, moving away from the cloud is
+hard. Cloud repatriation requires nontrivial up-front investment in both
+commodities and engineering effort. More and more companies are
+following a hybrid approach: keeping most of their workloads on the cloud
+but slowly increasing their data centers investment.
+ON MULTICLOUD STRATEGY
+19
+20
+Another way for companies to reduce their dependence on any single cloud provider is
+to follow a multicloud strategy: spreading their workloads on multiple cloud
+providers. This allows companies to architect their systems so that they can be
+compatible with multiple clouds, enabling them to leverage the best and most cost
+effective technologies available instead of being stuck with the services provided by a
+single cloud provider, a situation known as vendor lock-in. A 2019 study by Gartner
+shows that 81% of organizations are working with two or more public cloud
+providers. A common pattern that I’ve seen for ML workloads is to do training on
+GCP or Azure, and deployment on AWS.
+The multicloud strategy doesn’t usually happen by choice. As Josh Wills, one of our
+early reviewers, put it: “Nobody in their right mind intends to use multicloud.” It’s
+incredibly hard to move data and orchestrate workloads across clouds.
+Often, multicloud just happens because different parts of the organization operate
+independently, and each part makes their own cloud decision. It can also happen
+following an acquisition—the acquired team is already on a cloud different from the
+host organization, and migrating hasn’t happened yet.
+In my work, I’ve seen multicloud happen due to strategic investments. Microsoft and
+Google are big investors in the startup ecosystem, and several companies that I work
+with that were previously on AWS have moved to Azure/GCP after Microsoft/Google
+invested in them

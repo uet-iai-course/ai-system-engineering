@@ -1,0 +1,125 @@
+A NOTE FOR EARLY RELEASE READERS
+With Early Release ebooks, you get books in their earliest form—the
+author’s raw and unedited content as they write—so you can take
+advantage of these technologies long before the official release of these
+titles.
+This will be the 10th chapter of the final book. Please note that the
+GitHub repo will be made active later on.
+If you have comments about how we might improve the content and/or
+examples in this book, or if you notice missing material within this
+chapter, please reach out to the author at chip@huyenchip.com.
+In Chapter 4 to Chapter 6, we discussed the logics for developing ML
+systems. In Chapter 7 to Chapter 9, we discussed the considerations for
+deploying, monitoring, and continually updating an ML system. Up until
+now, we’ve assumed that ML practitioners have access to all the tools and
+infrastructure they need to implement these logics and carry out these
+considerations. However, that assumption is far from being true. Many data
+scientists have told me that they know the right things to do for their ML
+systems, but they can’t do them because their infrastructure isn’t set up in a
+way that enables them to do so.
+ML systems are complex. The more complex a system, the more it can
+benefit from good infrastructure. Infrastructure, when set up right, can help
+automate processes, reducing the need for specialized knowledge and
+engineering time. This, in turn, can speed up the development and delivery
+of ML applications, reduce the surface area for bugs, and enable new use
+cases. When set up wrong, however, infrastructure is painful to use and
+expensive to replace. In this chapter, we’ll discuss how to set up
+infrastructure right for ML systems.
+Before we dive in, it’s important to note that every company’s infrastructure
+needs are different. The infrastructure required for you depends on the
+number of applications you develop and how specialized the applications
+are. At one end of the spectrum, you have companies that use ML for ad
+hoc business analytics such as to project the number of new users they’ll
+have next year to present at their quarterly planning meeting. These
+companies probably won’t need to invest in any infrastructure—Jupyter
+Notebooks, Python, and Pandas would be their best friends. If you have
+only one simple ML use case, such as an Android app for object detection
+to show your friends, you probably won’t need any infrastructure either—
+you just need an Android-compatible ML framework like TensorFlow Lite.
+1
+At the other end of the spectrum, there are companies that work on
+applications with unique requirements. For example, self-driving cars have
+unique accuracy and latency requirements—the algorithm must be able to
+respond within milliseconds and its accuracy must be near-perfect since a
+wrong prediction can lead to serious accidents. Similarly, Google Search
+has a unique scale requirement since most companies don’t process 63,000
+search queries a second, which translates to 234 million search queries an
+hour, like Google does. These companies will likely need to develop their
+own highly specialized infrastructure. Google developed a large part of
+their internal infrastructure for search; so did self-driving car companies
+like Tesla and Waymo. It’s common that part of specialized infrastructure
+is later made public and adopted by other companies. For example, Google
+extended their internal cloud infrastructure to the public, resulting in
+Google Cloud Platform.
+2
+In the middle of the spectrum are the majority of companies, those who use
+ML for multiple common applications—a fraud detection model, a price
+optimization model, a churn prediction model, a recommender system, etc.
+—at reasonable scale. “Reasonable scale” refers to companies that work
+with data in the order of gigabytes and terabytes, instead of petabytes, a
+3
+day. Their data science team might range from 10 to hundreds of
+engineers. This category might include any company from a 20-person
+startup to a company at Zillow’s scale, but not at FAAAM scale. For
+example, back in 2018, Uber was adding tens of terabytes of data a day to
+their data lake, and Zillow’s biggest dataset was bringing in 2 terabytes of
+uncompressed data a day. In contrast, even back in 2014, Facebook was
+generating 4 petabytes of data a day.
+4
+5
+6
+Companies in the middle of the spectrum will likely benefit from
+generalized ML infrastructure that is being increasingly standardized (see
+Figure 10-1). In this book, we’ll focus on the infrastructure for the vast
+majority of ML applications at a reasonable scale.
+Figure 10-1. Infrastructure requirements for companies at different production scales
+7
+In order to set up the right infrastructure for your needs, it’s important to
+understand exactly what infrastructure means and what it consists of.
+According to Wikipedia, in the physical world, “infrastructure is the set of
+fundamental facilities and systems that support the sustainable functionality
+of households and firms.” In the ML world, infrastructure is the set of
+fundamental facilities that support the development and maintenance of ML
+systems. What should be considered the “fundamental facilities” varies
+greatly from company to company, as discussed earlier in this chapter. In
+this section, we will examine the following four layers:
+Storage and compute
+The storage layer is where data is collected and stored. The compute
+layer provides the compute needed to run your ML workloads such as
+training a model, computing features, generating features, etc.
+Resource management
+Resource management comprises tools to schedule and orchestrate your
+workloads to make the most out of your available compute resources.
+Examples of tools in this category include Airflow, Kubeflow, and
+Metaflow.
+ML platform
+This provides tools to aid the development of ML applications such as
+model stores, feature stores, and monitoring tools. Examples of tools in
+this category include SageMaker and MLflow.
+Development environment
+This is usually referred to as the dev environment; it is where code is
+written and experiments are run. Code needs to be versioned and tested.
+Experiments need to be tracked.
+These four different layers are shown in Figure 10-2. Data and compute are
+the essential resources needed for any ML project, and thus the storage and
+compute layer forms the infrastructural foundation for any company that
+wants to apply ML. This layer is also the most abstract to a data scientist.
+We’ll discuss this layer first because they are the easiest to explain.
+Figure 10-2. Different layers of infrastructure for ML
+The dev environment is what data scientists have to interact with daily, and
+therefore, it is the least abstract to them. We’ll discuss this category next,
+then we’ll discuss resource management, a contentious topic among data
+scientists—people are still debating whether a data scientist needs to know
+about this layer or not. Because “ML platform” is a relatively new concept
+with its different components still maturing, we’ll discuss this category last,
+after we’ve familiarized ourselves with all other categories. An ML
+platform requires up-front investment from a company, but if it’s done right,
+it can make the life of data scientists across business use cases at that
+company so much easier.
+Even if two companies have the exact same infrastructure needs, their
+resulting infrastructure might look different depending on their approaches
+to build versus buy decisions—e.g., what they want to build in-house versus
+what they want to outsource to other companies. We’ll discuss the build
+versus buy decisions in the last part of this chapter, where we’ll also discuss
+the hope for standardized and unified abstractions for ML infrastructure.
+Let’s dive in!

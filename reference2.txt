@@ -1,0 +1,290 @@
+Development Environment
+The dev environment is where ML engineers write code, run experiments,
+and interact with the production environment where champion models are
+deployed and challenger models evaluated. The dev environment consists
+of the following components: IDE (integrated development environment),
+versioning, and CI/CD.
+If you’re a data scientist or ML engineer who writes code daily, you’re
+probably very familiar with all these tools and might wonder what there is
+to say about them. In my experience, outside of a handful of tech
+companies, the dev environment is severely underrated and underinvested
+in at most companies. According to Ville Tuulos in his book Effective Data
+Science Infrastructure, “you would be surprised to know how many
+companies have well-tuned, scalable production infrastructure but the
+question of how the code is developed, debugged, and tested in the first
+place is solved in an ad-hoc manner.”
+He suggested that “if you have time to set up only one piece of
+infrastructure well, make it the development environment for data
+scientists.” Because the dev environment is where engineers work,
+improvements in the dev environment translate directly into improvements
+in engineering productivity.
+In this section, we’ll first cover different components of the dev
+environment, then we’ll discuss the standardization of the dev environment
+before we discuss how to bring your changes from the dev environment to
+the production environment with containers.
+Dev Environment Setup
+The dev environment should be set up to contain all the tools that can make
+it easier for engineers to do their job. It should also consist of tools for
+versioning. As of this writing, companies use an ad hoc set of tools to
+version their ML workflows, such as Git to version control code, DVC to
+version data, Weights & Biases or Comet.ml to track experiments during
+development, and MLflow to track artifacts of models when deploying
+them. Claypot AI is working on a platform that can help you version and
+track all your ML workflows in one place. Versioning is important for any
+software engineering projects, but even more so for ML projects because of
+both the sheer number of things you can change (code, parameters, the data
+itself, etc.) and the need to keep track of prior runs to reproduce later on.
+We’ve covered this in the section “Experiment Tracking and Versioning” in
+Chapter 6.
+The dev environment should also be set up with a CI/CD test suite to test
+your code before pushing it to the staging or production environment.
+Examples of tools to orchestrate your CI/CD test suite are GitHub Actions
+and CircleCI. Because CI/CD is a software engineering concern, it’s beyond
+the scope of this book.
+In this section, we’ll focus on the place where engineers write code: the
+IDE.
+IDE
+The IDE is the editor where you write your code. IDEs tend to support
+multiple programming languages. IDEs can be native apps like VS Code or
+Vim. IDEs can be browser-based, which means they run in browsers, such
+as AWS Cloud9.
+21
+Many data scientists write code not just in IDEs but also in notebooks like
+Jupyter Notebooks and Google Colab. Notebooks are more than just
+places to write code. You can include arbitrary artifacts such as images,
+plots, data in nice tabular formats, etc., which makes notebooks very useful
+for exploratory data analysis and analyzing model training results.
+Notebooks have a nice property: they are stateful—they can retain states
+after runs. If your program fails halfway through, you can rerun from the
+failed step instead of having to run the program from the beginning. This is
+especially helpful when you have to deal with large datasets that might take
+a long time to load. With notebooks, you only need to load your data once
+—notebooks can retain this data in memory—instead of having to load it
+each time you want to run your code. As shown in Figure 10-5, if your code
+fails at step 4 in a notebook, you’ll only need to rerun step 4 instead of from
+the beginning of your program.
+Figure 10-5. In Jupyter Notebooks, if step 4 fails, you only need to run step 4 again, instead of having
+to run steps 1 to 4 again
+Note that this statefulness can be a double-edged sword, as it allows you to
+execute your cells not in order. For example, in a normal script, cell 4 must
+run after cell 3 and cell 3 must run after cell 2. However, in notebooks, you
+can run cell 2, 3, then 4 or cell 4, 3, then 2. This makes notebook
+reproducibility harder unless your notebook comes with an instruction on
+the order in which to run your cells. This difficulty is captured in a joke by
+Chris Albon (see Figure 10-6).
+Figure 10-6. Notebooks’ statefulness allows you to execute cells not in order, making it hard to
+reproduce a notebook
+Because notebooks are so useful for data exploration and experiments,
+notebooks have become an indispensable tool for data scientists and ML.
+Some companies have made notebooks the center of their data science
+infrastructure. In their seminar article, “Beyond Interactive: Notebook
+Innovation at Netflix,” Netflix included a list of infrastructure tools that can
+be used to make notebooks even more powerful. The list includes:
+22
+Papermill
+For spawning multiple notebooks with different parameter sets—such as
+when you want to run different experiments with different sets of
+parameters and execute them concurrently. It can also help summarize
+metrics from a collection of notebooks.
+Commuter
+A notebook hub for viewing, finding, and sharing notebooks within an
+organization.
+Another interesting project aimed at improving the notebook experience is
+nbdev, a library on top of Jupyter Notebooks that encourages you to write
+documentation and tests in the same place.
+Standardizing Dev Environments
+The first thing about the dev environment is that it should be standardized,
+if not company-wide, then at least team-wide. We’ll go over a story to
+understand what it means to have the dev environment standardized and
+why that is needed.
+In the early days of our startup, we each worked from our own computer.
+We had a bash file that a new team member could run to create a new
+virtual environment—in our case, we use conda for virtual environments—
+and install the required packages needed to run our code. The list of the
+required packages was the good old requirements.txt that we kept adding to
+as we started using a new package. Sometimes, one of us got lazy and we
+just added a package name (e.g., torch) without specifying which version
+23
+of the package it was (e.g., torch==1.10.0+cpu). Occasionally, a new
+pull request would run well on my computer but not another coworker’s
+computer, and we usually quickly figured out that it was because we used
+different versions of the same package. We resolved to always specify the
+package name together with the package version when adding a new
+package to the requirements.txt, and that removed a lot of unnecessary
+headaches.
+One day, we ran into this weird bug that only happened during some runs
+and not others. I asked my coworker to look into it, but he wasn’t able to
+reproduce the bug. I told him that the bug only happened some of the time,
+so he might have to run the code around 20 times just to be sure. He ran the
+code 20 times and still found nothing. We compared our packages and
+everything matched. After a few hours of hair-pulling frustration, we
+discovered that it was a concurrency issue that is only an issue for Python
+version 3.8 or earlier. I had Python 3.8 and my coworker had Python 3.9, so
+he didn’t see the bug. We resolved to have everyone on the same Python
+version, and that removed some more headaches.
+Then one day, my coworker got a new laptop. It was a MacBook with the
+then new M1 chip. He tried to follow our setup steps on this new laptop but
+ran into difficulty. It was because the M1 chip was new, and some of the
+tools we used, including Docker, weren’t working well with M1 chips yet.
+After seeing him struggling with setting the environment up for a day, we
+decided to move to a cloud dev environment. This means that we still
+standardize the virtual environment and tools and packages, but now
+everyone uses the virtual environment and tools and packages on the same
+type of machine too, provided by a cloud provider.
+When using a cloud dev environment, you can use a cloud dev environment
+that also comes with a cloud IDE like AWS Cloud9 (which has no built-in
+notebooks) and Amazon SageMaker Studio (which comes with hosted
+JupyterLab). As of writing this book, AWS SageMaker Studio seems more
+widely used than Cloud9. However, most engineers I know who use cloud
+IDEs do so by installing IDEs of their choice, like Vim, on their cloud
+instances.
+A much more popular option is to use a cloud dev environment with a local
+IDE. For example, you can use VS Code installed on your computer and
+connect the local IDE to the cloud environment using a secure protocol like
+Secure Shell (SSH).
+24
+While it’s generally agreed upon that tools and packages should be
+standardized, some companies are hesitant to standardize IDEs. Engineers
+can get emotionally attached to IDEs, and some have gone to great length to
+defend their IDE of choice, so it’ll be hard forcing everyone to be using
+the same IDE. However, over the years, some IDEs have emerged to be the
+most popular. Among them, VS Code is a good choice since it allows easy
+integration with cloud dev instances.
+At our startup, we chose GitHub Codespaces as our cloud dev environment,
+but an AWS EC2 or a GCP instance that you can SSH into is also a good
+option. Before moving to cloud environments, like many other companies,
+we were worried about the cost—what if we forgot to shut down our
+instances when not in use and they kept charging us money? However, this
+worry has gone away for two reasons. First, tools like GitHub Codespaces
+automatically shut down your instance after 30 minutes of inactivity.
+Second, some instances are pretty cheap. For example, an AWS instance
+with 4 vCPUs and 8 GB of memory costs around $0.1/hour, which comes to
+approximately $73/month if you never shut it down. Because engineering
+time is expensive, if a cloud dev environment can help you save a few hours
+of engineering time a month, it’s worth it for many companies.
+Moving from local dev environments to cloud dev environments has many
+other benefits. First, it makes IT support so much easier—imagine having to
+support 1,000 different local machines instead of having to support only one
+type of cloud instance. Second, it’s convenient for remote work—you can
+just SSH into your dev environment wherever you go from any computer.
+Third, cloud dev environments can help with security. For example, if an
+employee’s laptop is stolen, you can just revoke access to cloud instances
+from that laptop to prevent the thief from accessing your codebase and
+proprietary information. Of course, some companies might not be able to
+move to cloud dev environments also because of security concerns. For
+example, they aren’t allowed to have their code or data on the cloud.
+The fourth benefit, which I would argue is the biggest benefit for companies
+that do production on the cloud, is that having your dev environment on the
+cloud reduces the gap between the dev environment and the production
+environment. If your production environment is in the cloud, bringing your
+dev environment to the cloud is only natural.
+Occasionally, a company has to move their dev environments to the cloud
+not only because of the benefits, but also out of necessity. For the use cases
+where data can’t be downloaded or stored on a local machine, the only way
+to access it is via a notebook in the cloud (SageMaker Studio) that can read
+the data from S3, provided it has the right permissions.
+Of course, cloud dev environments might not work for every company due
+to cost, security, or other concerns. Setting up cloud dev environments also
+requires some initial investments, and you might need to educate your data
+scientists on cloud hygiene, including establishing secure connections to the
+cloud, security compliance, or avoiding wasteful cloud usage. However,
+standardization of dev environments might make your data scientists’ lives
+easier and save you money in the long run.
+From Dev to Prod: Containers
+During development, you might usually work with a fixed number of
+machines or instances (usually one) because your workloads don’t fluctuate
+a lot—your model doesn’t suddenly change from serving only 1,000
+requests an hour to 1 million requests an hour.
+A production service, on the other hand, might be spread out on multiple
+instances. The number of instances changes from time to time depending on
+the incoming workloads, which can be unpredictable at times. For example,
+a celebrity tweets about your fledgling app and suddenly your traffic spikes
+10x. You will have to turn on new instances as needed, and these instances
+will need to be set up with required tools and packages to execute your
+workloads.
+Previously, you’d have to spin up and shut down instances yourself, but
+most public cloud providers have taken care of the autoscaling part.
+However, you still have to worry about setting up new instances.
+When you consistently work with the same instance, you can install
+dependencies once and use them whenever you use this instance. In
+production, if you dynamically allocate instances as needed, your
+environment is inherently stateless. When a new instance is allocated for
+your workload, you’ll need to install dependencies using a list of predefined
+instructions.
+A question arises: how do you recreate an environment on any new
+instance? Container technology—of which Docker is the most popular—is
+designed to answer this question. With Docker, you create a Dockerfile with
+step-by-step instructions on how to recreate an environment in which your
+model can run: install this package, download this pretrained model, set
+environment variables, navigate into a folder, etc. These instructions allow
+hardware anywhere to run your code.
+Two key concepts in Docker are image and container. Running all the
+instructions in a Dockerfile gives you a Docker image. If you run this
+Docker image, you get back a Docker container. You can think of a
+Dockerfile as the recipe to construct a mold, which is a Docker image.
+From this mold, you can create multiple running instances; each is a Docker
+container.
+You can build a Docker image either from scratch or from another Docker
+image. For example, NVIDIA might provide a Docker image that contains
+TensorFlow and all necessary libraries to optimize TensorFlow for GPUs. If
+you want to build an application that runs TensorFlow on GPUs, it’s not a
+bad idea to use this Docker image as your base and install dependencies
+specific to your application on top of this base image.
+A container registry is where you can share a Docker image or find an
+image created by other people to be shared publicly or only with people
+inside their organizations. Common container registries include Docker
+Hub and AWS ECR (Elastic Container Registry).
+Here’s an example of a simple Dockerfile that runs the following
+instructions. The example is to show how Dockerfiles work in general, and
+might not be executable.
+Download the latest PyTorch base image.
+Clone NVIDIA’s apex repository on GitHub, navigate to the newly
+created apex folder, and install apex.
+Set fancy-nlp-project to be the working directory.
+Clone Hugging Face’s transformers repository on GitHub, navigate to
+the newly created transformers folder, and install transformers.
+#Dockerfile 
+FROM pytorch/pytorch:latest 
+RUN git clone https://github.com/NVIDIA/apex 
+RUN cd apex && \ 
+    python3 setup.py install && \ 
+    pip install -v --no-cache-dir --global-option="--cpp_ext" -
+global-option="--cuda_ext" ./ 
+WORKDIR /fancy-nlp-project 
+RUN git clone https://github.com/huggingface/transformers.git && 
+\ 
+    cd transformers && \ 
+    python3 -m pip install --no-cache-dir.
+If your application does anything interesting, you will probably need more
+than one container. Consider the case where your project consists of the
+featurizing code that is fast to run but requires a lot of memory, and the
+model training code that is slow to run but requires less memory. If you run
+both parts of the code on the same GPU instances, you’ll need GPU
+instances with high memory, which can be very expensive. Instead, you can
+run your featurizing code on CPU instances and the model training code on
+GPU instances. This means you’ll need one container for featurizing and
+another container for training.
+Different containers might also be necessary when different steps in your
+pipeline have conflicting dependencies, such as your featurizer code
+requires NumPy 0.8 but your model requires NumPy 1.0.
+If you have 100 microservices and each microservice requires its own
+container, you might have 100 containers running at the same time.
+Manually building, running, allocating resources for, and stopping 100
+containers might be a painful chore. A tool to help you manage multiple
+containers is called container orchestration. Docker Compose is a
+lightweight container orchestrator that can manage containers on a single
+host.
+However, each of your containers might run on its own host, and this is
+where Docker Compose is at its limits. Kubernetes (K8s) is a tool for
+exactly that. K8s creates a network for containers to communicate and share
+resources. It can help you spin up containers on more instances when you
+need more compute/memory as well as shutting down containers when you
+no longer need them, and it helps maintain high availability for your
+system.
+K8s was one of the fastest-growing technologies in the 2010s. Since its
+inception in 2014, it’s become ubiquitous in production systems today.
+Jeremy Jordan has a great introduction to K8s for readers interested in
+learning more. However, K8s is not the most data-scientist-friendly tool,
+and there have been many discussions on how to move data science
+workloads away from it. We’ll go more into K8s in the “Resource
+Management” section

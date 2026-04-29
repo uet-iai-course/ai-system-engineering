@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360">
+  <defs>
+    <style>
+      .t { font-family: serif; fill: #333; }
+      .muted { fill: #666; font-size: 14px; }
+      .label { font-size: 16px; font-weight: 700; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#666" />
+    </marker>
+  </defs>
+
+  <rect x="16" y="16" width="728" height="328" rx="14" fill="#fafafa" stroke="#e0e0e0" />
+
+  <text x="44" y="54" class="t label">ConsistencyAccuracy trade-off</text>
+  <text x="44" y="78" class="t muted">Minh ho¡ khái niÇm: giï Õn Ënh UX ôi khi ph£i hy sinh gãi ý tÑi °u theo mô hình.</text>
+
+  <!-- Axis -->
+  <line x1="90" y1="288" x2="680" y2="288" stroke="#999" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="90" y1="288" x2="90" y2="110" stroke="#999" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <text x="690" y="292" class="t muted">Accuracy ‘</text>
+  <text x="58" y="105" class="t muted" transform="rotate(-90 58 105)">Consistency ‘</text>
+
+  <!-- Curve -->
+  <path d="M 120 260 C 240 210, 360 170, 520 140 C 600 126, 640 122, 670 120" fill="none" stroke="#1565c0" stroke-width="4"/>
+
+  <!-- Regions -->
+  <circle cx="160" cy="240" r="7" fill="#2e7d32"/>
+  <text x="176" y="245" class="t muted">Ôn Ënh cao, có thÃ ít tÑi °u</text>
+
+  <circle cx="610" cy="130" r="7" fill="#ef6c00"/>
+  <text x="626" y="135" class="t muted">TÑi °u cao, nh°ng dÅ thay Õi</text>
+
+  <!-- Example callouts -->
+  <rect x="120" y="152" width="235" height="68" rx="10" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="136" y="176" class="t muted"><tspan font-weight="700" fill="#1b5e20">Rule / iÁu kiÇn</tspan></text>
+  <text x="136" y="198" class="t muted">Giï Á xu¥t Õn Ënh khi user</text>
+  <text x="136" y="216" class="t muted">ã chÍn mÙt lña chÍn.</text>
+
+  <rect x="410" y="204" width="270" height="68" rx="10" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="426" y="228" class="t muted"><tspan font-weight="700" fill="#e65100">Model-only</tspan></text>
+  <text x="426" y="250" class="t muted">Luôn gãi ý cái úng nh¥t</text>
+  <text x="426" y="268" class="t muted">’ UX có thÃ thi¿u nh¥t quán.</text>
+</svg>

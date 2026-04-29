@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="360" viewBox="0 0 520 360">
+  <defs>
+    <style>
+      .t { font-family: serif; fill: #333; }
+      .muted { fill: #666; font-size: 14px; }
+      .label { font-size: 16px; font-weight: 700; }
+      .small { fill: #666; font-size: 12px; }
+    </style>
+  </defs>
+
+  <rect x="16" y="16" width="488" height="328" rx="14" fill="#fafafa" stroke="#e0e0e0" />
+  <text x="44" y="54" class="t label">Model card (minh ho¡)</text>
+  <text x="44" y="78" class="t muted">Tóm t¯t thông tin train/eval + bÑi c£nh sí dång + h¡n ch¿.</text>
+
+  <rect x="60" y="104" width="400" height="220" rx="12" fill="#fff" stroke="#ddd"/>
+  <rect x="60" y="104" width="400" height="44" rx="12" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="78" y="132" class="t muted"><tspan font-weight="700" fill="#0d47a1">Model Details</tspan> · Version · Owner</text>
+
+  <text x="78" y="172" class="t small">Intended use (in/out of scope)</text>
+  <text x="78" y="194" class="t small">Factors</text>
+  <text x="78" y="216" class="t small">Metrics + thresholds + variation</text>
+  <text x="78" y="238" class="t small">Evaluation data · Training data (when possible)</text>
+  <text x="78" y="260" class="t small">Quantitative analyses (unitary / intersectional)</text>
+  <text x="78" y="282" class="t small">Ethical considerations · Caveats & recommendations</text>
+
+  <rect x="60" y="104" width="400" height="220" rx="12" fill="none" stroke="#bbb"/>
+</svg>

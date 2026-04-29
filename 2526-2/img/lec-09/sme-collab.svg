@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360">
+  <defs>
+    <style>
+      .t { font-family: serif; fill: #333; }
+      .muted { fill: #666; font-size: 14px; }
+      .label { font-size: 16px; font-weight: 700; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#666" />
+    </marker>
+  </defs>
+
+  <rect x="16" y="16" width="728" height="328" rx="14" fill="#fafafa" stroke="#e0e0e0" />
+  <text x="44" y="54" class="t label">SMEs trong vòng Ýi ML</text>
+  <text x="44" y="78" class="t muted">Minh ho¡ ý trong sách: SMEs không chÉ tham gia labeling mà còn ß nhiÁu iÃm then chÑt.</text>
+
+  <!-- SME -->
+  <rect x="60" y="128" width="180" height="88" rx="12" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="78" y="158" class="t muted"><tspan font-weight="700" fill="#e65100">SME</tspan> (domain expert)</text>
+  <text x="78" y="180" class="t muted">ki¿n théc nghiÇp vå</text>
+  <text x="78" y="202" class="t muted">+ ràng buÙc thñc t¿</text>
+
+  <!-- Platform -->
+  <rect x="290" y="128" width="190" height="88" rx="12" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="308" y="158" class="t muted"><tspan font-weight="700" fill="#0d47a1">No-code / low-code</tspan></text>
+  <text x="308" y="180" class="t muted">UI Ã góp ý, label,</text>
+  <text x="308" y="202" class="t muted">iÁu tra l×i, feedback</text>
+
+  <line x1="240" y1="172" x2="290" y2="172" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ML lifecycle -->
+  <rect x="520" y="70" width="200" height="220" rx="14" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="538" y="100" class="t muted"><tspan font-weight="700" fill="#1b5e20">ML lifecycle</tspan></text>
+
+  <text x="538" y="132" class="t muted">" Problem formulation</text>
+  <text x="538" y="154" class="t muted">" Feature engineering</text>
+  <text x="538" y="176" class="t muted">" Error analysis</text>
+  <text x="538" y="198" class="t muted">" Evaluation</text>
+  <text x="538" y="220" class="t muted">" Reranking</text>
+  <text x="538" y="242" class="t muted">" UI presentation</text>
+
+  <line x1="480" y1="172" x2="520" y2="172" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <text x="60" y="300" class="t muted">Gãi ý të sách: involve SMEs sÛm, gi£m cía £i kù thu­t Ã hÍ óng góp thñc ch¥t.</text>
+</svg>

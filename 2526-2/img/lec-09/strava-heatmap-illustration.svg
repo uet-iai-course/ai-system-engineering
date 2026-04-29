@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="360" viewBox="0 0 520 360">
+  <defs>
+    <style>
+      .t { font-family: serif; fill: #333; }
+      .muted { fill: #666; font-size: 14px; }
+      .label { font-size: 16px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <rect x="16" y="16" width="488" height="328" rx="14" fill="#fafafa" stroke="#e0e0e0" />
+  <text x="44" y="54" class="t label">Anonymized heatmap v«n có thÃ lÙ thông tin</text>
+  <text x="44" y="78" class="t muted">Minh ho¡ trëu t°ãng (không ph£i dï liÇu th­t).</text>
+
+  <!-- Map frame -->
+  <rect x="52" y="104" width="416" height="220" rx="12" fill="#fff" stroke="#ddd"/>
+
+  <!-- Sparse background dots -->
+  <circle cx="98" cy="162" r="3" fill="#cfd8dc"/>
+  <circle cx="122" cy="210" r="3" fill="#cfd8dc"/>
+  <circle cx="154" cy="280" r="3" fill="#cfd8dc"/>
+  <circle cx="402" cy="138" r="3" fill="#cfd8dc"/>
+  <circle cx="430" cy="246" r="3" fill="#cfd8dc"/>
+  <circle cx="318" cy="216" r="3" fill="#cfd8dc"/>
+
+  <!-- Bright pattern path -->
+  <path d="M 120 260 C 160 240, 200 220, 240 210 C 280 200, 320 185, 360 150" fill="none" stroke="#ff9800" stroke-width="10" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 122 262 C 162 242, 202 222, 242 212 C 282 202, 322 187, 362 152" fill="none" stroke="#e65100" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- Highlight area -->
+  <rect x="332" y="118" width="110" height="74" rx="10" fill="none" stroke="#c62828" stroke-width="3"/>
+  <text x="342" y="114" class="t muted" fill="#c62828">Pattern nÕi b­t</text>
+
+  <rect x="52" y="104" width="416" height="220" rx="12" fill="none" stroke="#bbb"/>
+</svg>

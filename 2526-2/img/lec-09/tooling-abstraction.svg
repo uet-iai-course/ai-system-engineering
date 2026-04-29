@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="300" viewBox="0 0 920 300">
+  <defs>
+    <style>
+      .t { font-family: serif; fill: #333; }
+      .muted { fill: #666; font-size: 14px; }
+      .label { font-size: 16px; font-weight: 700; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#666" />
+    </marker>
+  </defs>
+
+  <rect x="16" y="16" width="888" height="268" rx="14" fill="#fafafa" stroke="#e0e0e0" />
+  <text x="44" y="54" class="t label">Tooling trëu t°ãng hoá h¡ t§ng</text>
+  <text x="44" y="78" class="t muted">Ý trong sách: end-to-end DS chÉ kh£ thi n¿u tools che khu¥t containerization, distributed processing, failover, orchestration&</text>
+
+  <!-- Specialists -->
+  <rect x="56" y="118" width="240" height="120" rx="14" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="76" y="148" class="t muted"><tspan font-weight="700" fill="#0d47a1">Specialists</tspan></text>
+  <text x="76" y="170" class="t muted">Platform / infra / MLE</text>
+  <text x="76" y="192" class="t muted">óng gói best practices</text>
+  <text x="76" y="214" class="t muted">’ t¡o tools/workflows</text>
+
+  <!-- Arrow -->
+  <line x1="296" y1="178" x2="360" y2="178" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Tools layer -->
+  <rect x="364" y="106" width="240" height="144" rx="14" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="384" y="136" class="t muted"><tspan font-weight="700" fill="#e65100">Tools / abstractions</tspan></text>
+  <text x="384" y="158" class="t muted">Run steps + deps + compute</text>
+  <text x="384" y="180" class="t muted">Auto retry / failover</text>
+  <text x="384" y="202" class="t muted">Monitoring / lineage</text>
+  <text x="384" y="224" class="t muted">&</text>
+
+  <!-- Arrow -->
+  <line x1="604" y1="178" x2="668" y2="178" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- DS -->
+  <rect x="672" y="118" width="200" height="120" rx="14" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="692" y="148" class="t muted"><tspan font-weight="700" fill="#1b5e20">Data scientists</tspan></text>
+  <text x="692" y="170" class="t muted">own end-to-end</text>
+  <text x="692" y="192" class="t muted">t­p trung vào data/model</text>
+  <text x="692" y="214" class="t muted">ít ång h¡ t§ng th¥p</text>
+</svg>

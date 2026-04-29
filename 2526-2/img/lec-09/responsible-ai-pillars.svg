@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="300" viewBox="0 0 860 300">
+  <defs>
+    <style>
+      .t { font-family: serif; fill: #333; }
+      .muted { fill: #666; font-size: 14px; }
+      .label { font-size: 16px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <rect x="16" y="16" width="828" height="268" rx="14" fill="#fafafa" stroke="#e0e0e0" />
+  <text x="44" y="54" class="t label">Responsible AI (Ch°¡ng 11)</text>
+  <text x="44" y="78" class="t muted">Minh ho¡ 4 trå cÙt °ãc nêu: fairness · privacy · transparency · accountability.</text>
+
+  <rect x="70" y="118" width="170" height="120" rx="14" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="92" y="148" class="t muted"><tspan font-weight="700" fill="#0d47a1">Fairness</tspan></text>
+  <text x="92" y="172" class="t muted">gi£m bias,</text>
+  <text x="92" y="194" class="t muted">tránh disparate impact</text>
+
+  <rect x="260" y="118" width="170" height="120" rx="14" fill="#e8f5e9" stroke="#a5d6a7"/>
+  <text x="282" y="148" class="t muted"><tspan font-weight="700" fill="#1b5e20">Privacy</tspan></text>
+  <text x="282" y="172" class="t muted">PII,</text>
+  <text x="282" y="194" class="t muted">anonymization pitfalls</text>
+
+  <rect x="450" y="118" width="170" height="120" rx="14" fill="#fff3e0" stroke="#ffcc80"/>
+  <text x="472" y="148" class="t muted"><tspan font-weight="700" fill="#e65100">Transparency</tspan></text>
+  <text x="472" y="172" class="t muted">công bÑ måc tiêu,</text>
+  <text x="472" y="194" class="t muted">giÛi h¡n, model cards</text>
+
+  <rect x="640" y="118" width="170" height="120" rx="14" fill="#f3e5f5" stroke="#ce93d8"/>
+  <text x="662" y="148" class="t muted"><tspan font-weight="700" fill="#4a148c">Accountability</tspan></text>
+  <text x="662" y="172" class="t muted">quy trình,</text>
+  <text x="662" y="194" class="t muted">audit, trách nhiÇm</text>
+
+  <text x="70" y="262" class="t muted">Måc tiêu: tng niÁm tin và gi£m tác h¡i vÛi ng°Ýi dùng/xã hÙi.</text>
+</svg>

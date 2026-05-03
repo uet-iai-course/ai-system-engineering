@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bài lab08: Kubernetes</title>
+
+    <link rel="stylesheet" href="revealjs/dist/reset.css" />
+    <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+    <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="lecture-style.css" />
+    <style>
+        .reveal {
+            font-size: 34px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <section>
+                <section>
+                    <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+                    <h3>Lab 08: Kubernetes</h3>
+                    <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội
+                    <p>Giảng viên: Trịnh Ngọc Huỳnh</p>
+                </section>
+
+                <section>
+                    <h2>Nội dung</h2>
+                    <ol>
+                        <li>Tổng quan & Cài đặt</li>
+                        <li>Kiến trúc Kubernetes</li>
+                        <li>Các khái niệm cơ bản</li>
+                        <li>Practice</li>
+                    </ol>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">1.</span><br />
+                        Tổng quan & Cài đặt
+                    </h1>
+                </section>
+
+                <section>
+                    <h2>Bài toán thực tế</h2>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start;">
+
+                        <!-- LEFT -->
+                        <div style="text-align: left; font-size: 0.65em;">
+                            <ul>
+                                <li class="fragment">2003: Google vận hành hàng trăm nghìn server</li>
+                                <li class="fragment">Search phục vụ người dùng toàn cầu</li>
+                                <li class="fragment">Hạ tầng tăng nhanh, dịch vụ ngày càng nhiều</li>
+
+                                <li class="fragment">
+                                    <span class="keyword">Quản lý thủ công không còn khả thi</span>
+                                    <ul style="margin-top:8px;">
+                                        <li>Deploy từng máy qua SSH</li>
+                                        <li>Lỗi → tự phát hiện, tự restart</li>
+                                        <li>Traffic tăng → tự scale</li>
+                                        <li>Khó nhìn trạng thái toàn hệ thống</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- RIGHT -->
+                        <div style="text-align: center;" class="fragment">
+                            <img src="img/lab-08/problem.png"
+                                alt="Manual management of large-scale server infrastructure"
+                                style="max-height: 450px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        </div>
+                    </div>
+
+                    <!-- BOTTOM -->
+                    <div class="fragment" style="width: 100%; margin-top: 10px; font-size: 0.65em">
+                        <div class="question-box"
+                            style="background-color: #fff3e0; border-left: 5px solid #ff9800; border-radius: 8px;">
+                            <div class="question-title">
+                                Urs Hölzle — Phó giám đốc công nghệ Google (2003)
+                            </div>
+                            <p>
+                                Với tốc độ mở rộng hiện tại, hệ thống của chúng ta sẽ sụp đổ nghiêm trọng vào cuối năm
+                                2004.
+                            </p>
+                        </div>
+                        <div style="margin-top: 20px; font-weight: bold; color: #1565c0; text-align: left;"> Hệ thống
+                            càng lớn → không thể quản lý thủ công từng thành phần. </div>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h2>Lịch sử phát triển</h2>
+
+                    <div style="display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 10px; align-items: center;">
+                        <div style="text-align: left; font-size: 0.7em;">
+                            <ul>
+                                <li class="fragment">
+                                    ~2003: Google phát triển hệ thống <span class="keyword">Borg</span> để quản
+                                    lý hạ tầng quy mô lớn.
+                                </li>
+                                <li class="fragment">
+                                    Sau đó: <span class="keyword">Omega</span> ra đời, kế thừa và cải tiến từ Borg.
+                                </li>
+                                <li class="fragment">
+                                    Tiên phong các cơ chế tự động hóa:
+                                    <span class="keyword">deploy</span> •
+                                    <span class="keyword">scale</span> •
+                                    <span class="keyword">self-healing</span>.
+                                </li>
+                                <li class="fragment">
+                                    <strong>2014:</strong> Open-source dự án với tên <span
+                                        class="keyword">Kubernetes</span>.
+                                </li>
+                                <li class="fragment">
+                                    <strong>Hiện nay:</strong> Được sử dụng rộng rãi và gần như là tiêu chuẩn trong
+                                    Cloud-native.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="fragment" style="text-align: center;">
+                            <div
+                                style="background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                                <img src="img/lab-08/history.png" alt="Sự tiến hóa từ Borg đến Kubernetes"
+                                    style="width: 100%; max-height: 500px; object-fit: contain;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fragment" style="width: 100%; margin-top: 20px; font-size: 0.7em;">
+                        <div class="question-box"
+                            style="background: rgba(21, 101, 192, 0.05); border-left: 5px solid #1565c0; border-radius: 8px; padding: 20px;">
+                            Kubernetes là kết quả của <span class="keyword">hơn 10 năm kinh nghiệm</span> vận hành hạ
+                            tầng quy mô lớn tại Google, được chuẩn hóa và phổ biến cho cộng đồng.
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Kubernetes</h2>
+
+                    <div class="question-box"
+                        style="margin-bottom: 20px; background: rgba(50, 108, 229, 0.05); border-left: 5px solid #326CE5; border-radius: 8px;">
+                        <p style="font-size: 0.9em;">
+                            Là hệ thống <strong>điều phối container</strong> giúp tự động hóa việc
+                            triển khai, mở rộng và quản lý các ứng dụng container trên một cụm máy chủ.
+                        </p>
+                    </div>
+
+                    <div style="font-size: 0.8em; text-align: left; margin-bottom: 30px;">
+                        <ul>
+                            <li class="fragment"><strong>Deploy:</strong> Tự động triển khai ứng dụng lên các cụm máy
+                                chủ phù hợp nhất.</li>
+                            <li class="fragment"><strong>Scale:</strong> Tăng hoặc giảm số lượng bản sao ứng dụng tức
+                                thì theo tải thực tế.</li>
+                            <li class="fragment"><strong>Self-healing:</strong> Tự động khôi phục, khởi động lại hoặc
+                                thay thế container khi có lỗi.</li>
+                            <li class="fragment"><strong>K8s:</strong> là viết tắt của Kubernetes, với 8
+                                chữ cái ở giữa chữ "K" và chữ "s".</li>
+                        </ul>
+                    </div>
+
+                    <div class="fragment question-box"
+                        style="border-radius: 8px; background: rgba(0,0,0,0.03); border: 1px solid #ddd;">
+                        <p style="font-size: 0.9em;">
+                            Kubernetes giống như một <span class="keyword">hệ điều hành</span> cho cụm máy chủ container
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Docker vs Kubernetes</h2>
+
+                    <div class="table-layout" style="margin-top: 15px; font-size: 0.8em;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid #333;">
+                                    <th style="width: 20%; padding: 5px; text-align: left;">Đặc điểm</th>
+                                    <th style="color: #0db7ed; text-align: center; padding: 5px;">Docker</th>
+                                    <th style="color: #326CE5; text-align: center; padding: 5px;">Kubernetes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 5px;"><strong>Mục tiêu</strong></td>
+                                    <td style="padding: 5px; text-align: center;">Chạy và đóng gói container</td>
+                                    <td style="padding: 5px; text-align: center;">Điều phối và quản lý hệ container</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 5px;"><strong>Phạm vi</strong></td>
+                                    <td style="padding: 5px; text-align: center;">Tối ưu trên 1 máy chủ
+                                        </br> (1 Node)
+                                    </td>
+                                    <td style="padding: 5px; text-align: center;">Quản lý cụm máy chủ
+                                        </br> (Cluster - Nhiều Node)
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 5px;"><strong>Vận hành</strong></td>
+                                    <td style="padding: 5px; text-align: center;">Thủ công / Script đơn lẻ</td>
+                                    <td style="padding: 5px; text-align: center;">Tự động hóa hoàn toàn
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 5px;"><strong>Phục hồi</strong></td>
+                                    <td style="padding: 5px; text-align: center;">Restart thủ công trên node</td>
+                                    <td style="padding: 5px; text-align: center;">Tự phục hồi thông minh
+                                    </td>
+                                </tr>
+                                <tr style="background-color: rgba(50, 108, 229, 0.1); border: 2px solid #326CE5;">
+                                    <td style="padding: 5px; color: #326CE5;"><strong>Vai trò cốt lõi</strong></td>
+                                    <td style="text-align: center; font-weight: bold; color: #0db7ed; padding: 5px;">
+                                        Công cụ tạo container<br>
+                                        <span style="font-size: 0.8em; font-weight: normal; color: #666;">(The
+                                            Tool)</span>
+                                    </td>
+                                    <td style="text-align: center; font-weight: bold; color: #326CE5; padding: 5px;">
+                                        Hệ điều hành quản lý<br>
+                                        <span style="font-size: 0.8em; font-weight: normal; color: #666;">(The
+                                            Platform)</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="fragment question-box" style="border-radius: 8px; margin-top: 20px;">
+                        K8s giúp hệ thống tự vận hành thay vì con người vận hành
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Docker vs Kubernetes</h2>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-top: 40px; text-align: center; font-size: 0.7em">
+
+                        <div style="flex: 1">
+                            <div
+                                style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                                <strong style="color: #1e293b;">1. Phát triển</strong><br>
+                                <span style="color: #64748b;">Viết Code &<br>Dockerfile</span>
+                            </div>
+                        </div>
+
+                        <div style="color: #94a3b8; font-size: 1.5em; padding: 0 10px;">➔</div>
+
+                        <div style="flex: 1;">
+                            <div
+                                style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                                <strong style="color: #1e293b;">2. Đóng gói</strong><br>
+                                <span style="color: #64748b;">Build Image<br>từ Dockerfile</span>
+                            </div>
+                        </div>
+
+                        <div style="color: #94a3b8; font-size: 1.5em; padding: 0 10px;">➔</div>
+
+                        <div style="flex: 1;">
+                            <div
+                                style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                                <strong style="color: #1e293b;">3. Lưu trữ</strong><br>
+                                <span style="color: #64748b;">Push Image<br>lên Registry</span>
+                            </div>
+                        </div>
+
+                        <div style="color: #94a3b8; font-size: 1.5em; padding: 0 10px;">➔</div>
+
+                        <div style="flex: 1;">
+                            <div
+                                style="background: #f8fafc; border: 2px solid #326CE5; border-radius: 8px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                <strong style="color: #326CE5;">4. Triển khai</strong><br>
+                                <span style="color: #64748b;">Dùng kubectl<br>apply YAML</span>
+                            </div>
+                        </div>
+
+                        <div style="color: #326CE5; font-size: 1.5em; padding: 0 10px;">➔</div>
+
+                        <div style="flex: 1;">
+                            <div
+                                style="background: #eff6ff; border: 2px solid #10b981; border-radius: 8px; padding: 15px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
+                                <strong style="color: #10b981;">5. Vận hành</strong><br>
+                                <span style="color: #047857;">K8s Pull Image<br>& Run Pod</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fragment"
+                        style="margin-top: 50px; background: rgba(50, 108, 229, 0.05); padding: 15px; border-radius: 8px; border-left: 5px solid #326CE5; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <p style="margin: 0 0 8px 0; text-align: left; line-height: 1.5;">
+                            <strong>Docker</strong> là công cụ chính để build và test container.
+                        </p>
+                        <p style="margin: 0; text-align: left">
+                            <strong>Kubernetes</strong> được dùng khi cần quản lý, mở rộng và vận hành hệ thống ở quy
+                            mô lớn hoặc môi trường production.
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Cài đặt</h2>
+
+                    <div class="question-box" style="margin-bottom: 20px;">
+                        Bạn cần gì để chạy Kubernetes?
+                    </div>
+
+                    <!-- 3 blocks -->
+                    <div style="display: flex; justify-content: space-around; margin-top: 30px; font-size: 0.8em;">
+
+                        <div class="fragment" style="text-align: center;">
+                            <strong>Cluster</strong>
+                            <p>Chạy Pod</p>
+                        </div>
+
+                        <div class="fragment" style="text-align: center;">
+                            <strong>kubectl</strong>
+                            <p>Gửi lệnh</p>
+                        </div>
+
+                        <div class="fragment" style="text-align: center;">
+                            <strong>Runtime</strong>
+                            <p>Chạy container</p>
+                        </div>
+
+                    </div>
+
+                    <div class="fragment" style="margin-top: 25px;">
+
+                        <div style="display: flex; justify-content: space-around; font-size: 0.8em;">
+                            <!-- LAB -->
+                            <div style="text-align: center; background: #f4f6f8; padding: 15px; border-radius: 10px;">
+                                <strong>Trong lab</strong>
+                                <p>1 máy</p>
+                                <p>Control Plane + Worker</p>
+                                <p>Single-node cluster</p>
+                            </div>
+
+                            <!-- REAL -->
+                            <div style="text-align: center; background: #f4f6f8; padding: 15px; border-radius: 10px;">
+                                <strong>Trong thực tế</strong>
+                                <p>Nhiều máy</p>
+                                <p>Phân tách Control Plane / Worker</p>
+                                <p>Multi-node cluster</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section>
+                    <h2>Cài đặt</h2>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 0.7em;">
+
+                        <!-- WINDOWS -->
+                        <div class="fragment" style="background: #f4f6f8; padding: 12px; border-radius: 10px;">
+                            <strong>Windows</strong>
+                            <ul>
+                                <li>Cài Docker Desktop</li>
+                                <li>Bật Kubernetes trong Settings</li>
+                            </ul>
+                            <div class="code-block">kubectl get nodes</div>
+                        </div>
+
+                        <!-- LINUX -->
+                        <div class="fragment" style="background: #f4f6f8; padding: 12px; border-radius: 10px;">
+                            <strong>Linux</strong>
+                            <ul>
+                                <li>Cài MicroK8s (snap)</li>
+                                <li>microk8s kubectl</li>
+                            </ul>
+                            <div class="code-block">microk8s status</div>
+                        </div>
+
+                        <!-- MAC -->
+                        <div class="fragment" style="background: #f4f6f8; padding: 12px; border-radius: 10px;">
+                            <strong>macOS</strong>
+                            <ul>
+                                <li>Cài MicroK8s (multipass)</li>
+                                <li>microk8s kubectl</li>
+                            </ul>
+                            <div class="code-block">microk8s status</div>
+                        </div>
+
+                    </div>
+
+                    <div class="fragment question-box" style="margin-top: 20px;">
+                        Khuyến nghị:
+                        <ul style="margin-top: 10px;">
+                            <li>Windows → Docker Desktop (dễ nhất)</li>
+                            <li>Linux / macOS → MicroK8s (ổn định, gần production)</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Kiểm tra hệ thống</h2>
+
+                    <div class="fragment"
+                        style="background: #282c34; color: #abb2bf; padding: 20px; border-radius: 8px; font-family: monospace; font-size: 0.9em; text-align: left; margin-top: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <div style="margin-bottom: 8px;"><span style="color: #61afef;">$ kubectl</span> get nodes</div>
+                        <div><span style="color: #61afef;">$ kubectl</span> get pods <span
+                                style="color: #d19a66;">-A</span></div>
+                    </div>
+
+                    <div class="fragment" style="text-align: left; margin-top: 25px;">
+                        <div style="font-weight: bold; color: #326CE5; margin-bottom: 15px; font-size: 1.05em;">
+                            Điều kiện hệ thống hoạt động:
+                        </div>
+                        <ul style="padding-left: 25px; line-height: 1.6;">
+                            <li class="fragment" style="margin-bottom: 10px;">
+                                Node ở trạng thái <strong style="color: #10b981;">Ready</strong>
+                            </li>
+                            <li class="fragment" style="margin-bottom: 10px;">
+                                Pod hệ thống ở trạng thái <strong style="color: #10b981;">Running</strong>
+                            </li>
+                            <li class="fragment" style="margin-bottom: 10px;">
+                                Không có lỗi như <strong style="color: #ef4444;">CrashLoopBackOff</strong>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="fragment"
+                        style="margin-top: 30px; background: rgba(16, 185, 129, 0.1); border: 2px solid rgba(16, 185, 129, 0.4); padding: 15px; border-radius: 8px; text-align: center;">
+                        <p style="margin: 0; font-size: 1.1em; color: #047857; font-weight: bold;">
+                            Sẵn sàng deploy ứng dụng 🚀
+                        </p>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">2.</span><br />
+                        Kiến trúc Kubernetes
+                    </h1>
+                </section>
+
+                <section>
+                    <h2>Thành phần chính</h2>
+
+                    <div
+                        style="display: grid; grid-template-columns: 9fr 11fr; gap: 20px; align-items: start; margin-top: 20px;">
+                        <div style="text-align: left;">
+                            <div style="margin-bottom: 10px">
+                                <p style="color: #326CE5; font-weight: bold; margin-bottom: 10px;"> Control Plane</p>
+                                <ul class="fragment" style="padding-left: 10px; font-size: 0.65em;">
+                                    <li><strong>api server:</strong> Tiếp nhận yêu cầu</li>
+                                    <li><strong>scheduler:</strong> Điều phối vị trí Pod</li>
+                                    <li> <strong>controller manager:</strong> Duy trì trạng thái</li>
+                                    <li><strong>etcd:</strong> Kho lưu trữ dữ liệu cấu hình</li>
+                                </ul>
+                            </div>
+
+                            <div class="fragment">
+                                <p style="color: #0db7ed; font-weight: bold; margin-bottom: 10px;"> Worker Node</p>
+                                <ul class="fragment" style="padding-left: 10px; font-size: 0.65em;">
+                                    <li><strong>kubelet:</strong> Quản trị viên tại chỗ của Node</li>
+                                    <li><strong>kube-proxy:</strong> Quản lý kết nối mạng nội bộ</li>
+                                    <li><strong>container runtime:</strong> Môi trường chạy Container</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="fragment" style="text-align: center;">
+                            <div style="background: white; border-radius: 10px; box-shadow: 0 10px 20px">
+                                <img src="img/lab-08/architeture.png" alt="Sơ đồ kiến trúc Kubernetes"
+                                    style="width: 100%; height: auto; max-height: 500px; object-fit: contain;">
+                            </div>
+                            <p style="font-size: 0.6em; color: #777; margin-top: 15px; font-style: italic;">
+                                Sơ đồ kiến trúc chi tiết các thành phần Kubernetes
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Api Server</h2>
+
+                    <div style="text-align: left; margin-bottom: 20px; margin-top: 20px;">
+                        <ul style="font-size: 0.8em;">
+                            <li>Là <strong>cửa chính</strong> của Kubernetes</li>
+                            <li>Nhận request từ:</li>
+                            <ul>
+                                <li>kubectl (dòng lệnh)</li>
+                                <li>Giao diện quản lý (Dashboard)</li>
+                                <li>Hệ thống tự động triển khai</li>
+                            </ul>
+                            <li>Kiểm tra quyền truy cập</li>
+                            <li>Lưu và lấy trạng thái hệ thống qua etcd</li>
+                        </ul>
+                    </div>
+
+                    <div class="fragment"
+                        style="background: #282c34; color: #abb2bf; padding: 10px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; text-align: center; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                        <span style="color: #61afef;">User / Admin</span>
+                        <span style="color: #c678dd; margin: 0 10px;">➔</span>
+                        <span style="color: #e5c07b; font-weight: bold;">[ API Server ]</span>
+                        <span style="color: #c678dd; margin: 0 10px;">➔</span>
+                        <span style="color: #98c379;">etcd</span>
+                    </div>
+
+                    <div class="fragment question-box"
+                        style="background: rgba(50, 108, 229, 0.05); border-left: 5px solid #326CE5; border-radius: 8px; padding: 10px; margin-top: 10px;">
+                        <div style="text-align: left; font-size: 0.8em; color: #333;">
+                            <strong>Nguyên lý thiết kế:</strong> Các thành phần trong K8s không bao giờ nói
+                            chuyện trực tiếp với nhau. Mọi luồng giao tiếp và điều khiển đều bắt buộc phải đi
+                            qua API Server.
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>etcd</h2>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-top: 20px;">
+
+                        <div style="text-align: left; font-size: 0.7em;">
+                            <ul style="padding-left: 20px;">
+
+                                <li class="fragment">
+                                    <strong>Cơ sở dữ liệu key-value:</strong>
+                                    lưu toàn bộ trạng thái của cluster (Pod, Node, Service, cấu hình,...)
+                                </li>
+
+                                <li class="fragment">
+                                    <strong>Hệ thống phân tán:</strong>
+                                    chạy trên nhiều node để tăng độ tin cậy và khả năng chịu lỗi
+                                </li>
+
+                                <li class="fragment">
+                                    <strong>Leader – Follower (Raft):</strong>
+                                    chỉ leader xử lý ghi dữ liệu, các node khác đồng bộ theo
+                                </li>
+
+                                <li class="fragment">
+                                    <strong>Tự phục hồi:</strong>
+                                    khi leader lỗi, các node còn lại tự bầu leader mới
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <div style="text-align: center;">
+                            <div
+                                style="background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                                <img src="img/lab-08/etcd.png"
+                                    style="width: 100%; max-height: 380px; object-fit: contain;">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="fragment question-box"
+                        style="background: rgba(50, 108, 229, 0.05); border-left: 5px solid #326CE5; border-radius: 8px; padding: 8px; margin-top: 10px;">
+
+                        <div style="padding-left: 20px; font-size: 0.7em;">
+                            <p>API Server đọc và ghi dữ liệu tại etcd</p>
+                            <p>etcd luôn lưu trạng thái hiện tại của cluster</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Scheduler</h2>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-size: 0.8em;">
+                        <div>
+                            <ul class="fragment">
+                                <li> Chịu trách nhiệm chọn Node để chạy Pod</li>
+                                <li>
+                                    Dựa vào nhiều yếu tố:
+                                    <ul>
+                                        <li>Tài nguyên: CPU, RAM còn trống</li>
+                                        <li>Ràng buộc: label, selector</li>
+                                        <li>Quy tắc: nodeAffinity, podAffinity</li>
+                                    </ul>
+                                </li>
+                                <li>Không chạy container, chỉ quyết định vị trí</li>
+                            </ul>
+                        </div>
+
+                        <div class="fragment" style="background: rgba(50, 108, 229, 0.05)">
+                            <p style="color: #326CE5;"><strong> Quy trình xử lý:</strong></p>
+                            <ol style="padding-left: 30px">
+                                <li>Lắng nghe Pod chưa được gán Node</li>
+                                <li>Tìm các Node phù hợp</li>
+                                <li>Chọn Node tốt nhất</li>
+                                <li>Ghi kết quả về API Server</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="fragment code-block"
+                        style="margin-top: 20px; background: #282c34; color: #abb2bf; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.9em; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+
+                        <div style="margin-bottom: 10px;">
+                            API Server ➔ <span>Scheduler</span> ➔ chọn Node ➔ API Server ➔
+                            <span>kubelet</span> chạy Pod
+                        </div>
+                        <div
+                            style="border-top: 3px solid rgba(255, 255, 255, 0.1); padding-top: 10px; color: #61afef; font-weight: bold;">
+                            Scheduler = “Người phân công công việc”
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Controller Manager</h2>
+
+                    <div style="text-align: left; margin-top: 20px; font-size: 0.9em">
+                        <ul style="padding-left: 20px;">
+                            <li class="fragment">
+                                Chạy các controller để duy trì trạng thái hệ thống ổn định.
+                            </li>
+                            <li class="fragment" style="margin-top: 12px;">
+                                Ví dụ:
+                                <ul style="padding-left: 20px; margin-top: 5px;">
+                                    <li>Đảm bảo số lượng Pod luôn đúng như mong muốn.</li>
+                                    <li>Tạo lại Pod khi bị lỗi hoặc bị xóa.</li>
+                                </ul>
+                            </li>
+                            <li class="fragment" style="margin-top: 12px;">
+                                Liên tục so sánh giữa <strong>trạng thái mong muốn</strong> và <strong>trạng thái thực
+                                    tế</strong>.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="fragment"
+                        style="background: rgba(50, 108, 229, 0.05); padding: 15px; border-radius: 12px; margin-top: 15px; border-left: 5px solid #326CE5; text-align: center;">
+                        <div
+                            style="background: #282c34; color: #abb2bf; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.85em;">
+                            desired state ➔ controller ➔ điều chỉnh ➔ actual state
+                        </div>
+                        <div
+                            style="border-top: 3px solid rgba(50, 108, 229, 0.2); margin-top: 15px; padding-top: 12px; color: #326CE5; font-weight: bold;">
+                            Controller = "Người giám sát và sửa lỗi tự động"
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>kubelet</h2>
+
+                    <div style="text-align: left; margin-top: 20px;">
+                        <ul style="padding-left: 20px; font-size: 0.8em;">
+                            <li>
+                                <strong>Agent quản lý:</strong> Là thành phần chạy trên mọi Worker Node trong Cluster.
+                            </li>
+                            <li style="margin-top: 12px;">
+                                <strong>Tiếp nhận lệnh:</strong> Theo dõi các Pod được API Server gán cho Node của mình.
+                            </li>
+                            <li style="margin-top: 12px;">
+                                <strong>Vận hành Container:</strong> Ra lệnh cho container runtime tạo hoặc quản lý
+                                Container.
+                            </li>
+                            <li style="margin-top: 12px;">
+                                <strong>Giám sát:</strong> Kiểm tra sức khỏe Container và tự động khởi động lại nếu gặp
+                                lỗi.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="fragment"
+                        style="background: rgba(13, 183, 237, 0.05); padding: 15px; border-radius: 12px; margin-top: 20px; border-left: 5px solid #0db7ed;">
+                        <div
+                            style="background: #282c34; color: #abb2bf; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.85em; text-align: center;">
+                            API Server ➔ <span style="color: #e5c07b;">kubelet</span> ➔ container runtime ➔ chạy Pod
+                        </div>
+                        <div
+                            style="border-top: 2px solid rgba(13, 183, 237, 0.2); margin-top: 15px; padding-top: 12px; color: #0db7ed; font-weight: bold; text-align: center;">
+                            kubelet = "Người thực thi tại Node"
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Container Runtime</h2>
+
+                    <div style="margin-top: 20px;">
+                        <ul style="padding-left: 20px; font-size: 0.8em;">
+                            <li> <strong>Động cơ thực thi:</strong> Thành phần thực sự chạy các Container trên Node.
+                            </li>
+                            <li style="margin-top: 12px;">
+                                <strong>Làm việc qua kubelet:</strong> Nhận chỉ thị từ kubelet để thực hiện các thao tác
+                                kỹ thuật:
+                                <ul style="padding-left: 25px; font-size: 0.9em; margin-top: 8px;">
+                                    <li>Pull image từ Registry (Docker Hub, v.v.).</li>
+                                    <li>Khởi tạo, chạy, dừng hoặc xóa container.</li>
+                                </ul>
+                            </li>
+                            <li style="margin-top: 12px;">
+                                <strong>Các chuẩn phổ biến:</strong> containerd (phổ biến nhất), CRI-O.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="fragment"
+                        style="background: rgba(50, 108, 229, 0.05); padding: 15px; border-radius: 12px; margin-top: 20px; border-left: 5px solid #326CE5;">
+                        <div
+                            style="background: #282c34; color: #abb2bf; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.85em; text-align: center;">
+                            kubelet ➔ <span style="color: #98c379;">container runtime</span> ➔ [Container thực thi]
+                        </div>
+                        <div
+                            style="border-top: 2px solid rgba(50, 108, 229, 0.2); margin-top: 15px; padding-top: 12px; color: #326CE5; font-weight: bold; text-align: center; font-size: 0.85em;">
+                            Kubernetes không tự chạy container, nó điều phối thông qua Runtime
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>kube-proxy</h2>
+
+                    <div style="text-align: left; margin-top: 20px; font-size: 0.8em;">
+                        <ul style="padding-left: 20px;">
+                            <li>
+                                <strong>Quản lý mạng:</strong> Là thành phần thiết lập và duy trì các luật
+                                mạng trên mỗi Node.
+                            </li>
+                            <li style="margin-top: 12px;">
+                                <strong>Định tuyến Traffic:</strong> Đảm bảo các yêu cầu từ Service
+                                được chuyển chính xác đến các Pod tương ứng.
+                            </li>
+                            <li style="margin-top: 12px;">
+                                <strong>Cân bằng tải:</strong> Tự động phân phối traffic giữa các bản
+                                sao của Pod để tối ưu hiệu suất.
+                            </li>
+                            <li style="margin-top: 12px;">
+                                <strong>Công nghệ hỗ trợ:</strong> Sử dụng <code>iptables</code> hoặc <code>IPVS</code>
+                                để điều hướng dữ liệu ở tầng mạng.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="fragment"
+                        style="background: rgba(13, 183, 237, 0.05); padding: 15px; border-radius: 12px; margin-top: 20px; border-left: 5px solid #0db7ed;">
+                        <div
+                            style="background: #282c34; color: #abb2bf; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.85em; text-align: center;">
+                            Client ➔ Service ➔ <span style="color: #61afef;">kube-proxy</span> ➔ Pod (đích)
+                        </div>
+                        <div
+                            style="border-top: 2px solid rgba(13, 183, 237, 0.2); margin-top: 15px; padding-top: 12px; color: #0db7ed; font-weight: bold; text-align: center;">
+                            kube-proxy = "Người điều phối Traffic trong Cluster"
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Luồng hoạt động</h2>
+
+                    <div style="text-align: left; margin-top: 20px;">
+                        <ol style="padding-left: 25px; font-size: 0.8em;">
+                            <li class="fragment">
+                                <strong>User</strong> ➔ <code
+                                    style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">kubectl</code> ➔
+                                <strong>API Server</strong>
+                            </li>
+                            <li class="fragment">
+                                <strong>API Server</strong> ➔ xác thực ➔ ghi trạng thái vào <strong>etcd</strong>
+                            </li>
+                            <li class="fragment">
+                                <strong>Controller</strong> ➔ phát hiện trạng thái mới và tạo Pod (nếu cần)
+                            </li>
+                            <li class="fragment">
+                                <strong>Scheduler</strong> ➔ chọn Node phù hợp cho Pod
+                            </li>
+                            <li class="fragment">
+                                <strong>API Server</strong> ➔ cập nhật Pod đã được gán Node
+                            </li>
+                            <li class="fragment">
+                                <strong>kubelet</strong> ➔ theo dõi Pod và yêu cầu container runtime chạy
+                            </li>
+                            <li class="fragment">
+                                <strong>Container Runtime</strong> ➔ pull image và chạy container
+                            </li>
+                            <li class="fragment">
+                                <strong>kube-proxy</strong> ➔ định tuyến traffic từ Service đến Pod
+                            </li>
+                            <li class="fragment">
+                                <strong>Controller</strong> ➔ liên tục kiểm tra và điều chỉnh trạng thái
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="fragment"
+                        style="margin-top: 10px; background: rgba(50, 108, 229, 0.05); padding: 15px; border-radius: 8px; border-left: 5px solid #326CE5; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <p style="margin: 0; font-size: 0.9em; color: #326CE5; font-weight: bold; text-align: center;">
+                            Kubernetes hoạt động theo vòng lặp:
+                        </p>
+                        <div
+                            style="margin-top: 8px; font-family: monospace; font-size: 0.9em; color: #475569; text-align: center; font-weight: bold;">
+                            Lưu trạng thái ➔ Thực thi ➔ Kiểm tra ➔ Điều chỉnh
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">3.</span><br />
+                        Các khái niệm cơ bản
+                    </h1>
+                </section>
+
+                <section>
+                    <h2>Pod</h2>
+
+                    <ul style="font-size: 0.85em;">
+                        <li>Là <strong>đơn vị nhỏ nhất</strong> trong Kubernetes</li>
+                        <li>Chứa 1 hoặc nhiều container chạy cùng nhau</li>
+                        <li>Các container trong Pod:
+                            <ul>
+                                <li>Dùng chung mạng (IP)</li>
+                                <li>Có thể chia sẻ dữ liệu</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p class="fragment" style="margin-top: 20px; font-size: 0.85em; color: #326CE5;">
+                        Pod là “đơn vị triển khai” của Kubernetes
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Deployment</h2>
+
+                    <ul style="font-size: 0.85em;">
+                        <li>Dùng để quản lý và triển khai Pod</li>
+
+                        <li>Hỗ trợ:
+                            <ul>
+                                <li>Số lượng <span class="keyword">Replica</span> (scale)</li>
+                                <li><span class="keyword">Rolling update</span> (cập nhật không gián đoạn)</li>
+                                <li>Tự động tạo lại Pod khi bị lỗi</li>
+                            </ul>
+                        </li>
+
+                        <li>Không làm việc trực tiếp với container, mà quản lý Pod</li>
+                    </ul>
+
+                    <p class="fragment" style="margin-top: 20px; font-size: 0.85em; color: #326CE5;">
+                        Deployment = “cách Kubernetes chạy và quản lý ứng dụng”
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Service</h2>
+
+                    <ul style="font-size: 0.85em;">
+                        <li>Cung cấp <strong>địa chỉ truy cập ổn định</strong> cho các Pod</li>
+
+                        <li>Kết nối:
+                            <ul>
+                                <li>Pod ↔ Pod</li>
+                                <li>Pod ↔ bên ngoài</li>
+                            </ul>
+                        </li>
+
+                        <li>Dùng <strong>label selector</strong> để chọn các Pod phía sau</li>
+
+                        <li>Hỗ trợ <strong>load balancing</strong> giữa các Pod</li>
+
+                        <li><strong>Các loại chính:</strong>
+                            <ul>
+                                <li><span class="inline-code">ClusterIP</span> (nội bộ cluster)</li>
+                                <li><span class="inline-code">NodePort</span> (mở port trên node)</li>
+                                <li><span class="inline-code">LoadBalancer</span> (ra Internet)</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="fragment code-block" style="margin-top: 15px;">
+                        Client → Service → kube-proxy → Pod
+                    </div>
+
+                    <p class="fragment" style="margin-top: 15px; font-size: 0.85em; color: #326CE5;">
+                        Service = “cổng truy cập ổn định cho Pod”
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Job / CronJob</h2>
+
+                    <ul style="font-size: 0.85em;">
+                        <li>Dùng cho <strong>tác vụ chạy một lần rồi kết thúc</strong></li>
+
+                        <li><strong>Job:</strong>
+                            <ul>
+                                <li>Chạy task một lần</li>
+                                <li>Đảm bảo hoàn thành thành công</li>
+                            </ul>
+                        </li>
+
+                        <li><strong>CronJob:</strong>
+                            <ul>
+                                <li>Chạy task theo lịch (giống cron)</li>
+                                <li>Ví dụ: mỗi ngày, mỗi giờ</li>
+                            </ul>
+                        </li>
+
+                        <li>Thường dùng cho:
+                            <ul>
+                                <li>Batch processing</li>
+                                <li>Backup dữ liệu</li>
+                                <li>Pipeline tự động</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p class="fragment" style="margin-top: 20px; font-size: 0.85em; color: #326CE5;">
+                        Job = “làm xong rồi dừng”, khác với Deployment chạy liên tục
+                    </p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">4.</span><br />
+                        Practice
+                    </h1>
+                </section>
+
+                <section>
+                    <h2>Hands-on</h2>
+
+                    <div style="font-size: 0.75em; text-align: left;">
+
+                        <p><strong>Deploy & Scale</strong></p>
+                        <pre><code class="language-bash">
+                kubectl create deployment web --image=nginx
+                kubectl scale deployment web --replicas=3
+                        </code></pre>
+
+                        <p><strong>Expose (Service)</strong></p>
+                        <pre><code class="language-bash">
+                kubectl expose deployment web --type=NodePort --port=80
+                        </code></pre>
+
+                        <p><strong>Quan sát hệ thống</strong></p>
+                        <pre><code class="language-bash">
+                kubectl get all
+                kubectl get pods -o wide
+                        </code></pre>
+
+                        <p><strong>Debug</strong></p>
+                        <pre><code class="language-bash">
+                kubectl describe pod &lt;pod&gt;
+                kubectl logs &lt;pod&gt;
+                kubectl exec -it &lt;pod&gt; -- /bin/bash
+                        </code></pre>
+                    </div>
+                </section>
+
+                <!-- Deploy -->
+                <section>
+                    <h2>Deploy & Scale</h2>
+
+                    <p>Tạo Deployment:</p>
+                    <pre><code class="language-bash">kubectl create deployment web --image=nginx</code></pre>
+
+                    <p class="fragment">Scale lên 3 bản sao:</p>
+                    <pre
+                        class="fragment"><code class="language-bash">kubectl scale deployment web --replicas=3</code></pre>
+
+                    <p class="fragment" style="margin-top: 20px;">
+                        Deployment đảm bảo số lượng Pod luôn đúng (self-healing + scaling)
+                    </p>
+                </section>
+
+                <!-- Network -->
+                <section>
+                    <h2>Expose & Debug</h2>
+
+                    <p>Expose ra bên ngoài:</p>
+                    <pre><code class="language-bash">kubectl expose deployment web --type=NodePort --port=80</code></pre>
+
+                    <p class="fragment">Debug hệ thống:</p>
+                    <pre class="fragment"><code class="language-bash">
+            kubectl get pods
+            kubectl logs &lt;pod&gt;
+            kubectl exec -it &lt;pod&gt; -- /bin/bash
+                    </code></pre>
+
+                    <p class="fragment" style="margin-top: 20px;">
+                        Service cung cấp địa chỉ truy cập ổn định cho Pod
+                    </p>
+                </section>
+
+                <!-- <section>
+                    <h2>Config & Secret</h2>
+
+                    <ul style="font-size: 0.85em;">
+                        <li><strong>ConfigMap:</strong> lưu cấu hình (env, file config)</li>
+                        <li><strong>Secret:</strong> lưu thông tin nhạy cảm (password, token)</li>
+                    </ul>
+
+                    <p class="fragment" style="margin-top: 20px;">
+                        Tách cấu hình khỏi code → dễ thay đổi và deploy
+                    </p>
+                </section> -->
+
+                <section>
+                    <h2>Storage (PV / PVC)</h2>
+
+                    <ul style="font-size: 0.85em;">
+                        <li>Dữ liệu trong Pod sẽ mất khi Pod bị xóa</li>
+                        <li><strong>PV + PVC</strong> giúp lưu dữ liệu lâu dài</li>
+                        <li>Dùng cho:
+                            <ul>
+                                <li>Database</li>
+                                <li>Model checkpoint</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p class="fragment" style="margin-top: 20px;">
+                        Pod chết → dữ liệu vẫn còn
+                    </p>
+                </section>
+
+                <!-- <section>
+                    <h2>Best Practices</h2>
+
+                    <ul style="font-size: 0.85em;">
+                        <li>Không hardcode config trong code hoặc image</li>
+                        <li>Luôn dùng Deployment thay vì chạy Pod trực tiếp</li>
+                        <li>Thiết lập resource limit (CPU / RAM)</li>
+                        <li>Thiết lập logging và monitoring</li>
+                    </ul>
+
+                    <p class="fragment" style="margin-top: 20px;">
+                        Giúp hệ thống ổn định và dễ vận hành
+                    </p>
+                </section> -->
+
+                <section>
+                    <h2>Mapping sang AI system</h2>
+
+                    <div class="question-box">
+                        <ul style="font-size: 0.85em;">
+                            <li><strong>Pod</strong> → chạy training hoặc task nhỏ</li>
+                            <li><strong>Deployment</strong> → service inference (API model)</li>
+                            <li><strong>Job</strong> → pipeline training / batch job</li>
+                            <li><strong>PV</strong> → dataset / checkpoint</li>
+                        </ul>
+                    </div>
+
+                    <p class="fragment" style="margin-top: 20px;">
+                        Kubernetes = nền tảng chạy hệ thống AI end-to-end
+                    </p>
+                </section>
+
+            </section>
+
+            <div class="footer">
+                Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §Lab07: Docker
+            </div>
+        </div>
+    </div>
+
+    <script src="revealjs/dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/math/math.js"></script>
+    <script>
+        Reveal.initialize({
+            controlsLayout: "edges",
+            slideNumber: true,
+            hashOneBasedIndex: true,
+            hash: true,
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+        });
+    </script>
+</body>
+
+</html>

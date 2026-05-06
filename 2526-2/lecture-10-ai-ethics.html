@@ -1,0 +1,1135 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bài 10: AI và Đạo đức</title>
+
+  <link rel="stylesheet" href="revealjs/dist/reset.css" />
+  <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+  <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+  <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="lecture-style.css" />
+  <style>
+    /* Giữ đúng “feel” như các bài trước */
+    .reveal {
+      font-size: 36px;
+    }
+
+    .source {
+      margin-top: 0.55em;
+      font-size: 0.55em;
+      color: #777;
+    }
+
+    .source a {
+      color: #555;
+      text-decoration: underline;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 0.6em;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.72em;
+      border: 1px solid #ddd;
+      color: #666;
+      background: #fafafa;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Mở đầu -->
+      <section>
+        <section>
+          <h1>Phương pháp luận lập trình</h1>
+          <h3>Bài 10: AI và Đạo đức</h3>
+          <p>Giới hạn của AI. Khung đạo đức. Thí nghiệm tưởng tượng. Chính sách.</p>
+          <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Nội dung</h2>
+          <ol>
+            <li>Giới thiệu về đạo đức AI (AI ethics)</li>
+            <li>Giới hạn của AI (limits of AI)</li>
+            <li>Đạo đức AI: khung &amp; trường phái</li>
+            <li>Các thí nghiệm tưởng tượng (thought experiments)</li>
+            <li>Chính sách đạo đức AI</li>
+            <li>Kết luận</li>
+          </ol>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Mục tiêu buổi học</h2>
+          <p style="color: #555; margin: 0 0 0.4em;">Sau buổi học, sinh viên có thể:</p>
+          <ol>
+            <li><strong>Giải thích</strong> vì sao đạo đức AI quan trọng trong hệ thống triển khai thực tế.</li>
+            <li><strong>Phân tích</strong> các giới hạn phổ biến của AI (thiên lệch, ngữ cảnh, ảo giác, tốc độ, …) và liên hệ ví dụ.</li>
+            <li><strong>Áp dụng</strong> khung đạo đức để đánh giá một tình huống ra quyết định có AI.</li>
+            <li><strong>Mô tả</strong> các thí nghiệm tưởng tượng kinh điển (Turing test, Chinese room, Mary's room) và ý nghĩa.</li>
+            <li><strong>Nhận diện</strong> các hướng chính sách (Mỹ, Châu Âu, Trung Quốc) và trục vấn đề (accountability, rủi ro).</li>
+          </ol>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Câu hỏi xuyên suốt buổi học</h2>
+          <div style="margin-top: 0.8em; background: #fff3e0; padding: 14px; border-radius: 8px; border-left: 5px solid #ff9800;">
+            <strong style="color: #e65100;">Câu hỏi xuyên suốt:</strong>
+            <p style="margin-top: 0.3em; font-style: italic; font-size: 1.05em;">
+              Khi AI được “nhúng” vào quyết định và sản phẩm, ta đánh giá thành công bằng tiêu chí nào ngoài độ chính xác —
+              và <strong>ai chịu trách nhiệm</strong> khi hệ thống sai hoặc gây hại?
+            </p>
+          </div>
+          <p style="margin-top: 0.6em; color: #555; font-size: 0.9em;">
+            → Trả lời qua: <strong>giới hạn kỹ thuật</strong> → <strong>khung đạo đức</strong> → <strong>thí nghiệm tưởng tượng</strong> → <strong>chính sách</strong>.
+          </p>
+        </section>
+      </section>
+
+      <!-- 1. Giới thiệu -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">1.</span><br />
+            Giới thiệu về đạo đức AI
+          </h1>
+          <p>Vì sao phải quan tâm khi AI “đi vào đời sống”.</p>
+        </section>
+
+        <section style="font-size: 0.78em;">
+          <h2>Mục tiêu (theo trục đạo đức hệ thống)</h2>
+          <p style="color: #555; margin: 0 0 0.5em;">Ba trụ cột thường gặp trong học thuật và thực hành (FAccT — fairness, accountability, transparency):</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Công bằng</strong> (fairness)
+              <p style="margin: 0.35em 0 0; color: #555;">Giảm phân biệt đối xử và kết quả bất công giữa nhóm.</p>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Trách nhiệm giải trình</strong> (accountability)
+              <p style="margin: 0.35em 0 0; color: #555;">Xác định được ai chịu trách nhiệm khi có hại hoặc sai sót.</p>
+            </div>
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Minh bạch</strong> (transparency)
+              <p style="margin: 0.35em 0 0; color: #555;">Giải thích được (ở mức phù hợp) cách hệ thống hoạt động và giới hạn.</p>
+            </div>
+          </div>
+        </section>
+
+        <section style="text-align: center; align-items: center; display: flex; justify-content: center;">
+          <img src="img/lec-10/facct.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Tại sao cần quan tâm?</h2>
+          <ul>
+            <li><strong>AI không chỉ “dự đoán”</strong> mà còn <strong>can thiệp quyết định</strong>: tuyển dụng, tín dụng, y tế, giáo dục, an ninh.</li>
+            <li><strong>Lỗi có thể nhân rộng</strong> theo quy mô phần mềm: một mô hình triển khai rộng → tác động hàng triệu người.</li>
+            <li><strong>Rủi ro xã hội</strong>: thiên lệch có hệ thống, mất niềm tin, thao túng (deepfake), và tranh luận về vũ khí/tự động hoá quyết định sát thương.</li>
+            <li><strong>Pháp lý &amp; uy tín</strong>: vi phạm quyền riêng tư, bản quyền, hoặc quy định ngành có thể biến “lợi ích kỹ thuật” thành rủi ro pháp lý.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Đạo đức AI là gì? (AI ethics)</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa (tối giản)</div>
+            <p>
+              <strong>Đạo đức AI</strong> (AI ethics) nghiên cứu và hướng dẫn cách
+              <strong>thiết kế</strong>, <strong>triển khai</strong>, và <strong>vận hành</strong> hệ thống AI sao cho
+              <strong>phù hợp giá trị con người</strong>, <strong>giảm tác hại</strong>, và <strong>tăng lợi ích</strong>.
+            </p>
+          </div>
+          <ul style="margin-top: 0.8em;">
+            <li>AI không chỉ là “một mô hình” mà là <strong>một hệ thống xã hội–kỹ thuật</strong> (socio-technical system).</li>
+            <li>Vấn đề đạo đức thường xuất hiện ở: <strong>dữ liệu</strong> → <strong>mô hình</strong> → <strong>sản phẩm</strong> → <strong>tác động xã hội</strong>.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Từ “đúng” sang “đúng trong bối cảnh”</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 0.6em;">
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Độ chính xác (accuracy)</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Mô hình đoán đúng trên tập test.</p>
+              <p style="margin: 0.35em 0 0; color: #777; font-style: italic;">Câu hỏi: “có đúng không?”</p>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Trách nhiệm (responsibility)</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Mô hình có công bằng, an toàn, minh bạch, hợp pháp…</p>
+              <p style="margin: 0.35em 0 0; color: #777; font-style: italic;">Câu hỏi: “đúng cho ai, ở đâu, khi nào, và với giá nào?”</p>
+            </div>
+          </div>
+          <div class="question-box" style="margin-top: 0.8em;">
+            <div class="question-title">Điểm mấu chốt</div>
+            <p>Đạo đức AI không thay kỹ thuật — nó <strong>đặt tiêu chí</strong> và <strong>ràng buộc</strong> để kỹ thuật phục vụ con người.</p>
+          </div>
+        </section>
+
+        <section style="font-size: 0.78em;">
+          <h2>Nhìn lại và đi tiếp</h2>
+          <div style="background: #e8f5e9; padding: 10px; border-radius: 8px; border-left: 5px solid #2e7d32;">
+            <strong style="color: #2e7d32;">Ta vừa biết:</strong>
+            Đạo đức AI là cách nhìn hệ thống: <strong>công bằng</strong>, <strong>trách nhiệm giải trình</strong>, <strong>minh bạch</strong> — không chỉ accuracy.
+          </div>
+          <div style="margin-top: 0.6em; background: #ffebee; padding: 10px; border-radius: 8px; border-left: 5px solid #c62828;">
+            <strong style="color: #c62828;">Câu hỏi chưa giải được:</strong>
+            Những <strong>giới hạn kỹ thuật</strong> nào khiến AI dễ sai theo kiểu “khó phát hiện”, và vì sao “hộp đen” làm mọi thứ tệ hơn?
+          </div>
+          <div style="margin-top: 0.6em; background: #e3f2fd; padding: 10px; border-radius: 8px; border-left: 5px solid #1565c0;">
+            <strong style="color: #1565c0;">Phần này trả lời:</strong>
+            <strong>Giới hạn của AI</strong> — từ thiên lệch đến <strong>căn chỉnh AI</strong> (AI alignment), và mối liên hệ với black box.
+          </div>
+        </section>
+      </section>
+
+      <!-- 2. Giới hạn của AI -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">2.</span><br />
+            Giới hạn của AI
+          </h1>
+          <p>Những “điểm yếu” thường gặp khi triển khai AI ở thế giới thật.</p>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Tổng quan nhanh: các giới hạn hay gặp</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Giới hạn kỹ thuật</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Thiên lệch (bias)</li>
+                <li>Thiếu ngữ cảnh (context)</li>
+                <li>Tốc độ/chi phí (speed/cost)</li>
+                <li>Ảo giác (hallucinations)</li>
+              </ul>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Giới hạn xã hội–pháp lý</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Đạo văn (plagiarism)</li>
+                <li>Nội dung không mong muốn (undesirable content)</li>
+                <li>Bản quyền (copyright)</li>
+                <li>Căn chỉnh AI (AI alignment)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.72em;">
+          <h2>Giới hạn của AI</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div style="background: #e3f2fd; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Bias</strong> — thiên lệch hệ thống
+            </div>
+            <div style="background: #e8f5e9; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Context</strong> — thiếu ngữ cảnh / nhập nhằng ngữ nghĩa
+            </div>
+            <div style="background: #fff3e0; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Speed / cost</strong> — độ trễ &amp; chi phí tính toán
+            </div>
+            <div style="background: #fce4ec; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #c2185b;">
+              <strong style="color: #880e4f;">Hallucinations</strong> — tin “hợp lý” nhưng sai
+            </div>
+            <div style="background: #f3e5f5; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #7b1fa2;">
+              <strong style="color: #4a148c;">Plagiarism</strong> — đạo văn / trùng nguồn
+            </div>
+            <div style="background: #ffebee; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #c62828;">
+              <strong style="color: #c62828;">Undesirable</strong> — nội dung độc hại, deepfake…
+            </div>
+            <div style="background: #eceff1; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #546e7a;">
+              <strong style="color: #37474f;">Copyright</strong> — bản quyền &amp; dữ liệu huấn luyện
+            </div>
+            <div style="background: #e0f2f1; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #00695c;">
+              <strong style="color: #004d40;">AI alignment</strong> — căn chỉnh theo giá trị / mục tiêu con người
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>1) Thiên lệch (bias)</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <p>
+              <strong>Thiên lệch</strong> (bias) là sự sai lệch <strong>hệ thống</strong> trong dữ liệu, mô hình, hoặc quy trình,
+              dẫn tới kết quả <strong>bất công</strong> hoặc <strong>không đại diện</strong> cho các nhóm khác nhau.
+            </p>
+          </div>
+        </section>
+
+        <section>
+            <img src="img/lec-10/bias.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>2) Ngữ cảnh (context)</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <p>
+              <strong>Ngữ cảnh</strong> (context) là thông tin nền (mục tiêu, tình huống, văn hoá, thời điểm, tri thức liên quan)
+              giúp giải thích đúng ý nghĩa của dữ liệu và câu hỏi. AI thường không thể hiểu được hết ngữ cảnh trong ngôn ngữ con người vì khác biệt về văn hóa, ngôn ngữ, từ đồng âm, đồng nghĩa,...
+            </p>
+          </div>
+          <div style="background: #fff3e0; border-radius: 8px; padding: 10px 12px; border-left: 4px solid #ef6c00; margin-top: 0.8em;">
+            <strong style="color: #e65100;">Ví dụ nhập nhằng ngữ nghĩa</strong>
+            <p style="margin: 0.35em 0 0; color: #555;">
+              Câu: <em>“Hổ mang bò lên núi.”</em><br />
+              Có thể hiểu: (a) <strong>rắn Hổ mang</strong> bò lên núi; hoặc (b) <strong>con Hổ</strong> mang con bò lên núi.
+            </p>
+          </div>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>3) Tốc độ &amp; chi phí (speed/cost)</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <p>
+              Nhiều mô hình hiện đại (đặc biệt mô hình lớn) đòi hỏi <strong>tài nguyên tính toán</strong> lớn,
+              dẫn tới <strong>độ trễ</strong> (latency) và <strong>chi phí</strong> (cost) cao.
+            </p>
+          </div>
+          <div class="two-col">
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Ví dụ (tác động)</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Trợ lý hội thoại trong CSKH: độ trễ cao → trải nghiệm kém, tăng rớt phiên.</li>
+                <li>Hệ thống an toàn (safety-critical) cần phản hồi gần thời gian thực.</li>
+              </ul>
+            </div>
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Giảm thiểu (ý tưởng)</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Mô hình nhỏ hơn / distillation / quantization.</li>
+                <li>Cache, RAG “đúng chỗ”, batch, hoặc cấu trúc pipeline hợp lý.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>4) Ảo giác (hallucinations)</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <p>
+              <strong>Ảo giác</strong> (hallucinations) là khi mô hình sinh ra thông tin
+              <strong>nghe có vẻ hợp lý</strong> nhưng <strong>không đúng</strong> hoặc <strong>không có căn cứ</strong>.
+            </p>
+          </div>
+          <div class="two-col">
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Ví dụ</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Bịa nguồn tài liệu, bịa “trích dẫn” hoặc bịa số liệu.</li>
+                <li>Trong lập trình: bịa API/hàm không tồn tại.</li>
+              </ul>
+            </div>
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Giảm thiểu (ý tưởng)</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Yêu cầu trích nguồn, kiểm tra chéo, “không biết thì nói không biết”.</li>
+                <li>RAG + kiểm chứng (verification) + đánh dấu độ tin cậy.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="source">Nguồn tổng quan: ACM TOIS (2024) “A Survey on Hallucination in Large Language Models” —
+            <a href="https://dl.acm.org/doi/10.1145/3703155" target="_blank" rel="noopener">DOI</a>.</p>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>5) Đạo văn (plagiarism)</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <p>
+              <strong>Đạo văn</strong> (plagiarism) là trình bày nội dung/ý tưởng của người khác như của mình,
+              đặc biệt khi sinh văn bản/code có thể <strong>giống/khớp</strong> với nguồn đã tồn tại.
+            </p>
+          </div>
+          <div style="background: #ffebee; border-radius: 8px; padding: 10px 12px; border-left: 4px solid #c62828; margin-top: 0.8em;">
+            <strong style="color: #c62828;">Điểm cần nhớ</strong>
+            <p style="margin: 0.35em 0 0; color: #555;">
+              “Giống về ý” có thể chấp nhận khi bạn trích dẫn và diễn giải; “giống về chữ” (verbatim) mà không trích dẫn là rủi ro đạo văn.
+            </p>
+          </div>
+        </section>
+
+        <section>
+            <img src="img/lec-10/plagiarism.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>6) Nội dung không mong muốn (undesirable content)</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <p>
+              <strong>Nội dung không mong muốn</strong> (undesirable content) là nội dung gây hại hoặc không phù hợp:
+              thù ghét, quấy rối, kích động bạo lực, lừa đảo, nội dung độc hại, hoặc thao túng dư luận.
+            </p>
+          </div>
+          <div class="two-col">
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Ví dụ (thực tế)</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">
+                Chatbot có thể bị “dạy” nội dung độc hại qua tương tác, rồi phát tán lại ra cộng đồng.
+              </p>
+            </div>
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Giảm thiểu (ý tưởng)</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Lọc đầu vào/đầu ra theo chính sách.</li>
+                <li>Giám sát &amp; phản hồi người dùng.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Undesirable content: Deepfake</h2>
+          <div class="question-box">
+            <div class="question-title">Khái niệm</div>
+            <p>
+              <strong>Deepfake</strong> là nội dung (ảnh/âm thanh/video) được tạo hoặc chỉnh sửa bằng AI
+              để <strong>giả mạo</strong> danh tính/lời nói/hành động, gây hiểu nhầm hoặc lừa đảo.
+            </p>
+          </div>
+          <div style="margin-top: 0.75em; background: #fafafa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px 12px;">
+            <strong>Luồng rủi ro (mô tả bằng chữ)</strong>
+            <ol style="margin: 0.4em 0 0; padding-left: 1.1em;">
+              <li>Thu thập dữ liệu sinh trắc / giọng nói / video.</li>
+              <li>Mô hình tổng hợp (synthesis) tạo nội dung giống thật.</li>
+              <li>Phát tán qua mạng xã hội / cuộc gọi / tin nhắn → lừa đảo, bôi nhọ, can thiệp chính trị…</li>
+            </ol>
+          </div>
+          <p class="source">Nguồn khái niệm synthetic content / rủi ro minh hoạ:
+            <a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-4.pdf" target="_blank" rel="noopener">NIST AI 100-4 (PDF)</a>.</p>
+        </section>
+
+        <section>
+          <img src="img/lec-10/deepfake.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>7) Bản quyền (copyright)</h2>
+          <div class="question-box">
+            <div class="question-title">Vấn đề</div>
+            <p>
+              Khi AI học từ dữ liệu có bản quyền và/hoặc tạo ra nội dung giống nguồn có bản quyền,
+              câu hỏi pháp lý phát sinh: <strong>quyền sử dụng dữ liệu</strong>, <strong>tác phẩm phái sinh</strong>,
+              <strong>trách nhiệm</strong> khi phát tán.
+            </p>
+          </div>
+          <div style="background: #fff3e0; border-radius: 8px; padding: 10px 12px; border-left: 4px solid #ef6c00; margin-top: 0.8em;">
+            <strong style="color: #e65100;">Ví dụ (tình huống)</strong>
+            <ul style="margin-top: 0.35em;">
+              <li>Sinh ảnh theo “phong cách” của một hoạ sĩ đang sống.</li>
+              <li>Sinh đoạn code hoặc văn bản trùng với nguồn đã xuất bản.</li>
+              <li>Dùng dữ liệu thu thập web để huấn luyện mà không rõ giấy phép.</li>
+            </ul>
+          </div>
+          <p class="caption">Phần này mang tính khái quát; chi tiết phụ thuộc luật từng quốc gia và án lệ cập nhật.</p>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>8) Căn chỉnh AI (AI alignment)</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <p>
+              <strong>Căn chỉnh AI</strong> (<em>AI alignment</em>; còn gọi <strong>liên kết giá trị</strong> / <em>value alignment</em>)
+              là bài toán làm cho hệ AI <strong>khớp</strong> với <strong>mục tiêu</strong> và <strong>giá trị con người</strong> (<em>human values</em>) —
+              tức hành vi và kết quả thực tế không lệch khỏi điều ta mong muốn, nhất khi mục tiêu mơ hồ hoặc các giá trị xung đột.
+            </p>
+          </div>
+          <p style="color: #555; margin: 0.65em 0 0;">Bốn hướng thường gặp: <strong>Top-down</strong>, <strong>Bottom-up</strong>, <strong>Hybrid</strong>, và <strong>Giám sát cộng tác</strong> (human-in-the-loop).</p>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Black box (hộp đen) và vì sao gây ra giới hạn</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            <p>
+              <strong>Hộp đen</strong> (black box) là khi ta <strong>khó giải thích</strong> tại sao mô hình cho ra một dự đoán cụ thể:
+              có đầu vào → có đầu ra, nhưng cơ chế bên trong không minh bạch (hoặc quá phức tạp).
+            </p>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 0.8em;">
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Vì sao dẫn đến giới hạn?</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Khó phát hiện thiên lệch (bias) ở mức “nguyên nhân”.</li>
+                <li>Khó kiểm chứng khi mô hình ảo giác.</li>
+                <li>Khó quy trách nhiệm khi có hại (accountability).</li>
+              </ul>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Giảm thiểu (ý tưởng)</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Giải thích mô hình (explainability), phân tích lỗi.</li>
+                <li>Kiểm thử theo kịch bản (scenario testing) + giám sát (monitoring).</li>
+                <li>Thiết kế “có người trong vòng” (human-in-the-loop) khi cần.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+            <img src="img/lec-10/black-box.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+  
+
+        <section style="font-size: 0.78em;">
+          <h2>Nhìn lại và đi tiếp</h2>
+          <div style="background: #e8f5e9; padding: 10px; border-radius: 8px; border-left: 5px solid #2e7d32;">
+            <strong style="color: #2e7d32;">Ta vừa biết:</strong>
+            Giới hạn AI không chỉ là “sai số” — còn có <strong>thiên lệch</strong>, <strong>thiếu ngữ cảnh</strong>, <strong>ảo giác</strong>, <strong>deepfake</strong>, <strong>căn chỉnh AI</strong>, và <strong>black box</strong>.
+          </div>
+          <div style="margin-top: 0.6em; background: #ffebee; padding: 10px; border-radius: 8px; border-left: 5px solid #c62828;">
+            <strong style="color: #c62828;">Câu hỏi chưa giải được:</strong>
+            Khi các giá trị xung đột, ta <strong>lập luận đạo đức</strong> thế nào để chọn hành động — không chỉ “tối ưu accuracy”?
+          </div>
+          <div style="margin-top: 0.6em; background: #e3f2fd; padding: 10px; border-radius: 8px; border-left: 5px solid #1565c0;">
+            <strong style="color: #1565c0;">Phần này trả lời:</strong>
+            <strong>Khung đạo đức</strong> + <strong>bốn trường phái</strong> + liên hệ với <strong>căn chỉnh AI</strong> (AI alignment).
+          </div>
+        </section>
+      </section>
+
+      <!-- 3. Đạo đức AI: khung & trường phái -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">3.</span><br />
+            Đạo đức AI: khung &amp; trường phái
+          </h1>
+          <p>Khái niệm, mô hình vấn đề, và các cách lập luận đạo đức.</p>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Khung đạo đức (ethical framework) dùng để làm gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Mục tiêu</div>
+            <p>Cho một tình huống khó, khung đạo đức giúp ta <strong>xác định vấn đề</strong>, <strong>so sánh lựa chọn</strong>, và <strong>biện minh</strong> quyết định.</p>
+          </div>
+          <ul style="margin-top: 0.8em;">
+            <li>Không đảm bảo “đúng tuyệt đối”, nhưng giúp <strong>tránh quyết định tuỳ tiện</strong>.</li>
+            <li>Hữu ích khi các giá trị <strong>xung đột</strong> (an toàn vs tự do, riêng tư vs tiện lợi, …).</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.72em;">
+          <h2>Mô hình 4 tầng vấn đề đạo đức (kim tự tháp)</h2>
+          <p style="color: #555; margin: 0 0 0.45em;">Ý tưởng: từ <strong>cá nhân</strong> → <strong>bên liên quan</strong> → <strong>chính sách nội bộ</strong> → <strong>xã hội</strong> — phạm vi trách nhiệm mở rộng dần.</p>
+          <div style="display: flex; flex-direction: column; gap: 8px; max-width: 920px; margin: 0 auto;">
+            <div style="background: #ffebee; padding: 8px 14px; border-radius: 8px; border-left: 4px solid #c62828; margin-left: 0;">
+              <strong style="color: #c62828;">(4) Xã hội</strong> — luật, chuẩn mực, hệ quả dài hạn
+            </div>
+            <div style="background: #fff3e0; padding: 8px 14px; border-radius: 8px; border-left: 4px solid #ef6c00; margin-left: 1.2em;">
+              <strong style="color: #e65100;">(3) Chính sách nội bộ</strong> — quy trình, kiểm thử, quản trị rủi ro
+            </div>
+            <div style="background: #e3f2fd; padding: 8px 14px; border-radius: 8px; border-left: 4px solid #1565c0; margin-left: 2.4em;">
+              <strong style="color: #0d47a1;">(2) Bên liên quan</strong> — người dùng, khách hàng, cộng đồng
+            </div>
+            <div style="background: #e8f5e9; padding: 8px 14px; border-radius: 8px; border-left: 4px solid #2e7d32; margin-left: 3.6em;">
+              <strong style="color: #1b5e20;">(1) Cá nhân</strong> — lương tâm, đạo đức nghề nghiệp
+            </div>
+          </div>
+        </section>
+
+        <section style="text-align: center; align-items: center; display: flex; justify-content: center;">
+          <img src="img/lec-10/ethics-levels.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.78em;">
+          <h2>Mô hình 4 tầng</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 0.5em;">
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">(1) Cá nhân (personal)</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Giá trị cá nhân, lương tâm, trách nhiệm nghề nghiệp.</p>
+              <p style="margin: 0.35em 0 0; color: #777; font-style: italic;">VD: tôi có đưa dữ liệu nhạy cảm vào AI không?</p>
+            </div>
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">(2) Bên liên quan (stakeholders)</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Người dùng, khách hàng, nạn nhân, nhân viên, cộng đồng.</p>
+              <p style="margin: 0.35em 0 0; color: #777; font-style: italic;">VD: ai chịu hại khi mô hình sai?</p>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">(3) Chính sách nội bộ (internal policy)</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Quy trình, tiêu chuẩn, kiểm thử, đánh giá rủi ro.</p>
+              <p style="margin: 0.35em 0 0; color: #777; font-style: italic;">VD: có red-team, audit, logging?</p>
+            </div>
+            <div style="background: #ffebee; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #c62828;">
+              <strong style="color: #c62828;">(4) Xã hội (societal)</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Luật, chuẩn mực xã hội, tác động dài hạn.</p>
+              <p style="margin: 0.35em 0 0; color: #777; font-style: italic;">VD: phân biệt đối xử, thao túng bầu cử, …</p>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Trường phái 1: Vị lợi (consequentialism / utilitarianism)</h2>
+          <div class="question-box">
+            <div class="question-title">Nguyên tắc</div>
+            <p>Chọn hành động tạo ra <strong>lợi ích ròng lớn nhất</strong> (tối đa hoá hạnh phúc / phúc lợi tổng).</p>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 0.8em;">
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Điểm mạnh</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Phù hợp tối ưu hoá và đánh đổi.</li>
+                <li>Dễ áp dụng với bài toán phân bổ tài nguyên.</li>
+              </ul>
+            </div>
+            <div style="background: #ffebee; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #c62828;">
+              <strong style="color: #c62828;">Điểm yếu</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Khó đo lường “hạnh phúc” và tác động dài hạn.</li>
+                <li>Có thể hi sinh quyền lợi thiểu số vì “tổng lợi ích”.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Trolley problem (2 slides) -->
+        <section style="font-size: 0.82em;">
+          <h2>Ví dụ kinh điển: bài toán xe điện (trolley problem)</h2>
+          <div class="question-box">
+            <div class="question-title">Tình huống</div>
+            <p>Một xe điện mất phanh đang lao tới 5 người trên đường ray. Bạn có thể kéo cần gạt để chuyển hướng, nhưng đường kia có 1 người.</p>
+          </div>
+          <div style="margin-top: 0.7em; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: #ffebee; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #c62828;">
+              <strong style="color: #c62828;">Lựa chọn A</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Không can thiệp: xe tiếp tục đường cũ → nguy cơ cho <strong>5 người</strong>.</p>
+            </div>
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Lựa chọn B</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Kéo cần gạt: chuyển ray → nguy cơ cho <strong>1 người</strong> (nhưng giảm tổng thiệt hại theo một cách đếm).</p>
+            </div>
+          </div>
+        </section>
+
+        <section style="text-align: center; align-items: center; display: flex; justify-content: center;">
+            <img src="img/lec-10/trolley-problem.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Trolley problem: hai cách lập luận</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 0.6em;">
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Theo vị lợi (utilitarianism)</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Kéo cần gạt: 1 người bị đâm thay vì 5 → “tốt hơn” theo tổng thiệt hại.</li>
+                <li>Tập trung vào <strong>kết quả</strong>.</li>
+              </ul>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Câu hỏi mở cho AI</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>AI xe tự lái tối ưu “tổng thiệt hại” có chấp nhận được không?</li>
+                <li>Nếu tối ưu vậy, ai đặt trọng số (value weights) cho “thiệt hại”?</li>
+              </ul>
+            </div>
+          </div>
+          <p class="caption">Trolley problem thường dùng để minh hoạ xung đột giữa trường phái đạo đức, không nhằm “giải đúng”.</p>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Trường phái 2: Bổn phận (deontology)</h2>
+          <div class="question-box">
+            <div class="question-title">Nguyên tắc (tối giản)</div>
+            <p>Đánh giá hành động dựa trên <strong>quy tắc/chuẩn mực</strong> và <strong>bổn phận</strong>, không chỉ dựa trên kết quả.</p>
+          </div>
+          <div style="background: #ffebee; border-radius: 8px; padding: 10px 12px; border-left: 4px solid #c62828; margin-top: 0.8em;">
+            <strong style="color: #c62828;">Câu hỏi của Kant:</strong>
+            <p style="margin: 0.35em 0 0; color: #555;">“Nếu ai cũng làm thế, thế giới có tốt hơn không?” (tính phổ quát hoá)</p>
+          </div>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Trường phái 3: Virtue ethics (đạo đức đức hạnh)</h2>
+          <div class="question-box">
+            <div class="question-title">Nguyên tắc</div>
+            <p>Tập trung vào <strong>phẩm chất/đức hạnh</strong> của tác nhân: trung thực, dũng cảm, công bằng, cẩn trọng…</p>
+          </div>
+          <div style="background: #e8f5e9; border-radius: 8px; padding: 10px 12px; border-left: 4px solid #2e7d32; margin-top: 0.8em;">
+            <strong style="color: #1b5e20;">Ví dụ trong AI</strong>
+            <ul style="margin-top: 0.35em;">
+              <li><strong>Trung thực</strong>: không thổi phồng năng lực hệ thống, không che lỗi.</li>
+              <li><strong>Cẩn trọng</strong>: kiểm thử, đánh giá rủi ro trước khi triển khai.</li>
+              <li><strong>Công bằng</strong>: theo dõi sai lệch theo nhóm, sửa dữ liệu/quy trình.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Trường phái 4: Contract ethics (đạo đức hợp đồng / social contract)</h2>
+          <div class="question-box">
+            <div class="question-title">Ý tưởng</div>
+            <p>
+              Quy tắc đúng đắn xuất phát từ <strong>thoả thuận hợp lý</strong> giữa các bên trong xã hội:
+              quyền, nghĩa vụ, và cơ chế bảo vệ lẫn nhau (minh bạch, khiếu nại, bồi thường…).
+            </p>
+          </div>
+          <ul style="margin-top: 0.6em;">
+            <li><strong>Trong AI</strong>: điều khoản dịch vụ, chính sách dữ liệu, tiêu chuẩn ngành, “rules of the road” cho triển khai.</li>
+            <li><strong>Điểm mạnh</strong>: hoá giá trị thành quy tắc có thể kiểm tra.</li>
+            <li><strong>Điểm khó</strong>: bên yếu thế có thể không thực sự “thoả thuận” bình đẳng nếu thiếu cơ chế.</li>
+          </ul>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Căn chỉnh AI:</h2>
+          <div class="question-box">
+            <div class="question-title">Nhớ nhanh</div>
+            <p><strong>Top-down</strong> (gài sẵn giá trị / quy tắc) + <strong>Bottom-up</strong> (học từ dữ liệu &amp; phản hồi) + <strong>Hybrid</strong> (lai) + <strong>Giám sát cộng tác</strong> (human-in-the-loop / human oversight).</p>
+          </div>
+          <div style="margin-top: 0.8em; background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+            <strong style="color: #0d47a1;">Vì sao nằm trong bài đạo đức?</strong>
+            <p style="margin: 0.35em 0 0; color: #555;">
+              <strong>Căn chỉnh AI</strong> là chỗ <strong>đạo đức “gặp” kỹ thuật</strong>: ta phải chọn và cố định hoá giá trị (từ trường phái / chính sách),
+              rồi biến chúng thành huấn luyện, quy tắc, kiểm thử và giám sát — để hệ không chỉ “chạy đúng” mà <strong>chạy đúng hướng</strong> với con người.
+            </p>
+          </div>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Hướng 1: Top-down (từ trên xuống)</h2>
+          <div class="question-box">
+            <div class="question-title">Ý tưởng</div>
+            <p>Đặt <strong>quy tắc/giá trị</strong> trước, rồi ép hệ tuân thủ: “được làm gì, không được làm gì, và ưu tiên gì”.</p>
+          </div>
+          <div class="two-col">
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Cách làm (ví dụ)</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Chính sách an toàn (safety policy), “hiến pháp” hành vi (constitutional rules).</li>
+                <li>Prompt / system rules + bộ lọc (guardrails) + danh sách cấm.</li>
+                <li>Đánh giá theo checklist chuẩn mực (compliance / policy tests).</li>
+              </ul>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Điểm mạnh / điểm yếu</strong>
+              <ul style="margin-top: 0.35em;">
+                <li><strong>+</strong> Rõ ràng, kiểm tra được, dễ giải thích.</li>
+                <li><strong>−</strong> Dễ “cứng nhắc”, thiếu bao phủ với tình huống mới.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="text-align: center; align-items: center; display: flex; justify-content: center;">
+          <img src="img/lec-10/top-down.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Hướng 2: Bottom-up (từ dưới lên)</h2>
+          <div class="question-box">
+            <div class="question-title">Ý tưởng</div>
+            <p>Không viết hết “đạo đức” thành luật; để hệ <strong>học ưu tiên</strong> từ dữ liệu và phản hồi của con người.</p>
+          </div>
+          <div class="two-col">
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Cách làm (ví dụ)</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>RLHF / DPO: học từ <strong>ưu tiên</strong> (preferences).</li>
+                <li>Tinh chỉnh theo dữ liệu “chuẩn mực” đã gắn nhãn (curated data).</li>
+                <li>Học từ phản hồi người dùng (feedback loop) có kiểm soát.</li>
+              </ul>
+            </div>
+            <div style="background: #ffebee; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #c62828;">
+              <strong style="color: #c62828;">Rủi ro hay gặp</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Học “thói quen xấu” nếu dữ liệu/feedback bị nhiễu hoặc bị tấn công.</li>
+                <li>Thiên lệch theo nhóm nếu phản hồi không đại diện.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Hướng 3: Hybrid (lai)</h2>
+          <div class="question-box">
+            <div class="question-title">Ý tưởng</div>
+            <p>Kết hợp “luật cứng” (<strong>top-down</strong>) với “học ưu tiên” (<strong>bottom-up</strong>), rồi <strong>kiểm chứng</strong>.</p>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 0.7em;">
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Pipeline phổ biến</strong>
+              <ol style="margin: 0.4em 0 0; padding-left: 1.1em;">
+                <li>Model sinh nội dung.</li>
+                <li>Rule/policy check + classifier.</li>
+                <li>RAG/verify với nguồn tin cậy (nếu cần).</li>
+                <li>Chặn / sửa / yêu cầu làm rõ.</li>
+              </ol>
+            </div>
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Điểm mạnh</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Thực tế hơn khi triển khai sản phẩm.</li>
+                <li>Có nhiều “lớp” giảm rủi ro (defense in depth).</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Hướng 4: Giám sát cộng tác (human-in-the-loop)</h2>
+          <div class="question-box">
+            <div class="question-title">Ý tưởng</div>
+            <p>Giữ <strong>con người trong vòng</strong> ở bước nhạy cảm: hệ đề xuất, con người quyết định; có ghi vết để quy trách nhiệm.</p>
+          </div>
+          <div class="two-col">
+            <div style="background: #f3e5f5; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #7b1fa2;">
+              <strong style="color: #4a148c;">Áp dụng tốt khi</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Quyết định ảnh hưởng lớn: y tế, tín dụng, tuyển dụng, an ninh.</li>
+                <li>Cần cân nhắc bối cảnh mà mô hình dễ hiểu sai.</li>
+              </ul>
+            </div>
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Yêu cầu kèm theo</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Giao diện cho người duyệt + hướng dẫn thống nhất.</li>
+                <li>Logging/audit + quy trình incident response.</li>
+                <li>Đào tạo để tránh “tự động tin máy” (automation bias).</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- 4. Thí nghiệm tưởng tượng -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">4.</span><br />
+            Các thí nghiệm tưởng tượng
+          </h1>
+          <p>Đánh giá trách nhiệm đạo đức, quyền của AI, và ranh giới mô phỏng–thực chất.</p>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Mục tiêu của “thí nghiệm tưởng tượng”</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 0.6em;">
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Đánh giá đạo đức &amp; quyền của AI</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">AI có “hiểu” hay chỉ “bắt chước”? Nếu không hiểu, ta có nên gán quyền?</p>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Xác định giới hạn của AI</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Giới hạn của suy luận, ý thức, trải nghiệm chủ quan, và hiểu nghĩa.</p>
+            </div>
+          </div>
+          <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0; margin-top: 0.8em;">
+            <strong style="color: #0d47a1;">Phân định “mô phỏng” và “thực chất”</strong>
+            <p style="margin: 0.35em 0 0; color: #555;">
+              Một hệ có thể <strong>mô phỏng</strong> hành vi thông minh mà vẫn không có <strong>hiểu nghĩa</strong> hoặc <strong>ý thức</strong>.
+            </p>
+          </div>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>1) Turing test (phép thử Turing)</h2>
+          <div class="question-box">
+            <div class="question-title">Ý tưởng</div>
+            <p>
+              Nếu một máy có thể trò chuyện sao cho người đối thoại không phân biệt được đó là máy hay người,
+              ta có thể gọi nó là “thông minh” theo tiêu chí hành vi.
+            </p>
+          </div>
+          <div class="two-col">
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Cách thức</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Người hỏi giao tiếp qua kênh chữ (ẩn danh).</li>
+                <li>So sánh hai “đối tượng”: người và máy.</li>
+                <li>Nếu máy đánh lừa được người hỏi đủ lâu/đủ tốt → đạt.</li>
+              </ul>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Ý nghĩa</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Đo hành vi bên ngoài (behavior) thay vì “ý thức” bên trong.</li>
+                <li>Gợi câu hỏi: “đánh lừa” có đồng nghĩa “hiểu” không?</li>
+              </ul>
+            </div>
+          </div>
+          <p class="source">Nguồn: Alan Turing, “Computing Machinery and Intelligence” (1950).</p>
+        </section>
+
+        <section style="text-align: center; align-items: center; display: flex; justify-content: center;">
+            <img src="img/lec-10/turing-test.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>2) Chinese room (phòng tiếng Trung)</h2>
+          <div class="question-box">
+            <div class="question-title">Ý tưởng</div>
+            <p>
+              Một người trong phòng không biết tiếng Trung nhưng có quyển “luật” để biến ký hiệu đầu vào thành ký hiệu đầu ra.
+              Với người ngoài, phòng “trả lời tiếng Trung” rất tốt — nhưng người trong phòng không hiểu nghĩa.
+            </p>
+          </div>
+          <div class="two-col">
+            <div style="background: #ffebee; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #c62828;">
+              <strong style="color: #c62828;">Điểm nhấn</strong>
+              <ul style="margin-top: 0.35em;">
+                <li><strong>Cú pháp</strong> (syntax) ≠ <strong>ngữ nghĩa</strong> (semantics).</li>
+                <li>Hệ có thể “đúng” về thao tác ký hiệu mà không “hiểu”.</li>
+              </ul>
+            </div>
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">Ý nghĩa với AI hiện đại</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>LLM có thể sinh câu “giống hiểu” nhưng vẫn sai về thực tế.</li>
+                <li>Giúp lý giải rủi ro ảo giác và thiếu ngữ cảnh.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="source">Nguồn: John Searle, “Minds, Brains, and Programs” (1980).</p>
+        </section>
+
+        <section style="text-align: center; align-items: center; display: flex; justify-content: center;">
+            <img src="img/lec-10/chinese-room.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+      </section>
+
+      <!-- 5. Chính sách -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">5.</span><br />
+            Chính sách đạo đức AI
+          </h1>
+          <p>Accountability. Khung rủi ro. Hướng tiếp cận của Mỹ, EU và Trung Quốc.</p>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Accountability (trách nhiệm giải trình)</h2>
+          <div class="question-box">
+            <div class="question-title">Câu hỏi</div>
+            <p>Khi AI gây hại, trách nhiệm thuộc về <strong>nhà phát triển</strong>, <strong>tổ chức triển khai</strong>, <strong>người dùng</strong>, hay <strong>chuỗi cung ứng</strong>?</p>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0.65em;">
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Chuỗi trách nhiệm (accountability chain)</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Thiết kế &amp; huấn luyện (design / training).</li>
+                <li>Triển khai &amp; cấu hình (deployment / configuration).</li>
+                <li>Vận hành &amp; giám sát (operations / monitoring).</li>
+                <li>Người dùng cuối &amp; bên thứ ba (end users / vendors).</li>
+              </ul>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Làm cho trách nhiệm “bám được”</strong>
+              <ul style="margin-top: 0.35em;">
+                <li>Rõ vai trò: <strong>ai quyết định triển khai</strong> và <strong>ai kiểm soát vận hành</strong>.</li>
+                <li>Ghi vết: logging, audit, kiểm thử, tài liệu hoá (documentation).</li>
+                <li>Phản ứng sự cố: incident response, thông báo, khắc phục.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Hướng chính sách: Mỹ (US)</h2>
+          <div class="question-box">
+            <div class="question-title">Tóm tắt (theo ảnh)</div>
+            <p>Sáng kiến AI Hoa Kỳ; NIST; quy định cấp bang.</p>
+          </div>
+          <ul style="margin-top: 0.5em;">
+            <li><strong>American Artificial Intelligence Initiative (Sáng kiến AI Hoa Kỳ):</strong> Tập trung đầu tư R&amp;D và các hướng dẫn đạo đức để thúc đẩy phát triển AI.</li>
+            <li><strong>National Institute of Standards and Technology (NIST):</strong> Chủ động xây dựng tiêu chuẩn và thực hành tốt nhất (best practices) cho AI.</li>
+            <li><strong>State Regulations (quy định cấp bang):</strong> Nhiều bang đóng góp bằng quy định địa phương, nhấn mạnh “lan can đạo đức” (ethical guardrails) như không phân biệt đối xử (non-discrimination) trong AI.</li>
+          </ul>
+        </section>
+
+        <section style="text-align: center; align-items: center; display: flex; justify-content: center;">
+          <img src="img/lec-10/nist.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Hướng chính sách: Châu Âu (EU)</h2>
+          <div class="question-box">
+            <div class="question-title">Tóm tắt (theo ảnh)</div>
+            <p>GDPR; đề xuất quy định AI (4/2021); nhóm chuyên gia cấp cao.</p>
+          </div>
+          <ul style="margin-top: 0.5em;">
+            <li><strong>General Data Protection Regulation (GDPR):</strong> Thiết lập chuẩn mực toàn cầu về bảo vệ dữ liệu (data protection) và quyền riêng tư (privacy).</li>
+            <li><strong>Proposed AI Regulations (April 2021):</strong> Đề xuất quy định nhắm vào AI, tập trung vào minh bạch (transparency), trách nhiệm giải trình (accountability) và quản trị rủi ro (risk management).</li>
+            <li><strong>High-Level Expert Group on Artificial Intelligence:</strong> Nhấn mạnh cách tiếp cận AI có trách nhiệm và lấy con người làm trung tâm (human-centric).</li>
+          </ul>
+        </section>
+
+        <section style="text-align: center; align-items: center; display: flex; justify-content: center;">
+          <img src="img/lec-10/gdpr.jpg" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Hướng chính sách: Trung Quốc (China)</h2>
+          <div class="question-box">
+            <div class="question-title">Tóm tắt (theo ảnh)</div>
+            <p>Kế hoạch phát triển; nguyên tắc AI; an ninh dữ liệu; sandbox quản lý.</p>
+          </div>
+          <ul style="margin-top: 0.5em;">
+            <li><strong>New Generation AI Development Plan:</strong> Thúc đẩy tích hợp AI với các ngành công nghiệp, có quy định để quản lý AI, và cải thiện nguồn nhân lực AI.</li>
+            <li><strong>Beijing AI Principles:</strong> Do Beijing Academy of AI đề xuất; nhấn mạnh sự hài hoà (harmony), công bằng (fairness) và công lý (justice).</li>
+            <li><strong>China's Data Security Law:</strong> Điều chỉnh các hoạt động dữ liệu, đề cao an ninh mạng (cybersecurity), và bảo vệ lợi ích an ninh quốc gia.</li>
+            <li><strong>Shanghai AI Regulatory Sandbox:</strong> Cho phép doanh nghiệp AI thử nghiệm ứng dụng trong môi trường thực (real-world) dưới sự giám sát của cơ quan quản lý.</li>
+          </ul>
+        </section>
+
+        <section style="text-align: center; align-items: center; display: flex; justify-content: center;">
+          <img src="img/lec-10/beijing-ai.png" alt="" style="max-width: 100%; max-height: 75vh; object-fit: contain;" />
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>So sánh nhanh (tối giản)</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 0.6em;">
+            <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Mỹ</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Sáng kiến AI Hoa Kỳ (R&amp;D + hướng dẫn đạo đức), NIST (tiêu chuẩn &amp; best practices), và quy định cấp bang (lan can đạo đức như không phân biệt đối xử).</p>
+            </div>
+            <div style="background: #e8f5e9; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">EU</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">GDPR (bảo vệ dữ liệu &amp; quyền riêng tư), đề xuất quy định AI (4/2021: minh bạch, trách nhiệm giải trình, quản trị rủi ro), và nhóm chuyên gia cấp cao (có trách nhiệm, lấy con người làm trung tâm).</p>
+            </div>
+            <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Trung Quốc</strong>
+              <p style="margin: 0.35em 0 0; color: #555;">Kế hoạch phát triển AI thế hệ mới (tích hợp + quản lý + nhân lực), Beijing AI Principles (hài hoà, công bằng, công lý), Data Security Law (an ninh mạng, an ninh quốc gia), và sandbox Thượng Hải (thử nghiệm thực tế có giám sát).</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- 6. Kết luận -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">6.</span><br />
+            Kết luận
+          </h1>
+          <p>AI mạnh, nhưng có giới hạn và cần khung đạo đức + chính sách để vận hành an toàn.</p>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Tóm tắt theo 6 ý</h2>
+          <ol>
+            <li><strong>Đạo đức AI</strong> giúp ra quyết định có căn cứ trong hệ thống xã hội–kỹ thuật.</li>
+            <li><strong>Giới hạn</strong> của AI gồm kỹ thuật (bias, context, speed, hallucinations) và xã hội–pháp lý (plagiarism, deepfake, copyright, căn chỉnh AI / AI alignment).</li>
+            <li><strong>Black box</strong> làm tăng khó khăn trong giải thích và quy trách nhiệm.</li>
+            <li><strong>Khung đạo đức</strong> và các trường phái (vị lợi, bổn phận, đức hạnh, hợp đồng) cung cấp cách lập luận.</li>
+            <li><strong>Thí nghiệm tưởng tượng</strong> giúp soi ranh giới mô phỏng–thực chất và giới hạn “hiểu/ý thức”.</li>
+            <li><strong>Chính sách</strong> xoay quanh accountability và quản trị rủi ro, với các hướng tiếp cận khác nhau theo khu vực.</li>
+          </ol>
+        </section>
+
+        <section style="font-size: 0.74em;">
+          <h2>Tài liệu tham khảo (chính)</h2>
+          <ul>
+            <li>
+              Alan Turing (1950). <em>Computing Machinery and Intelligence</em>.
+              <span class="pill"><a href="https://academic.oup.com/mind/article/LIX/236/433/986238" target="_blank"
+                  rel="noopener">Oxford Academic</a></span>
+            </li>
+            <li>
+              John Searle (1980). <em>Minds, Brains, and Programs</em>.
+              <span class="pill"><a
+                  href="https://www.cambridge.org/core/journals/behavioral-and-brain-sciences/article/minds-brains-and-programs/DC644B47A4299C637C89772FACC2706A"
+                  target="_blank" rel="noopener">Cambridge Core</a></span>
+            </li>
+            <li>
+              Frank Jackson (1982). <em>Epiphenomenal Qualia</em>.
+              <span class="pill"><a href="https://academic.oup.com/pq/article/32/127/127/1612468" target="_blank"
+                  rel="noopener">Oxford Academic</a></span>
+            </li>
+            <li>
+              Philippa Foot (1967). <em>The Problem of Abortion and the Doctrine of the Double Effect</em>.
+              <span class="pill"><a href="https://philpapers.org/rec/FOOTPO-2" target="_blank"
+                  rel="noopener">PhilPapers</a></span>
+            </li>
+            <li>
+              Judith Jarvis Thomson (1985). <em>The Trolley Problem</em>.
+              <span class="pill"><a
+                  href="https://openyls.law.yale.edu/bitstream/handle/20.500.13051/16338/56_94YaleLJ1395_1984_1985_.pdf?sequence=2"
+                  target="_blank" rel="noopener">Yale (PDF)</a></span>
+            </li>
+            <li>
+              NIST (2023). <em>AI Risk Management Framework (AI RMF 1.0)</em>.
+              <span class="pill"><a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf?stream=top"
+                  target="_blank" rel="noopener">PDF</a></span>
+            </li>
+            <li>
+              White House OSTP (2022). <em>Blueprint for an AI Bill of Rights</em>.
+              <span class="pill"><a href="https://whitehouse.gov/wp-content/uploads/2022/10/Blueprint-for-an-AI-Bill-of-Rights.pdf"
+                  target="_blank" rel="noopener">PDF</a></span>
+            </li>
+            <li>
+              European Union (2024). <em>EU AI Act</em> — Regulation (EU) 2024/1689.
+              <span class="pill"><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ%3AL_202401689"
+                  target="_blank" rel="noopener">EUR-Lex</a></span>
+            </li>
+            <li>
+              NIST (2024). <em>Reducing Risks Posed by Synthetic Content</em> (tổng quan về deepfake/synthetic content).
+              <span class="pill"><a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-4.pdf" target="_blank"
+                  rel="noopener">PDF</a></span>
+            </li>
+            <li>
+              ACM TOIS (2024). <em>A Survey on Hallucination in Large Language Models</em>.
+              <span class="pill"><a href="https://dl.acm.org/doi/10.1145/3703155" target="_blank"
+                  rel="noopener">DOI</a></span>
+            </li>
+            <li>
+              Cornell Center for Teaching Innovation (2024). <em>AI &amp; Academic Integrity</em>.
+              <span class="pill"><a href="https://teaching.cornell.edu/generative-artificial-intelligence/ai-academic-integrity"
+                  target="_blank" rel="noopener">Link</a></span>
+            </li>
+            <li>
+              Trung Quốc: <em>Provisions on Deep Synthesis</em> (2022) và <em>Interim Measures for Generative AI Services</em> (2023).
+              <span class="pill"><a href="https://www.chinalawtranslate.com/en/deep-synthesis/" target="_blank"
+                  rel="noopener">Deep synthesis</a></span>
+              <span class="pill"><a href="https://chinalawtranslate.com/en/generative-ai-interim/" target="_blank"
+                  rel="noopener">GenAI measures</a></span>
+            </li>
+          </ul>
+          <p class="caption">Ghi chú: phần “chính sách” cần cập nhật theo văn bản chính thức và thời điểm áp dụng.</p>
+        </section>
+      </section>
+
+      <div class="footer">
+        Phương pháp luận lập trình (Học kỳ 2 2025-2026) §10: AI và Đạo đức
+      </div>
+    </div>
+  </div>
+
+  <script src="revealjs/dist/reveal.js"></script>
+  <script src="plugin/notes/notes.js"></script>
+  <script src="plugin/markdown/markdown.js"></script>
+  <script src="plugin/highlight/highlight.js"></script>
+  <script src="plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+    });
+  </script>
+</body>
+
+</html>
+

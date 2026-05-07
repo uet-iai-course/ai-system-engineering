@@ -206,6 +206,35 @@
           <p class="caption">Ý chính: “tấn công = bài toán tối ưu dưới ràng buộc độ lớn nhiễu”.</p>
         </section>
 
+        <section style="font-size: 0.72em; line-height: 1.18;">
+          <h2 style="margin-bottom: 0.25em;">Chuẩn \(L_p\) và ngưỡng \(\epsilon\)</h2>
+          <div class="question-box" style="margin: 0;">
+            <div class="question-title">Trực giác</div>
+            <p style="margin: 0.25em 0 0;">
+              Làm \(x \to x'\) để mô hình <strong>phân loại sai</strong>, nhưng người nhìn vẫn thấy \(x'\) <strong>gần như y hệt</strong> \(x\).
+            </p>
+          </div>
+          <div style="margin-top: 0.5em; background: #e3f2fd; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #1565c0;">
+            <strong style="color: #0d47a1;">Ràng buộc theo chuẩn \(L_p\)</strong>
+            <div style="margin-top: 0.25em; color: #555; font-size: 1.05em;">
+              \[
+              \lVert x' - x \rVert_p \le \epsilon
+              \]
+            </div>
+            <div style="margin-top: 0.15em; color: #666;">\(\epsilon\) càng nhỏ → \(x'\) càng “giống” \(x\).</div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0.55em;">
+            <div style="background: #ffebee; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #c62828;">
+              <strong style="color: #c62828;">\(\epsilon\) quá lớn</strong>
+              <div style="margin-top: 0.25em; color: #555;">Ảnh <strong>biến dạng thấy rõ</strong> → mất tính đối kháng.</div>
+            </div>
+            <div style="background: #e8f5e9; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+              <strong style="color: #1b5e20;">\(\epsilon\) phù hợp</strong>
+              <div style="margin-top: 0.25em; color: #555;"><strong>Model sai</strong>, nhưng mắt người vẫn thấy <strong>bình thường</strong>.</div>
+            </div>
+          </div>
+        </section>
+
         <section style="font-size: 0.78em;">
           <h2>Chuẩn \(L_p\):</h2>
           <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 0.6em;">
@@ -215,18 +244,17 @@
             </div>
             <div style="background: #e3f2fd; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #1565c0;">
               <strong style="color: #0d47a1;">\(L_2\)</strong> (Euclid)
-              <p style="margin: 0.35em 0 0; color: #555;">Độ lệch “toàn cục” theo căn bậc hai.</p>
+              <p style="margin: 0.35em 0 0; color: #555;">Căn bậc hai tổng bình phương độ lệch.</p>
             </div>
             <div style="background: #fff3e0; padding: 10px 12px; border-radius: 8px; border-left: 4px solid #ef6c00;">
               <strong style="color: #e65100;">\(L_\infty\)</strong>
-              <p style="margin: 0.35em 0 0; color: #555;">Giới hạn lệch lớn nhất trên 1 điểm ảnh.</p>
+              <p style="margin: 0.35em 0 0; color: #555;">Độ lệch tuyệt đối lớn nhất.</p>
             </div>
           </div>
           <div class="question-box" style="margin-top: 0.8em;">
             <div class="question-title">Ghi nhớ</div>
-            <p>Một phòng thủ có thể mạnh với \(L_\infty\) nhưng yếu với kiểu khác (vd: patch không phải “nhiễu nhỏ” theo \(L_\infty\)).</p>
+            <p>Một hệ thống AI có thể phòng thủ tốt với \(L_\infty\) nhưng yếu với kiểu tấn công theo chuẩn \(L_p\) khác (vd: Phòng thủ \(L_{\infty }\) tập trung vào việc giữ cho mô hình ổn định khi mọi đầu vào bị thay đổi nhẹ. Nhưng nếu kẻ tấn công sử dụng chuẩn \(L_1\) để tạo ra một đầu vào mà chỉ có một số điểm ảnh bị thay đổi, thì phòng thủ \(L_{\infty }\) sẽ không phát hiện được sự thay đổi này và mô hình sẽ bị tấn công.)
           </div>
-          <p class="caption">Các chuẩn \(L_p\) và “perturbation distance” được dùng phổ biến trong đo lường tấn công/phòng thủ.</p>
         </section>
 
         <section style="font-size: 0.74em;">
@@ -335,6 +363,42 @@
             <li><strong>Khả năng chuyển</strong> (transferability): mẫu đối kháng tạo cho mô hình A có thể “chuyển” sang mô hình B.</li>
             <li><strong>Ước lượng gradient bằng truy vấn</strong>: dùng nhiều truy vấn để xấp xỉ hướng “tệ nhất”.</li>
           </ul>
+        </section>
+
+        <section style="font-size: 0.72em; line-height: 1.18;">
+          <h2>Ước lượng gradient (black-box): NES & Finite Differences</h2>
+          <div class="question-box" style="margin: 0;">
+            <div class="question-title">Mục tiêu</div>
+            <p style="margin: 0.25em 0 0;">
+              Chỉ quan sát \(f(x)\) (loss / confidence) qua truy vấn, ta vẫn xấp xỉ \(\nabla_x f(x)\) để cập nhật \(x \leftarrow x + \alpha \cdot \hat{g}\).
+            </p>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0.55em;">
+            <div style="background: #e3f2fd; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">NES (Natural Evolution Strategies)</strong>
+              <p style="margin: 0.25em 0 0; color: #555;">
+                Lấy nhiễu \(u_i \sim \mathcal{N}(0,I)\), ước lượng:
+                \[
+                \hat{g}_{NES}=\frac{1}{n\sigma}\sum_{i=1}^{n} f(x+\sigma u_i)\,u_i
+                \]
+              </p>
+            </div>
+            <div style="background: #fff3e0; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">Finite Differences (FD)</strong>
+              <p style="margin: 0.25em 0 0; color: #555;">
+                Ước lượng theo nhiễu có hướng \(u\):
+                \[
+                \hat{g}_{FD}(u)=\frac{f(x+h u)-f(x-h u)}{2h}\,u
+                \]
+              </p>
+            </div>
+          </div>
+          <div style="margin-top: 0.55em; background: #e8f5e9; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+            <strong style="color: #1b5e20;">Khung thuật toán (tóm tắt)</strong>
+            <div style="margin-top: 0.25em; color: #555;">
+              (1) Chọn \(n,\sigma\) (hoặc \(h\)) → (2) Query \(f(\cdot)\) trên các điểm nhiễu → (3) Tính \(\hat{g}\) → (4) Cập nhật \(x\) và chiếu về \(\|x'-x\|_p \le \epsilon\).
+            </div>
+          </div>
         </section>
 
         <section style="font-size: 0.82em;">
@@ -468,6 +532,42 @@
                 <li>Test trên <strong>tập có trigger</strong>, không chỉ tập sạch.</li>
                 <li>Đặt ngưỡng tin cậy (confidence threshold) và quan sát thay đổi.</li>
               </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.70em; line-height: 1.16;">
+          <h2>6) Tấn công oracle (qua truy vấn) – ví dụ “kính đánh lừa”</h2>
+          <div class="question-box" style="margin: 0;">
+            <div class="question-title">Bối cảnh (Oracle ở sân bay)</div>
+            <p style="margin: 0.25em 0 0;">
+              Hệ nhận diện khuôn mặt chỉ trả về <strong>nhãn</strong> (“A” / “không phải A”) và <strong>confidence</strong> \(f(x)\).
+              Kẻ tấn công muốn tạo “kính” (patch vật lý) để hệ nhận nhầm <strong>A → B</strong>.
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 12px; margin-top: 0.55em;">
+            <div style="background: #e3f2fd; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #1565c0;">
+              <strong style="color: #0d47a1;">Quy trình truy vấn (minh hoạ)</strong>
+              <ol style="margin-top: 0.25em; padding-left: 1.05em;">
+                <li><strong>Query 0:</strong> gửi \(x\) → “A, 99%”.</li>
+                <li>Chọn \(u_1,\dots,u_n\) ngẫu nhiên, tạo \(x+\sigma u_i\).</li>
+                <li>Nhận \(f(x+\sigma u_i)\): 95%, 98%, …, 90%.</li>
+                <li><strong>Ước lượng gradient:</strong> dùng NES/FD để lấy \(\hat{g}\).</li>
+                <li><strong>Cập nhật:</strong> \(\delta \leftarrow \delta + \alpha \cdot \text{sign}(\hat{g})\), rồi query lại.</li>
+              </ol>
+            </div>
+            <div style="background: #fff3e0; padding: 8px 10px; border-radius: 8px; border-left: 4px solid #ef6c00;">
+              <strong style="color: #e65100;">NES (công thức dùng nhiều)</strong>
+              <p style="margin: 0.25em 0 0; color: #555;">
+                Với \(u_i \sim \mathcal{N}(0,I)\):
+                \[
+                \hat{g}=\frac{1}{n\sigma}\sum_{i=1}^{n}\big(f(x+\sigma u_i)-f(x-\sigma u_i)\big)\,u_i
+                \]
+              </p>
+              <p style="margin: 0.25em 0 0; color: #666;">
+                Sau hàng nghìn (hoặc ít hơn) truy vấn, thu được nhiễu/patch tối ưu → “A” bị nhận thành “B”.
+              </p>
             </div>
           </div>
         </section>

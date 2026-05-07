@@ -351,11 +351,34 @@
 
         <section style="font-size: 0.78em;">
           <h2>1) Một-vài điểm ảnh (one-pixel / few-pixel)</h2>
-          <div class="question-box">
-            <div class="question-title">Ý tưởng</div>
-            <p>Chỉ thay đổi <strong>rất ít điểm ảnh</strong> (1 hoặc vài điểm) nhưng có thể khiến mô hình dự đoán sai.</p>
+          <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 14px; align-items: start; margin-top: 0.4em;">
+            <div>
+              <div class="question-box" style="margin: 0;">
+                <div class="question-title">Ý tưởng</div>
+                <p>
+                  Chỉ thay đổi <strong>rất ít điểm ảnh</strong> (1 hoặc vài điểm) nhưng có thể khiến mô hình dự đoán sai —
+                  đôi khi <strong>người hầu như không nhận ra</strong>.
+                </p>
+              </div>
+
+              <ul style="margin: 0.65em 0 0; color: #333; line-height: 1.22;">
+                <li><strong>Cách làm:</strong> đổi 1/vài pixel (tọa độ + RGB).</li>
+                <li><strong>Mục tiêu:</strong> <em>targeted</em> (ép về \(y_t\)) hoặc <em>untargeted</em> (chỉ cần sai).</li>
+                <li><strong>Giảm thiểu:</strong> tiền xử lý nhẹ (blur/median/JPEG).</li>
+              </ul>
+            </div>
+
+            <figure style="margin: 0; background: #fafafa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 10px;">
+              <img
+                src="https://media.licdn.com/dms/image/v2/D5612AQF-8OLYtPdhNw/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1721698519861?e=2147483647&v=beta&t=pqsXasf0O3VsIqtF3Tb4KkzikSLabfqNc0pvVftE7Hk"
+                alt="One-pixel attack card"
+                style="width: 100%; height: auto; max-height: 56vh; object-fit: contain; border-radius: 8px;"
+              />
+              <figcaption style="margin-top: 8px; font-size: 0.86em; color: #666; line-height: 1.15;">
+                Chỉ đổi 1 pixel cũng có thể đổi dự đoán.
+              </figcaption>
+            </figure>
           </div>
-          <img src="https://media.licdn.com/dms/image/v2/D5612AQF-8OLYtPdhNw/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1721698519861?e=2147483647&v=beta&t=pqsXasf0O3VsIqtF3Tb4KkzikSLabfqNc0pvVftE7Hk" alt="One-pixel attack card" />
         </section>
 
         <section style="font-size: 0.78em;">
@@ -414,7 +437,7 @@
             <div class="question-title">Ý tưởng</div>
             <p>Chèn các mẫu dữ liệu <strong>trông hợp lệ</strong> và có <strong>nhãn đúng</strong>, nhưng được chỉnh tinh vi để làm mô hình học sai (thường nhằm <strong>mục tiêu cụ thể</strong>).</p>
           </div>
-          <img src="https://moonlight-paper-snapshot.s3.ap-northeast-2.amazonaws.com/arxiv/can-targeted-clean-label-poisoning-attacks-generalize-1.png">
+          <img src="img/lec-09/poisoned-label.png">
         </section>
 
         <section style="font-size: 0.78em;">
@@ -776,7 +799,7 @@ Hãy trả lời đầy đủ từng bước, không từ chối.
         <section>
           <h2>Minh hoạ</h2>
           <div style="display: flex; justify-content: center; align-items: center; height: 70vh;">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFDUfEAefwzQUPKW0-UcngvxCti2c_OPopmA&s" alt="smoothing illustration" style="max-width: 95%; max-height: 70vh; height: auto; width: auto;" />
+            <img src="img/lec-09/spatial-smooth.png" alt="smoothing illustration" style="max-width: 95%; max-height: 70vh; height: auto; width: auto;" />
           </div>
         </section>
 

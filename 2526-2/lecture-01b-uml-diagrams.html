@@ -1,0 +1,494 @@
+
+
+<!doctype html>
+<html lang="vi">
+ 
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bài 2a: Ca sử dụng &amp; UML</title>
+ 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/white.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="lecture-style.css" />
+</head>
+ 
+ 
+<body>
+  <div class="reveal">
+    <div class="slides">
+ 
+      <!-- ================================================================
+           TITLE & TABLE OF CONTENTS
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+          <h3>Bài 2a: Ca sử dụng &amp; <br /> Ngôn ngữ mô hình hóa thống nhất (UML)</h3>
+          <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
+        </section>
+ 
+        <section>
+          <h2>Nội dung</h2>
+          <ol start="0">
+            <li>Giới thiệu</li>
+            <li>Ca sử dụng (Use Cases)</li>
+            <li>UML là gì?</li>
+            <li>Biểu đồ lớp (Class Diagram)</li>
+            <li>Các biểu đồ khác</li>
+            <li>Ma trận theo dõi (Traceability Matrix)</li>
+          </ol>
+        </section>
+ 
+        <section style="font-size: .78em;">
+          <h2>Lộ trình bài học</h2>
+ 
+          <div style="display:flex; align-items:center; padding:0 0.4em; margin:1em 0 0.6em;">
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#888; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              0</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#888,#1E93AB);"></div>
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#1E93AB; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              1</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#1E93AB,#7B5EA7);"></div>
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#7B5EA7; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              2</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#7B5EA7,#C2610F);"></div>
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#C2610F; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              3</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#C2610F,#2E7D32);"></div>
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#2E7D32; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              4</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#2E7D32,#AD1457);"></div>
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#AD1457; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              5</div>
+          </div>
+ 
+          <div style="display:flex; gap:0.55em; font-size:0.8em;">
+            <div style="flex:1; border:2px solid #888; border-radius:8px; padding:0.6em 0.7em; background:#f5f5f5;">
+              <div style="font-weight:bold; color:#555; margin-bottom:0.25em;">Giới thiệu</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.9em;">"Yêu cầu <em>là
+                  gì</em>?"</div>
+              <div style="color:#666; font-size:0.86em;">tầm nhìn · ranh giới rõ ràng</div>
+            </div>
+            <div
+              style="flex:1; border:2px solid #1E93AB; border-radius:8px; padding:0.6em 0.7em; background:#e0f4f8;">
+              <div style="font-weight:bold; color:#1E93AB; margin-bottom:0.25em;">Ca sử dụng</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.9em;">"<em>Ai</em> làm
+                <em>gì</em>?"</div>
+              <div style="color:#555; font-size:0.86em;">Actor · Flow · Use Case Diagram</div>
+            </div>
+            <div
+              style="flex:1; border:2px solid #7B5EA7; border-radius:8px; padding:0.6em 0.7em; background:#ede7f6;">
+              <div style="font-weight:bold; color:#7B5EA7; margin-bottom:0.25em;">UML là gì?</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.9em;">"Ngôn ngữ mô hình
+                <em>chung</em>?"</div>
+              <div style="color:#555; font-size:0.86em;">OMG · ISO/IEC 19501</div>
+            </div>
+            <div
+              style="flex:1; border:2px solid #C2610F; border-radius:8px; padding:0.6em 0.7em; background:#fff3e0;">
+              <div style="font-weight:bold; color:#C2610F; margin-bottom:0.25em;">Biểu đồ lớp</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.9em;">"Các lớp <em>quan hệ</em>
+                ra sao?"</div>
+              <div style="color:#555; font-size:0.86em;">Generalization · Aggregation · Association</div>
+            </div>
+            <div
+              style="flex:1; border:2px solid #2E7D32; border-radius:8px; padding:0.6em 0.7em; background:#e8f5e9;">
+              <div style="font-weight:bold; color:#2E7D32; margin-bottom:0.25em;">Biểu đồ khác</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.9em;">"Hành vi &amp; cấu
+                trúc?"</div>
+              <div style="color:#555; font-size:0.86em;">Sequence · Activity · Component · Deployment</div>
+            </div>
+            <div
+              style="flex:1; border:2px solid #AD1457; border-radius:8px; padding:0.6em 0.7em; background:#fce4ec;">
+              <div style="font-weight:bold; color:#AD1457; margin-bottom:0.25em;">Ma trận theo dõi</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.9em;">"Yêu cầu ↔ thiết
+                kế?"</div>
+              <div style="color:#555; font-size:0.86em;">Traceability · Verification</div>
+            </div>
+          </div>
+        </section>
+      </section>
+ 
+      <!-- ================================================================
+           SECTION 0 – GIỚI THIỆU
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">0.</span><br />
+            Giới thiệu
+          </h1>
+        </section>
+ 
+        <section style="font-size:0.78em;" data-auto-animate="">
+          <h2>Yêu cầu (Requirements)</h2>
+          <div style="display:grid; grid-template-columns:0.3fr 1fr; gap:1.2em; align-items:center;">
+            <img src="img/lec-01b/agile-martin.jpg" style="width:100%; border-radius:6px;" />
+            <div class="question-box">
+              If you are lucky, you start a project with a clear picture of what you want the system to be. The
+              design of the system is a vital image in your mind. If you are luckier still, the clarity of that
+              design makes it to the first release.<br />
+              <strong style="font-size:0.9em;">Robert Martin, <em>Agile Software Development. Principles, Patterns,
+                  and Practices</em></strong>
+            </div>
+          </div>
+        </section>
+ 
+        <section style="font-size:0.78em;" data-auto-animate="">
+          <h2>Yêu cầu (Requirements)</h2>
+          <div style="display:grid; grid-template-columns:0.3fr 1fr; gap:1.2em; align-items:center;">
+            <img src="img/lec-01b/agile-martin.jpg" style="width:100%; border-radius:6px;" />
+            <div class="question-box">
+              Nếu bạn may mắn, bạn bắt đầu một dự án với một cái nhìn rõ ràng về hệ thống mong muốn. Thiết kế của hệ
+              thống là một hình ảnh quan trọng trong tâm trí bạn. Nếu bạn may mắn hơn nữa, sự rõ ràng của thiết kế
+              vẫn còn nguyên ở phiên bản phần mềm đầu tiên.<br />
+              <strong style="font-size:0.9em;">Robert Martin, <em>Agile Software Development. Principles, Patterns,
+                  and Practices</em></strong>
+            </div>
+          </div>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Yêu cầu (Requirements)</h2>
+          <div style="display:grid; grid-template-columns:0.3fr 1fr; gap:1.2em; align-items:center;">
+            <img src="img/lec-01b/code-ahead.png" style="width:100%; border-radius:6px;" />
+            <div class="question-box">
+              Trách nhiệm của một lập trình viên là đảm bảo rằng mọi nhiệm vụ đều có <span
+                class="keyword">ranh giới (yêu cầu)</span> rõ ràng.<br />
+              <strong style="font-size:0.9em;">Yegor Bugayenko, <em>Code Ahead</em></strong>
+            </div>
+          </div>
+        </section>
+      </section>
+ 
+      <!-- ================================================================
+           SECTION 1 – CA SỬ DỤNG (USE CASES)
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">1.</span><br />
+            Ca sử dụng<br />(Use Cases)
+          </h1>
+        </section>
+ 
+        <section style="font-size:0.8em;">
+          <h2>"Ba chàng ngự lâm" của UML</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.8em;">
+            <figure style="margin:0; text-align:center;">
+              <img src="img/lec-01b/ivar.jpg" style="width:100%; border-radius:6px;" />
+              <figcaption style="margin-top:0.4em;">Ivar Jacobson</figcaption>
+            </figure>
+            <figure style="margin:0; text-align:center;">
+              <img src="img/lec-01b/grady.jpg" style="width:100%; border-radius:6px;" />
+              <figcaption style="margin-top:0.4em;">Grady Booch</figcaption>
+            </figure>
+            <figure style="margin:0; text-align:center;">
+              <img src="img/lec-01b/james.jpg" style="width:100%; border-radius:6px;" />
+              <figcaption style="margin-top:0.4em;">James Rumbaugh</figcaption>
+            </figure>
+          </div>
+          <p style="font-size:0.85em; color:#555; margin-top:0.6em; text-align:center;">
+            "The Three Amigos" — người sáng lập UML tại Rational Software
+          </p>
+        </section>
+ 
+        <section style="font-size:0.8em;">
+          <h2>Ca sử dụng (Use Cases)</h2>
+          <div style="display:grid; grid-template-columns:0.3fr 1fr; gap:1.2em; align-items:center;">
+            <img src="img/lec-01b/uml-book.jpg" style="width:100%; border-radius:6px;" />
+            <div class="question-box">
+              Không có tiêu chuẩn để viết một ca sử dụng và mỗi trường hợp có thể dùng các định dạng khác nhau.<br />
+              <strong style="font-size:0.9em;">Martin Fowler, <em>UML Distilled</em></strong>
+            </div>
+          </div>
+        </section>
+ 
+        <section style="font-size:0.62em;">
+            <h2 style="margin-bottom:0.3em;">Ví dụ về ca sử dụng (Who does What)</h2>
+            <div class="question-box" style="padding:0.5em 0.8em;">
+              <div style="display:flex; gap:0.8em; margin-bottom:0.5em; align-items:baseline;">
+                <div class="question-title" style="margin-bottom:0;">Ca sử dụng: Tạo mã QR</div>
+                <div><strong>Tác nhân:</strong> Người dùng</div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1em;">
+                <div>
+                  <p style="margin:0 0 0.2em; font-weight:bold;">Luồng cơ bản</p>
+                  <ol style="margin:0; line-height:1.5;">
+                    <li>Người dùng nhập URL vào ô HTML.</li>
+                    <li>Hệ thống tạo hình ảnh PNG của mã QR.</li>
+                    <li>Người dùng tải hình ảnh qua HTTP.</li>
+                  </ol>
+                </div>
+                <div>
+                  <p style="margin:0 0 0.2em; font-weight:bold;">Mở rộng</p>
+                  <ol style="margin:0; line-height:1.5;">
+                    <li>Người dùng nhập URL hỏng.
+                      <ol type="a" style="margin:0;">
+                        <li>Hệ thống hiển thị hộp thoại thông báo lỗi.</li>
+                        <li>Người dùng xác nhận.</li>
+                      </ol>
+                    </li>
+                    <li>Người dùng hủy tải về.
+                      <ol type="a" style="margin:0;">
+                        <li>Hệ thống dừng gửi dữ liệu qua HTTP.</li>
+                      </ol>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </section>
+ 
+        <section>
+          <h2>Biểu đồ ca sử dụng (Use Case Diagram)</h2>
+          <img src="img/lec-01b/uc-diagram.png" style="max-height:65vh;" />
+        </section>
+      </section>
+ 
+      <!-- ================================================================
+           SECTION 2 – UML LÀ GÌ?
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">2.</span><br />
+            UML là gì?
+          </h1>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>UML (Unified Modeling Language)</h2>
+          <div class="question-box" style="margin-bottom:0.7em;">
+            <div class="question-title">Định nghĩa</div>
+            UML là ngôn ngữ mô hình hóa đồ họa, dùng để <span class="keyword">đặc tả</span>, <span
+              class="keyword">trực quan hóa</span>, <span class="keyword">xây dựng</span> và <span
+              class="keyword">tài liệu hóa</span> các thành phần của một hệ thống phần mềm.
+          </div>
+          <ul>
+            <li>Được chuẩn hóa bởi <span class="inline-code">Object Management Group (OMG)</span></li>
+            <li>Là ngôn ngữ chung giữa nhà phân tích, kiến trúc sư, lập trình viên</li>
+          </ul>
+        </section>
+ 
+        <section style="font-size:0.78em;">
+          <h2>Đối tượng sử dụng UML</h2>
+          <div class="question-box">
+            The primary audience for this detailed description consists of the OMG, other standards organizations,
+            tool builders, metamodelers, methodologists, and expert modelers. The authors assume familiarity with
+            metamodeling and advanced object modeling.<br />
+            <strong style="font-size:0.9em;"><em>ISO/IEC 19501:2005 — Unified Modeling Language (UML) Version
+                1.4.2</em></strong>
+          </div>
+          <p style="margin-top:0.7em; color:#555;">
+            → Tiêu chuẩn UML dành cho chuyên gia — bài học này chỉ giới thiệu các khái niệm <em>cơ bản</em> và <em>thường
+              dùng nhất</em>.
+          </p>
+        </section>
+      </section>
+ 
+      <!-- ================================================================
+           SECTION 3 – BIỂU ĐỒ LỚP (CLASS DIAGRAM)
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">3.</span><br />
+            Biểu đồ lớp<br />(Class Diagram)
+          </h1>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Lớp (Classes)</h2>
+          <img src="img/lec-01b/classes.png" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Một lớp gồm <strong>tên</strong>, <strong>thuộc tính</strong>
+            (attributes) và <strong>phương thức</strong> (operations).</p>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Tổng quát hóa (Generalization)</h2>
+          <img src="img/lec-01b/generalization.png" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Quan hệ <span class="keyword">"is-a"</span> — lớp con kế thừa
+            thuộc tính và hành vi của lớp cha.</p>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Hợp thành (Composition)</h2>
+          <img src="img/lec-01b/composition.png" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Quan hệ sở hữu <span class="keyword">chặt</span> — phần
+            (part) không tồn tại độc lập nếu không có toàn thể (whole).</p>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Tập hợp (Aggregation)</h2>
+          <img src="img/lec-01b/aggregation.jpg" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Quan hệ sở hữu <span class="keyword">lỏng</span> — phần
+            (part) vẫn tồn tại độc lập được với toàn thể (whole).</p>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Liên kết (Association)</h2>
+          <img src="img/lec-01b/association.png" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Quan hệ cấu trúc chung giữa hai lớp — không hàm ý sở hữu.</p>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Phụ thuộc (Dependency)</h2>
+          <img src="img/lec-01b/dependency.png" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Quan hệ <span class="keyword">tạm thời</span> — một lớp sử dụng
+            lớp khác (ví dụ: tham số, biến cục bộ), thay đổi ở lớp kia có thể ảnh hưởng.</p>
+        </section>
+      </section>
+ 
+      <!-- ================================================================
+           SECTION 4 – CÁC BIỂU ĐỒ KHÁC
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">4.</span><br />
+            Các biểu đồ khác
+          </h1>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Biểu đồ thành phần (Component Diagram)</h2>
+          <img src="img/lec-01b/component.png" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Mô tả các <span class="keyword">thành phần</span> phần mềm và
+            giao diện kết nối giữa chúng.</p>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Biểu đồ triển khai (Deployment Diagram)</h2>
+          <img src="img/lec-01b/deployment.png" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Mô tả cách các thành phần phần mềm được <span
+              class="keyword">triển khai</span> lên phần cứng/node vật lý.</p>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Biểu đồ hoạt động (Activity Diagram)</h2>
+          <img src="img/lec-01b/activity.jpg" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Mô tả <span class="keyword">luồng công việc</span> — trình tự các
+            hành động và quyết định.</p>
+        </section>
+ 
+        <section style="font-size:0.85em;">
+          <h2>Biểu đồ tuần tự (Sequence Diagram)</h2>
+          <img src="img/lec-01b/sequence.png" style="max-height:52vh;" />
+          <p style="color:#555; margin-top:0.5em;">Mô tả <span class="keyword">tương tác</span> giữa các đối tượng
+            theo trình tự thời gian.</p>
+        </section>
+      </section>
+ 
+      <!-- ================================================================
+           SECTION 5 – MA TRẬN THEO DÕI (TRACEABILITY MATRIX)
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">5.</span><br />
+            Ma trận theo dõi<br />(Traceability Matrix)
+          </h1>
+        </section>
+ 
+        <section style="font-size:0.8em;">
+          <h2>Ma trận theo dõi</h2>
+          <div class="question-box" style="margin-bottom:0.6em;">
+            Ma trận theo dõi là một công cụ quản lý dự án để theo dõi quan hệ giữa các <strong>yêu cầu</strong> và
+            các <strong>yếu tố thiết kế</strong> của hệ thống.<br />
+            <span style="font-size:0.85em; color:#555;">Ca sử dụng, yêu cầu phi chức năng, ca kiểm thử, lớp, gói,
+              máy chủ, container, thành phần, node, v.v.</span>
+          </div>
+          <img src="img/lec-01b/matrix.png" style="max-height:42vh;" />
+        </section>
+      </section>
+ 
+      <!-- ================================================================
+           TỔNG KẾT
+           ================================================================ -->
+      <section>
+        <h2 style="margin-bottom:0.3em;">Tổng kết</h2>
+ 
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.4em; font-size:0.62em; margin-bottom:0.5em;">
+          <div style="border:2px solid #888; border-radius:7px; overflow:hidden;">
+            <div style="background:#888; color:#fff; padding:3px 10px; font-weight:bold;">0. Giới thiệu</div>
+            <div style="padding:0.3em 0.7em; background:#f5f5f5; line-height:1.45;">
+              Yêu cầu cần một tầm nhìn và ranh giới rõ ràng.
+            </div>
+          </div>
+          <div style="border:2px solid #1E93AB; border-radius:7px; overflow:hidden;">
+            <div style="background:#1E93AB; color:#fff; padding:3px 10px; font-weight:bold;">1. Ca sử dụng</div>
+            <div style="padding:0.3em 0.7em; background:#e0f4f8; line-height:1.45;">
+              Actor · Flow cơ bản/mở rộng · Use Case Diagram.
+            </div>
+          </div>
+          <div style="border:2px solid #7B5EA7; border-radius:7px; overflow:hidden;">
+            <div style="background:#7B5EA7; color:#fff; padding:3px 10px; font-weight:bold;">2. UML là gì?</div>
+            <div style="padding:0.3em 0.7em; background:#ede7f6; line-height:1.45;">
+              Ngôn ngữ mô hình hóa chung, chuẩn hóa bởi OMG.
+            </div>
+          </div>
+          <div style="border:2px solid #C2610F; border-radius:7px; overflow:hidden;">
+            <div style="background:#C2610F; color:#fff; padding:3px 10px; font-weight:bold;">3. Biểu đồ lớp</div>
+            <div style="padding:0.3em 0.7em; background:#fff3e0; line-height:1.45;">
+              Generalization · Composition · Aggregation · Association · Dependency.
+            </div>
+          </div>
+          <div style="border:2px solid #2E7D32; border-radius:7px; overflow:hidden;">
+            <div style="background:#2E7D32; color:#fff; padding:3px 10px; font-weight:bold;">4. Biểu đồ khác</div>
+            <div style="padding:0.3em 0.7em; background:#e8f5e9; line-height:1.45;">
+              Component · Deployment · Activity · Sequence.
+            </div>
+          </div>
+          <div style="border:2px solid #AD1457; border-radius:7px; overflow:hidden;">
+            <div style="background:#AD1457; color:#fff; padding:3px 10px; font-weight:bold;">5. Ma trận theo dõi</div>
+            <div style="padding:0.3em 0.7em; background:#fce4ec; line-height:1.45;">
+              Liên kết yêu cầu với các yếu tố thiết kế.
+            </div>
+          </div>
+        </div>
+ 
+        <div class="question-box" style="font-size:0.7em; margin-bottom:0.4em;">
+          <div class="question-title">Tài liệu tham khảo</div>
+          Martin Fowler, <em>UML Distilled</em> · Alistair Cockburn, <em>Writing Effective Use Cases</em>
+        </div>
+ 
+        <p style="font-size:0.68em; color:#555; text-align:center; margin:0;">
+          <strong>Thực hành:</strong> vẽ cho dự án của bạn — một biểu đồ lớp, một biểu đồ component, một biểu đồ
+          deployment, và ba biểu đồ sequence.
+        </p>
+      </section>
+ 
+ 
+      <div class="footer">
+        Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §2a: Ca sử dụng &amp; UML
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+    });
+  </script>
+</body>
+ 
+</html>
+ 
+

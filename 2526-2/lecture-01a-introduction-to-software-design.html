@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bài 1a: Giới thiệu Hệ thống phần mềm</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/white.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="lecture-style.css" />
+</head>
+
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ================================================================
+           TITLE & TABLE OF CONTENTS
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+          <h3>Bài 1a: Giới thiệu <br /> Hệ thống phần mềm</h3>
+          <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
+        </section>
+
+        <section>
+          <h2>Nội dung</h2>
+          <ol start="0">
+            <li>Giới thiệu học phần</li>
+            <li>Sự phát triển của phần mềm</li>
+            <li>Thiết kế phần mềm là gì?</li>
+            <li>Tài liệu mô tả thiết kế phần mềm (SDD)</li>
+            <li>Công cụ viết tài liệu</li>
+          </ol>
+        </section>
+
+        <section style="font-size: .8em;">
+          <h2>Lộ trình bài học</h2>
+
+          <!-- Horizontal timeline: circles + gradient connectors -->
+          <div style="display:flex; align-items:center; padding:0 0.4em; margin:1em 0 0.6em;">
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#888; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              0</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#888,#1E93AB);"></div>
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#1E93AB; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              1</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#1E93AB,#7B5EA7);"></div>
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#7B5EA7; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              2</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#7B5EA7,#C2610F);"></div>
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#C2610F; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              3</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#C2610F,#2E7D32);"></div>
+            <div
+              style="width:2.6em; height:2.6em; border-radius:50%; background:#2E7D32; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.1em; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+              4</div>
+          </div>
+
+          <!-- Cards below circles, each aligned under its circle -->
+          <div style="display:flex; gap:0.6em; font-size:0.82em;">
+            <div style="flex:1; border:2px solid #888; border-radius:8px; padding:0.65em 0.75em; background:#f5f5f5;">
+              <div style="font-weight:bold; color:#555; margin-bottom:0.25em;">Giới thiệu</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.92em;">"Học gì trong học
+                phần?"</div>
+              <div style="color:#666; font-size:0.88em;">bài giảng · chính sách · tài nguyên</div>
+            </div>
+            <div
+              style="flex:1; border:2px solid #1E93AB; border-radius:8px; padding:0.65em 0.75em; background:#e0f4f8;">
+              <div style="font-weight:bold; color:#1E93AB; margin-bottom:0.25em;">Phát triển PM</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.92em;">"Phần mềm <em>thay
+                  đổi</em> thế nào?"</div>
+              <div style="color:#555; font-size:0.88em;">AI-assisted · LLM · Copilot</div>
+            </div>
+            <div
+              style="flex:1; border:2px solid #7B5EA7; border-radius:8px; padding:0.65em 0.75em; background:#ede7f6;">
+              <div style="font-weight:bold; color:#7B5EA7; margin-bottom:0.25em;">Thiết kế</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.92em;">"Thiết kế <em>là
+                  gì</em>?"</div>
+              <div style="color:#555; font-size:0.88em;">Định nghĩa · So sánh nội thất</div>
+            </div>
+            <div
+              style="flex:1; border:2px solid #C2610F; border-radius:8px; padding:0.65em 0.75em; background:#fff3e0;">
+              <div style="font-weight:bold; color:#C2610F; margin-bottom:0.25em;">Tài liệu SDD</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.92em;">"Ghi lại <em>thiết
+                  kế</em> thế nào?"</div>
+              <div style="color:#555; font-size:0.88em;">IEEE 1016 · Glossary · Viewpoints</div>
+            </div>
+            <div
+              style="flex:1; border:2px solid #2E7D32; border-radius:8px; padding:0.65em 0.75em; background:#e8f5e9;">
+              <div style="font-weight:bold; color:#2E7D32; margin-bottom:0.25em;">Công cụ</div>
+              <div style="font-style:italic; color:#444; margin-bottom:0.3em; font-size:0.92em;">"Viết tài liệu
+                <em>bằng gì</em>?"
+              </div>
+              <div style="color:#555; font-size:0.88em;">LaTeX · Markdown · UML</div>
+            </div>
+          </div>
+        </section>
+
+      </section>
+
+      <!-- ================================================================
+           SECTION 0 – GIỚI THIỆU HỌC PHẦN
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">0.</span><br />
+            Giới thiệu<br />học phần
+          </h1>
+        </section>
+
+        <section style="font-size:0.9em;">
+          <h2>Giới thiệu chung</h2>
+          <ul>
+            <li>Các bài giảng trong học phần này <strong>chỉ mang tính tổng quan</strong>, không đi sâu vào chi tiết
+            </li>
+            <li><strong>Không thay thế</strong> Wikipedia hoặc sách</li>
+            <li>Không phải lúc nào cũng <em>chính xác</em></li>
+            <li>Chi tiết nằm trong các <span class="keyword">ví dụ, bài tập và dự án</span> kèm theo</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Các bài giảng (1/2)</h2>
+          <ol>
+            <li>README vs. IEEE<br />Kỹ nghệ yêu cầu (Requirements Engineering)<br />RUP vs. Agile/XP</li>
+            <li>OOAD + Nguyên tắc và Mùi thiết kế<br />Tư duy hướng đối tượng (Object Thinking) + DDD</li>
+            <li>Mẫu thiết kế (Patterns), Phản mẫu (Anti-Patterns)<br />Cải tiến mã (Refactoring)</li>
+            <li>XML và JSON<br />Ngôn ngữ mô hình hóa thống nhất (UML)</li>
+          </ol>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Các bài giảng (2/2)</h2>
+          <ol start="5">
+            <li>Thiết kế dữ liệu</li>
+            <li>Thiết kế cho phân phối liên tục<br />Microservices, APIs, RESTful<br />Thiết kế Serverless trên
+              Cloud</li>
+            <li>Phát triển dựa trên Kiểm thử (TDD)<br />Phản mẫu kiểm thử (Test Anti-Patterns)</li>
+            <li>Liên kết &amp; Kết hợp và các chỉ số khác<br />Tương lai của thiết kế phần mềm</li>
+          </ol>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Chính sách và quy định</h2>
+          <ul style="margin-bottom:0.8em;">
+            <li><strong>Điểm danh</strong>: thông qua quiz trên portal, theo quy chế của trường</li>
+          </ul>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em;">
+            <div style="border:2px solid #1E93AB; border-radius:8px; overflow:hidden;">
+              <div style="background:#1E93AB; color:#fff; padding:5px 12px; font-weight:bold;">Điểm thành phần — 40%
+              </div>
+              <div style="padding:0.5em 0.8em; background:#e0f4f8; line-height:1.6;">
+                Bài tập nửa đầu học kì — 20%<br />
+                Thi giữa kì — 20%
+              </div>
+            </div>
+            <div style="border:2px solid #2E7D32; border-radius:8px; overflow:hidden;">
+              <div style="background:#2E7D32; color:#fff; padding:5px 12px; font-weight:bold;">Điểm cuối kì — 60%</div>
+              <div style="padding:0.5em 0.8em; background:#e8f5e9; line-height:1.6;">
+                Bài tập nửa sau học kì — 20%<br />
+                Dự án/vấn đáp — 40%
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Tài nguyên</h2>
+          <p>Sách tham khảo:</p>
+          <ul>
+            <li><em>Elegant Objects, Code Ahead</em> (Yegor Bugayenko)</li>
+            <li><em>Refactoring, UML</em> (Martin Fowler)</li>
+            <li><em>Clean Code, Agile</em> (Robert C. Martin)</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 1 – SỰ PHÁT TRIỂN CỦA PHẦN MỀM
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">1.</span><br />
+            Sự phát triển<br />của phần mềm
+          </h1>
+        </section>
+
+        <section>
+          <h2>Sự phát triển của phần mềm</h2>
+          <figure style="margin:0.4em 0;">
+            <img src="img/lec-01a/software_era.png" style="max-height:60vh;" />
+            <figcaption style="font-size:0.7em; color:#666; margin-top:0.4em;">Andrej Karpathy: Software Is Changing
+              (Again)</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <h2>Sự phát triển của phần mềm</h2>
+          <figure style="margin:0.4em 0;">
+            <img src="img/lec-01a/software_era_ex.png" style="max-height:60vh;" />
+            <figcaption style="font-size:0.7em; color:#666; margin-top:0.4em;">Andrej Karpathy: Software Is Changing
+              (Again)</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <h2>Sự phát triển của phần mềm</h2>
+          <p style="font-size:0.75em; color:#555; margin-bottom:0.3em;">Ví dụ: hệ thống nhà thông minh — cách tiếp
+            cận truyền thống</p>
+          <img src="img/lec-01a/smart_home.drawio.png" style="max-height:58vh;" />
+        </section>
+
+        <section>
+          <h2>Sự phát triển của phần mềm</h2>
+          <p style="font-size:0.75em; color:#555; margin-bottom:0.3em;">Ví dụ: hệ thống nhà thông minh — với LLM</p>
+          <img src="img/lec-01a/llm_smart_home.drawio.png" style="max-height:58vh;" />
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 2 – THIẾT KẾ PHẦN MỀM LÀ GÌ?
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">2.</span><br />
+            Thiết kế<br />phần mềm là gì?
+          </h1>
+        </section>
+
+        <!-- Definition EN -->
+        <section style="font-size:0.8em;" data-auto-animate="">
+          <h2>Thiết kế (Design)</h2>
+          <div style="display:grid; grid-template-columns:0.3fr 1fr; gap:1.2em; align-items:center;">
+            <img src="img/lec-01a/freeman.png" style="width:100%; border-radius:6px;" />
+            <div class="question-box">
+              <div class="question-title">Định nghĩa</div>
+              Design encompasses all the activities involved in <em>conceptualizing</em>, <em>framing</em>,
+              <em>implementing</em>, <em>commissioning</em>, and ultimately <em>modifying</em> complex systems—not
+              just the activity following requirements specification and before programming.<br />
+              <strong style="font-size:0.85em;">Peter Freeman and David Hart, <em>Communications of the ACM</em>,
+                vol. 47, no. 8, 2004</strong>
+            </div>
+          </div>
+        </section>
+
+        <!-- Definition VN -->
+        <section style="font-size:0.8em;" data-auto-animate="">
+          <h2>Thiết kế (Design)</h2>
+          <div style="display:grid; grid-template-columns:0.3fr 1fr; gap:1.2em; align-items:center;">
+            <img src="img/lec-01a/freeman.png" style="width:100%; border-radius:6px;" />
+            <div class="question-box">
+              <div class="question-title">Định nghĩa</div>
+              Thiết kế bao gồm tất cả các hoạt động liên quan đến <em>khái niệm hóa</em>, <em>định hình</em>,
+              <em>triển khai</em>, <em>đưa vào vận hành</em> và cuối cùng là <em>điều chỉnh</em> các hệ thống phức
+              tạp — không chỉ là hoạt động diễn ra sau khi đặc tả yêu cầu và trước khi lập trình.<br />
+              <strong style="font-size:0.85em;">Peter Freeman và David Hart, <em>Communications of the ACM</em>, tập
+                47, số 8, 2004</strong>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interior vs Software -->
+        <section style="font-size:0.8em;">
+          <h2>So sánh: Nội thất và Phần mềm</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em;">
+            <figure style="margin:0;">
+              <img src="img/lec-01a/interior.jpg" style="width:100%; border-radius:6px;" />
+              <figcaption style="text-align:center; color:#666; margin-top:0.3em;">Nội thất</figcaption>
+            </figure>
+            <figure style="margin:0;">
+              <img src="img/lec-01a/docker-logo.jpg" style="width:100%; border-radius:6px;" />
+              <figcaption style="text-align:center; color:#666; margin-top:0.3em;">Phần mềm</figcaption>
+            </figure>
+            <!-- <figure style="margin:0;">
+              <img src="img/lec-01a/floor-plan.jpg" style="width:100%; border-radius:6px;" />
+              <figcaption style="text-align:center; color:#666; margin-top:0.3em;">Thiết kế Nội thất</figcaption>
+            </figure>
+            <figure style="margin:0;">
+              <img src="img/lec-01a/docker-uml.png" style="width:100%; border-radius:6px;" />
+              <figcaption style="text-align:center; color:#666; margin-top:0.3em;">Thiết kế Phần mềm</figcaption>
+            </figure> -->
+          </div>
+        </section>
+
+        <!-- Giải thích & thiết kế -->
+        <section style="font-size:0.85em;">
+          <h2>Giải thích &amp; Thiết kế</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1em; align-items:start;">
+            <figure style="margin:0; text-align:center;">
+              <img src="img/lec-01a/floor-plan.jpg" style="max-height:38vh; border-radius:6px;" />
+              <figcaption style="color:#E62727; margin-top:0.4em;">Làm thế nào để giải thích? → Tiêu chuẩn</figcaption>
+            </figure>
+            <figure style="margin:0; text-align:center;">
+              <img src="img/lec-01a/interior.jpg" style="max-height:38vh; border-radius:6px;" />
+              <figcaption style="color:#1E93AB; margin-top:0.4em;">Làm thế nào để thiết kế? → Mẫu thiết kế</figcaption>
+            </figure>
+          </div>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 3 – TÀI LIỆU MÔ TẢ THIẾT KẾ PHẦN MỀM (SDD)
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">3.</span><br />
+            Tài liệu mô tả<br />thiết kế phần mềm
+          </h1>
+        </section>
+
+        <section style="font-size:0.75em;">
+          <h2 class="text-light" style="font-size:0.6em;">Tài liệu</h2>
+          <p style="font-size:1.6em; margin-top:1.2em;">
+            Một tài liệu tốt là <strong style="color:#E62727;"><em>tiền đề</em></strong> cho một thiết kế tốt.
+          </p>
+        </section>
+
+        <section style="font-size:0.75em;">
+          <h2>Mô tả thiết kế phần mềm (SDD) theo IEEE 1016</h2>
+          <div style="display:grid; grid-template-columns:0.35fr 1fr; gap:1.2em; align-items:center;">
+            <img src="img/lec-01a/ieee-1016.png" style="width:100%; border-radius:6px;" />
+            <div class="question-box">
+              <div class="question-title">Định nghĩa</div>
+              Một SDD (Software Design Description) là biểu diễn của thiết kế phần mềm nhằm ghi lại thông tin thiết
+              kế và truyền tải thông tin đó đến các bên liên quan. Tiêu chuẩn này được sử dụng trong các tình huống
+              thiết kế yêu cầu phải chuẩn bị SDD rõ ràng.<br />
+              <strong style="font-size:0.85em;">IEEE 1016-2009: Tiêu chuẩn IEEE về Công nghệ Thông tin—Thiết kế Hệ
+                thống—Mô tả Thiết kế Phần mềm</strong>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Các tài liệu trong SDD</h2>
+          <ol>
+            <li>Từ điển thuật ngữ (Glossary)</li>
+            <li>Ngôn ngữ thiết kế (Languages)</li>
+            <li>Các bên liên quan (Stakeholders)</li>
+            <li>Các mối quan tâm (Concerns) — Yêu cầu: Chức năng (Functional) &amp; Phi chức năng (Non-functional)
+            </li>
+            <li>Các lát cắt (Viewpoints)</li>
+            <li>Các thành phần (Elements)</li>
+            <li>Lý do cho các quyết định thiết kế (Rationale)</li>
+          </ol>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Từ điển thuật ngữ</h2>
+          <div class="question-box" style="margin-bottom:0.6em;">
+            <div class="question-title">Từ điển thuật ngữ</div>
+            <ul style="margin:0;">
+              <li><em>Yêu cầu (request)</em> là gói dữ liệu gửi từ <span class="keyword">máy khách</span> đến
+                <span class="keyword">máy chủ</span>.
+              </li>
+              <li><em>Máy khách (client)</em> là máy tính có trình duyệt web.</li>
+              <li><em>Máy chủ (server)</em> là máy tính có phần mềm cài đặt.</li>
+            </ul>
+          </div>
+          <p class="fragment" style="font-size:1.3em; color:#E62727; font-weight:bold; text-align:center;">
+            Nếu bạn không hiểu, đó là lỗi của tôi!
+          </p>
+        </section>
+
+        <section style="font-size:0.8em;">
+          <h2>Ngôn ngữ thiết kế</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1em;">
+            <figure style="margin:0; text-align:center;">
+              <img src="img/lec-01a/bad-diagram.png" style="max-height:42vh; border-radius:6px;" />
+              <figcaption style="color:#E62727; margin-top:0.4em;">Không tốt</figcaption>
+            </figure>
+            <figure style="margin:0; text-align:center;">
+              <img src="img/lec-01a/good-uml.png" style="max-height:42vh; border-radius:6px;" />
+              <figcaption style="color:#2E7D32; margin-top:0.4em;">Tốt (UML)</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Các bên liên quan</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa</div>
+            Xác định các bên liên quan là quá trình xác định những người, nhóm hoặc tổ chức có thể
+            <strong>ảnh hưởng</strong> hoặc <strong>bị ảnh hưởng</strong> bởi quyết định, hoạt động hoặc kết quả của
+            dự án.
+          </div>
+        </section>
+
+        <section style="font-size:0.9em;">
+          <h2>Các mối quan tâm</h2>
+          <p>Yêu cầu:</p>
+          <ul>
+            <li>Chức năng (Functional)</li>
+            <li>Phi chức năng (Non-functional)</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.8em;">
+          <h2>Các lát cắt (Viewpoints)</h2>
+          <div style="display:grid; grid-template-columns:1fr 0.6fr; gap:1em; align-items:center;">
+            <div class="question-box">
+              Một lát cắt là một cách nhìn vào hệ thống từ một góc độ cụ thể, mô tả một số khía cạnh của hệ thống và
+              cung cấp thông tin cần thiết cho một số bên liên quan.
+            </div>
+            <img src="img/lec-01a/viewpoint.jpg" style="width:100%; border-radius:6px;" />
+          </div>
+        </section>
+
+        <section style="font-size:0.8em;">
+          <h2>Các thành phần (Elements)</h2>
+          <div style="display:grid; grid-template-columns:1fr 0.6fr; gap:1em; align-items:center;">
+            <div>
+              <p style="font-weight:bold; margin-bottom:0.3em;">Ví dụ</p>
+              <ul>
+                <li>Mô-đun</li>
+                <li>Hành vi</li>
+                <li>Dữ liệu</li>
+                <li>Giao diện</li>
+              </ul>
+            </div>
+            <img src="img/lec-01a/element.png" style="width:100%; border-radius:6px;" />
+          </div>
+        </section>
+
+        <section style="font-size:0.75em;" data-auto-animate="">
+          <h2>Lý do cho các quyết định thiết kế</h2>
+          <div class="question-box">
+            <div class="question-title">Lý do</div>
+            <ul style="margin:0;">
+              <li>Lý do chọn mô-đun A thay vì mô-đun B</li>
+              <li>Lý do chọn giao diện A thay vì giao diện B</li>
+              <li>Lý do chọn cơ sở dữ liệu A thay vì cơ sở dữ liệu B</li>
+              <li>Lý do chọn công nghệ A thay vì công nghệ B</li>
+              <li>Lý do chọn mẫu thiết kế A thay vì mẫu thiết kế B</li>
+            </ul>
+          </div>
+        </section>
+
+        <section style="font-size:0.75em;" data-auto-animate="">
+          <h2>Lý do cho các quyết định thiết kế</h2>
+          <div class="question-box" style="margin-bottom:0.7em;">
+            <div class="question-title">Công cụ</div>
+            <ul style="margin:0;">
+              <li>Quyết định đa tiêu chí (Multi-Criteria Decision Making, MCDM)</li>
+              <li>Phân tích lựa chọn thiết kế (Architecture Trade-off Analysis Method, ATAM)</li>
+              <li>Bảng quyết định (Decision Table)</li>
+              <li>Phân tích nhiều yếu tố (Multi Factor Analysis)</li>
+              <li>Ma trận quyết định (Decision Matrix)</li>
+            </ul>
+          </div>
+          <p style="font-size:1.2em; color:#E62727; font-weight:bold; text-align:center;">
+            Không cần tin tôi, hãy tin quyết định của tôi !!!
+          </p>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 4 – CÔNG CỤ VIẾT TÀI LIỆU
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">4.</span><br />
+            Công cụ<br />viết tài liệu
+          </h1>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Công cụ viết tài liệu</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9em; align-items:center;">
+            <ul style="font-size:1.05em; line-height:2;">
+              <li>LaTeX</li>
+              <li>Markdown (Notion, GitHub)</li>
+              <li>Visual Paradigm</li>
+              <li>UML</li>
+              <li>UI Mockups</li>
+            </ul>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6em; align-items:center;">
+              <img src="img/lec-01a/markdown.png" style="width:100%; border-radius:6px;" />
+              <img src="img/lec-01a/github-logo.png" style="width:100%; border-radius:6px;" />
+              <img src="img/lec-01a/mockups.jpg" style="width:100%; grid-column:span 2; border-radius:6px;" />
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           TỔNG KẾT
+           ================================================================ -->
+      <section>
+        <h2 style="margin-bottom:0.3em;">Tổng kết</h2>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4em; font-size:0.68em; margin-bottom:0.4em;">
+          <div style="border:2px solid #888; border-radius:7px; overflow:hidden;">
+            <div style="background:#888; color:#fff; padding:3px 10px; font-weight:bold;">0. Giới thiệu học phần
+            </div>
+            <div style="padding:0.3em 0.7em; background:#f5f5f5; line-height:1.45;">
+              Nội dung, chính sách và tài nguyên của học phần.<br />
+              <span style="color:#666;">→ Bài giảng · Điểm số · Sách tham khảo</span>
+            </div>
+          </div>
+          <div style="border:2px solid #1E93AB; border-radius:7px; overflow:hidden;">
+            <div style="background:#1E93AB; color:#fff; padding:3px 10px; font-weight:bold;">1. Sự phát triển của
+              phần mềm</div>
+            <div style="padding:0.3em 0.7em; background:#e0f4f8; line-height:1.45;">
+              Phần mềm thay đổi cùng với AI và LLM.<br />
+              <span style="color:#666;">→ Ví dụ nhà thông minh</span>
+            </div>
+          </div>
+          <div style="border:2px solid #7B5EA7; border-radius:7px; overflow:hidden;">
+            <div style="background:#7B5EA7; color:#fff; padding:3px 10px; font-weight:bold;">2. Thiết kế phần mềm là
+              gì?</div>
+            <div style="padding:0.3em 0.7em; background:#ede7f6; line-height:1.45;">
+              Khái niệm hóa, định hình, triển khai và điều chỉnh hệ thống phức tạp.<br />
+              <span style="color:#666;">→ So sánh với thiết kế nội thất</span>
+            </div>
+          </div>
+          <div style="border:2px solid #C2610F; border-radius:7px; overflow:hidden;">
+            <div style="background:#C2610F; color:#fff; padding:3px 10px; font-weight:bold;">3. Tài liệu mô tả thiết
+              kế (SDD)</div>
+            <div style="padding:0.3em 0.7em; background:#fff3e0; line-height:1.45;">
+              Từ điển, ngôn ngữ thiết kế, bên liên quan, lát cắt, thành phần, lý do.<br />
+              <span style="color:#666;">→ Chuẩn IEEE 1016</span>
+            </div>
+          </div>
+          <div style="border:2px solid #2E7D32; border-radius:7px; overflow:hidden; grid-column:1 / -1;">
+            <div style="background:#2E7D32; color:#fff; padding:3px 10px; font-weight:bold;">4. Công cụ viết tài
+              liệu</div>
+            <div style="padding:0.3em 0.7em; background:#e8f5e9; line-height:1.45;">
+              LaTeX · Markdown (Notion, GitHub) · Visual Paradigm · UML · UI Mockups
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <div class="footer">
+        Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §1a: Giới thiệu Hệ thống phần mềm
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+    });
+  </script>
+</body>
+
+</html>

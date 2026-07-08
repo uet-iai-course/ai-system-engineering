@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bài lab05: Class and Object Diagrams</title>
+
+    <link rel="stylesheet" href="revealjs/dist/reset.css" />
+    <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+    <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="lecture-style.css" />
+    <style>
+        .reveal {
+            font-size: 34px;
+        }
+
+        .reveal h1 {
+            font-size: 1.85em;
+            line-height: 1.08;
+        }
+
+        .reveal h2 {
+            font-size: 1.35em;
+            line-height: 1.12;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal h3 {
+            font-size: 1.1em;
+            line-height: 1.15;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal p,
+        .reveal li,
+        .reveal table {
+            line-height: 1.35;
+        }
+
+        .reveal ul,
+        .reveal ol {
+            margin-top: 0.25em;
+            margin-bottom: 0.25em;
+        }
+
+        .reveal .question-box {
+            padding: 0.6em;
+            border-radius: 12px;
+        }
+
+        .reveal .footer {
+            font-size: 0.9rem;
+        }
+
+        .lab-grid {
+            display: grid;
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .lab-grid.two {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .lab-grid.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .lab-grid.four {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .lab-card {
+            border: 2px solid #d9e2ec;
+            border-radius: 8px;
+            padding: 0.55em 0.65em;
+            background: #f8fafc;
+        }
+
+        .lab-card.blue {
+            border-color: #90caf9;
+            background: #e3f2fd;
+        }
+
+        .lab-card.green {
+            border-color: #a5d6a7;
+            background: #e8f5e9;
+        }
+
+        .lab-card.orange {
+            border-color: #ffcc80;
+            background: #fff3e0;
+        }
+
+        .lab-card.pink {
+            border-color: #f48fb1;
+            background: #fce4ec;
+        }
+
+        .lab-card h4 {
+            margin: 0 0 0.25em 0;
+            font-size: 0.95em;
+            color: #1E93AB;
+        }
+
+        .diagram-frame {
+            text-align: center;
+        }
+
+        .diagram-frame img,
+        .diagram-frame svg {
+            max-width: 100%;
+            object-fit: contain;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .compact-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.76em;
+        }
+
+        .compact-table th,
+        .compact-table td {
+            border: 1px solid #ddd;
+            padding: 0.45em 0.55em;
+            vertical-align: top;
+        }
+
+        .compact-table th {
+            background: #f3f2ec;
+            color: #1E93AB;
+        }
+
+        .task-note {
+            border-left: 5px solid #1E93AB;
+            background: #eef8fb;
+            border-radius: 8px;
+            padding: 0.55em 0.7em;
+            font-size: 0.85em;
+        }
+
+        .mini-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .mini-flow .arrow {
+            color: #1E93AB;
+            font-size: 1.7em;
+            font-weight: 700;
+        }
+
+        .svg-label {
+            font-family: Arial, Helvetica, sans-serif;
+            fill: #1f2933;
+        }
+
+        .svg-small {
+            font-size: 16px;
+        }
+
+        .svg-mid {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .svg-title {
+            font-size: 22px;
+            font-weight: 700;
+            fill: #1E93AB;
+        }
+
+        .uml-class {
+            border: 3px solid #1f2933;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #fff;
+            font-size: 0.78em;
+        }
+
+        .uml-class .name {
+            background: #e3f2fd;
+            border-bottom: 2px solid #1f2933;
+            font-weight: 700;
+            padding: 0.28em 0.45em;
+            text-align: center;
+        }
+
+        .uml-class .slot {
+            border-bottom: 2px solid #1f2933;
+            padding: 0.28em 0.45em;
+            min-height: 2.15em;
+        }
+
+        .uml-class .slot:last-child {
+            border-bottom: 0;
+        }
+
+        .uml-object .name {
+            text-decoration: underline;
+        }
+
+        .tight-list li {
+            margin: 0.12em 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <section>
+                    <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+                    <h3>Lab 05: Class &amp; Object Diagram</h3>
+                    <p>Trường ĐH Công nghệ - Đại học Quốc gia Hà Nội</p>
+                    <p>Giảng viên: Lương Sơn Bá, Nguyễn Tiến Đạt</p>
+                </section>
+
+                <section>
+                    <h2>Nội dung</h2>
+                    <ol>
+                        <li>Từ runtime thinking sang OOP thinking</li>
+                        <li>Class Diagram</li>
+                        <li>Object Diagram</li>
+                        <li>So sánh và thực hành</li>
+                    </ol>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">1.</span><br />
+                        Từ runtime thinking sang OOP thinking
+                    </h1>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Buổi trước ta đã có gì?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Behavior Diagram ở W4</h4>
+                            <ul>
+                                <li>Sequence Diagram: interaction theo thời gian.</li>
+                                <li>Communication Diagram: collaboration giữa object.</li>
+                                <li>Tập trung vào kịch bản hệ thống khi đang chạy.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Runtime thinking</h4>
+                            <ul>
+                                <li>Góc nhìn thực thi.</li>
+                                <li>Cách các đối tượng tương tác khi hệ thống đang chạy.</li>
+                                <li>Câu hỏi chính: các thành phần giao tiếp như thế nào theo thời gian?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Mục tiêu tuần 5</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Chuyển từ câu hỏi <span class="inline-code">luồng chạy diễn ra như thế nào?</span> sang
+                        <span class="inline-code">hệ thống được cấu tạo từ những thành phần cốt lõi nào?</span>
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Structural Diagram</h4>
+                            <ul>
+                                <li>Class Diagram: cấu trúc và quy tắc ở mức lớp.</li>
+                                <li>Object Diagram: snapshot object tại một thời điểm.</li>
+                                <li>Cả hai đều thuộc nhóm biểu đồ cấu trúc.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>OOP thinking</h4>
+                            <ul>
+                                <li>Góc nhìn cấu trúc, mang tính tĩnh.</li>
+                                <li>Nhìn dữ liệu object lưu giữ.</li>
+                                <li>Nhìn hành vi object có thể thực hiện và cách chúng liên kết.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Từ interaction đến structure</h2>
+                    <div class="mini-flow">
+                        <div class="lab-card blue">
+                            <h4>Sequence / Communication</h4>
+                            <p>Object nào gọi object nào, message nào đi qua, thứ tự xử lý ra sao.</p>
+                        </div>
+                        <div class="arrow">&rarr;</div>
+                        <div class="lab-card green">
+                            <h4>Class / Object</h4>
+                            <p>Class nào tồn tại, giữ dữ liệu gì, có method gì, quan hệ và multiplicity ra sao.</p>
+                        </div>
+                    </div>
+                    <p class="caption">W5 dùng kết quả từ interaction diagram để suy ra cấu trúc OOP.</p>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Class là khuôn mẫu, Object là instance</h2>
+                    <div class="lab-grid two" style="grid-template-columns:0.95fr 1.05fr; align-items:start;">
+                        <div class="lab-card blue">
+                            <h4>Class Diagram</h4>
+                            <div class="uml-class" style="margin-bottom:0.45em;">
+                                <div class="name">Order</div>
+                                <div class="slot">- number : String</div>
+                                <div class="slot">+ confirm()<br />+ close()</div>
+                            </div>
+                            <div class="uml-class">
+                                <div class="name">SpecialOrder</div>
+                                <div class="slot">+ dispatch()</div>
+                            </div>
+                            <p class="caption">Khuôn mẫu: class, attribute, method, inheritance.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Object Diagram</h4>
+                            <div class="uml-class uml-object" style="margin-bottom:0.45em;">
+                                <div class="name">c : Customer</div>
+                            </div>
+                            <div class="lab-grid two" style="gap:8px;">
+                                <div class="uml-class uml-object">
+                                    <div class="name">o1 : Order</div>
+                                    <div class="slot">number = 12</div>
+                                </div>
+                                <div class="uml-class uml-object">
+                                    <div class="name">o2 : Order</div>
+                                    <div class="slot">number = 61</div>
+                                </div>
+                                <div class="uml-class uml-object">
+                                    <div class="name">s1 : SpecialOrder</div>
+                                    <div class="slot">number = 43</div>
+                                </div>
+                            </div>
+                            <p class="caption">Snapshot: object cụ thể và giá trị cụ thể.</p>
+                        </div>
+                    </div>
+                    <p class="caption">Class Diagram mô tả khuôn mẫu; Object Diagram cho một snapshot cụ thể.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">2.</span><br />
+                        Class Diagram
+                    </h1>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Class Diagram là gì?</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        <div class="question-title">Định nghĩa</div>
+                        Class Diagram là một UML Structural Diagram mô tả cấu trúc tĩnh của hệ thống bằng cách hiển thị
+                        các lớp, thuộc tính, phương thức và mối quan hệ giữa chúng.
+                    </div>
+                    <ul>
+                        <li>Thể hiện các thành phần cốt lõi cấu tạo nên hệ thống.</li>
+                        <li>Thể hiện dữ liệu và hành vi của từng thành phần.</li>
+                        <li>Thể hiện các quy tắc liên kết và cấu trúc tĩnh giữa các lớp.</li>
+                    </ul>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ký hiệu class cơ bản</h2>
+                    <div class="lab-grid two" style="grid-template-columns:0.86fr 1.14fr; align-items:center;">
+                        <div class="uml-class">
+                            <div class="name">MyClass</div>
+                            <div class="slot">
+                                + attribute1 : int<br />
+                                - attribute2 : float<br />
+                                # attribute3 : Circle
+                            </div>
+                            <div class="slot">
+                                + op1(in p1 : bool, in p2) : String<br />
+                                - op2(input p3 : int) : float<br />
+                                # op3(out p6) : Class6*
+                            </div>
+                        </div>
+                        <div>
+                            <ul>
+                                <li><strong>Class</strong>: thực thể chính của hệ thống.</li>
+                                <li><strong>Attribute</strong>: dữ liệu class nắm giữ.</li>
+                                <li><strong>Method</strong>: hành vi hoặc thao tác xử lý của class.</li>
+                                <li>Ba khoang thường dùng: tên, thuộc tính, phương thức.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.7em;">
+                    <h2>Thành phần chính</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Thành phần</th>
+                                <th>Mô tả</th>
+                                <th>Khi đọc cần hỏi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Class</strong></td>
+                                <td>Thực thể chính, thường biểu diễn bằng hình chữ nhật chia 3 phần.</td>
+                                <td>Lớp này đại diện cho khái niệm miền hay service nào?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Attribute</strong></td>
+                                <td>Thuộc tính hoặc dữ liệu mà class nắm giữ.</td>
+                                <td>Lớp cần giữ trạng thái gì?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Method</strong></td>
+                                <td>Hành vi hoặc thao tác xử lý của class.</td>
+                                <td>Lớp nhận message nào và xử lý ra sao?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Relationship</strong></td>
+                                <td>Mối quan hệ giữa các class.</td>
+                                <td>Các class phụ thuộc, sở hữu hay kế thừa nhau?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Multiplicity</strong></td>
+                                <td>Bản số xác định số lượng object tham gia liên kết.</td>
+                                <td>Một object ở đầu này liên quan đến bao nhiêu object ở đầu kia?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Các loại relationship</h2>
+                    <div class="lab-grid three" style="font-size:0.88em;">
+                        <div class="lab-card blue">
+                            <h4>Dependency</h4>
+                            <p>Mũi tên nét đứt.</p>
+                            <p><span class="inline-code">Client --&gt; Service</span></p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Association</h4>
+                            <p>Đường nét liền.</p>
+                            <p><span class="inline-code">Order - Payment</span></p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Aggregation</h4>
+                            <p>Hình thoi rỗng.</p>
+                            <p>Whole-part lỏng.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Composition</h4>
+                            <p>Hình thoi đặc.</p>
+                            <p>Whole-part chặt.</p>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Inheritance</h4>
+                            <p>Mũi tên tam giác rỗng.</p>
+                            <p><span class="inline-code">Subclass -|&gt; Superclass</span></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.7em;">
+                    <h2>Relationship trong PDF W5</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Quan hệ</th>
+                                <th>Ký hiệu</th>
+                                <th>Ý nghĩa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Dependency</strong></td>
+                                <td>Mũi tên nét đứt</td>
+                                <td>Một class sử dụng hoặc phụ thuộc tạm thời vào class khác.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Association</strong></td>
+                                <td>Đường nét liền</td>
+                                <td>Quan hệ kết hợp hoặc biết nhau giữa các class.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aggregation</strong></td>
+                                <td>Đường nét liền, hình thoi rỗng</td>
+                                <td>Quan hệ tập hợp; phần vẫn có thể tồn tại độc lập.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Composition</strong></td>
+                                <td>Đường nét liền, hình thoi đặc</td>
+                                <td>Quan hệ cấu thành; phần phụ thuộc vòng đời vào toàn thể.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Inheritance</strong></td>
+                                <td>Mũi tên tam giác rỗng</td>
+                                <td>Quan hệ kế thừa giữa superclass và subclass.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Multiplicity</h2>
+                    <div class="lab-grid two" style="grid-template-columns:0.9fr 1.1fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <svg viewBox="0 0 560 260" style="max-height:45vh;" aria-label="Multiplicity example">
+                                <rect x="30" y="40" width="150" height="60" fill="#e3f2fd" stroke="#1f2933"
+                                    stroke-width="3" />
+                                <text x="75" y="77" class="svg-label svg-mid">Account</text>
+                                <rect x="365" y="40" width="150" height="60" fill="#e8f5e9" stroke="#1f2933"
+                                    stroke-width="3" />
+                                <text x="408" y="77" class="svg-label svg-mid">Order</text>
+                                <line x1="180" y1="70" x2="365" y2="70" stroke="#1f2933" stroke-width="3" />
+                                <text x="196" y="56" class="svg-label svg-small">1</text>
+                                <text x="322" y="56" class="svg-label svg-small">0..*</text>
+
+                                <rect x="30" y="165" width="150" height="60" fill="#fff3e0" stroke="#1f2933"
+                                    stroke-width="3" />
+                                <text x="60" y="202" class="svg-label svg-mid">Customer</text>
+                                <rect x="365" y="165" width="150" height="60" fill="#fce4ec" stroke="#1f2933"
+                                    stroke-width="3" />
+                                <text x="402" y="202" class="svg-label svg-mid">Account</text>
+                                <line x1="180" y1="195" x2="365" y2="195" stroke="#1f2933" stroke-width="3" />
+                                <text x="196" y="181" class="svg-label svg-small">1</text>
+                                <text x="336" y="181" class="svg-label svg-small">1</text>
+                            </svg>
+                        </div>
+                        <div>
+                            <ul>
+                                <li><span class="inline-code">1</span>: đúng một object.</li>
+                                <li><span class="inline-code">0..1</span>: không có hoặc có một object.</li>
+                                <li><span class="inline-code">*</span> hoặc <span class="inline-code">0..*</span>: nhiều object, có thể bằng 0.</li>
+                                <li><span class="inline-code">1..*</span>: ít nhất một object.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Tại sao cần Class Diagram?</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Kiến trúc tĩnh</h4>
+                            <p>Nắm bắt cấu trúc tĩnh và kiến trúc lớp của hệ thống.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Nền cho code OOP</h4>
+                            <p>Lập trình viên dùng class, attribute, method làm base để viết code.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Nền cho database</h4>
+                            <p>Định hình cấu trúc dữ liệu trước khi thiết kế bảng và quan hệ.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Phát hiện lỗi thiết kế</h4>
+                            <p>Nhìn ra class quá nhiều trách nhiệm, quan hệ sai hoặc multiplicity thiếu.</p>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Giao tiếp nhóm</h4>
+                            <p>Developer, tester và người thiết kế domain cùng có một bản đồ cấu trúc.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Tài liệu hóa</h4>
+                            <p>Lưu lại cấu trúc hệ thống để bảo trì và onboarding.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Khi nào dùng Class Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Phân tích và thiết kế</h4>
+                            <ul>
+                                <li>Khi phân tích hoặc thiết kế cấu trúc hệ thống mới.</li>
+                                <li>Khi cần mô tả cấu trúc dữ liệu và hành vi của object.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Chuẩn bị triển khai</h4>
+                            <ul>
+                                <li>Khi thiết kế nền tảng để viết code OOP.</li>
+                                <li>Khi cần mô tả quan hệ giữa các thành phần.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Cách vẽ Class Diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Bước</th>
+                                <th>Việc cần làm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. Xác định class</td>
+                                <td>Từ các lifeline trong Sequence Diagram, suy ra các class tương ứng.</td>
+                            </tr>
+                            <tr>
+                                <td>2. Xác định method</td>
+                                <td>Dựa vào message trỏ vào lifeline, tạo method cho class nhận.</td>
+                            </tr>
+                            <tr>
+                                <td>3. Xác định attribute</td>
+                                <td>Xác định dữ liệu cần để thực hiện method và duy trì trạng thái.</td>
+                            </tr>
+                            <tr>
+                                <td>4. Thêm relationship</td>
+                                <td>Xác định cách class liên kết: dependency, association, aggregation, composition, inheritance.</td>
+                            </tr>
+                            <tr>
+                                <td>5. Xác định multiplicity</td>
+                                <td>Đặt quy tắc số lượng object tham gia liên kết.</td>
+                            </tr>
+                            <tr>
+                                <td>6. Tách responsibility</td>
+                                <td>Dùng SOLID/SRP để chia nhỏ class ôm đồm quá nhiều việc.</td>
+                            </tr>
+                            <tr>
+                                <td>7. Kiểm tra và hoàn thiện</td>
+                                <td>Refactor design để đảm bảo tối ưu, thêm note nếu cần.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Từ Sequence Diagram sang Class Diagram</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Lifeline &rarr; Class</h4>
+                            <p>Mỗi participant ổn định trong sequence có thể trở thành một class hoặc component.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Incoming message &rarr; Method</h4>
+                            <p>Message đi vào lifeline gợi ý method mà class nhận cần cung cấp.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>State &rarr; Attribute</h4>
+                            <p>Dữ liệu cần nhớ giữa các bước xử lý trở thành attribute hoặc entity field.</p>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        Đây là cầu nối quan trọng giữa W4 và W5: từ hành vi runtime suy ra cấu trúc tĩnh.
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>SOLID/SRP khi kiểm tra class</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        SRP: một class nên chỉ có một lý do để thay đổi.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card pink">
+                            <h4>Dấu hiệu cần tách</h4>
+                            <ul>
+                                <li>Tên class có chữ Manager/Util quá chung.</li>
+                                <li>Class phục vụ nhiều actor khác nhau.</li>
+                                <li>Method trải rộng qua UI, business logic và persistence.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Cách refactor</h4>
+                            <ul>
+                                <li>Tách class theo trách nhiệm.</li>
+                                <li>Giữ domain model tập trung vào dữ liệu và quy tắc miền.</li>
+                                <li>Đưa orchestration sang control/service class.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.84em;">
+                    <h2>Ví dụ từ Lab 02: Class Diagram</h2>
+                    <div class="diagram-frame">
+                        <img src="img/lab-02/online-shopping-class-domain.png"
+                            alt="Online Shopping domain class diagram"
+                            style="max-height:48vh; max-width:80%; width:auto;" />
+                    </div>
+                </section>
+
+                <section style="font-size:0.72em;">
+                    <h2>Phân tích class diagram mẫu</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Chi tiết trên hình</th>
+                                <th>Cách đọc trong mô hình</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="inline-code">Customer - Account</span></td>
+                                <td>Mỗi customer có đúng một account.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">WebUser - Customer</span></td>
+                                <td>Customer có thể có web user identity; WebUser có trạng thái hợp lệ.</td>
+                            </tr>
+                            <tr>
+                                <td>Kim cương đen tại <span class="inline-code">Account</span></td>
+                                <td>Account sở hữu Shopping Cart và Orders theo quan hệ composition.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">Order - Payment</span> với <span
+                                        class="inline-code">0..*</span></td>
+                                <td>Một order có thể chưa có payment hoặc có nhiều payment.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">LineItem - Product</span></td>
+                                <td>Line item nối cart/order với một sản phẩm cụ thể.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">UserState</span>, <span
+                                        class="inline-code">OrderStatus</span></td>
+                                <td>Enumeration giữ các trạng thái hợp lệ.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">3.</span><br />
+                        Object Diagram
+                    </h1>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Object Diagram là gì?</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        <div class="question-title">Định nghĩa</div>
+                        Object Diagram là một UML Structural Diagram hiển thị một snapshot instance của cấu trúc tĩnh
+                        hệ thống tại một thời điểm cụ thể trong quá trình thực thi.
+                    </div>
+                    <ul>
+                        <li>Hiển thị object cụ thể đang tồn tại tại runtime.</li>
+                        <li>Hiển thị giá trị thuộc tính cụ thể của object.</li>
+                        <li>Hiển thị link giữa các object tại thời điểm chụp.</li>
+                    </ul>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ký hiệu object cơ bản</h2>
+                    <div class="lab-grid two" style="align-items:center;">
+                        <div class="uml-class uml-object">
+                            <div class="name">order12 : Order</div>
+                            <div class="slot">
+                                number = "12"<br />
+                                status = "Confirmed"<br />
+                                total = 850000
+                            </div>
+                        </div>
+                        <div>
+                            <ul>
+                                <li><strong>Object</strong>: đối tượng cụ thể đang tồn tại.</li>
+                                <li>Tên thường được gạch chân: <span class="inline-code">obj : ClassName</span>.</li>
+                                <li><strong>Attribute values</strong>: slot có giá trị tại thời điểm chụp.</li>
+                                <li>Object diagram không liệt kê method như class diagram.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.7em;">
+                    <h2>Thành phần chính</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Thành phần</th>
+                                <th>Mô tả</th>
+                                <th>Khi đọc cần hỏi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Object</strong></td>
+                                <td>Đối tượng cụ thể đang tồn tại, ví dụ <span class="inline-code">obj : ClassName</span>.</td>
+                                <td>Đây là instance nào của class nào?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Attributes &amp; Values</strong></td>
+                                <td>Thuộc tính đi kèm giá trị cụ thể, ví dụ <span class="inline-code">status = "Active"</span>.</td>
+                                <td>Snapshot này đang ghi lại trạng thái gì?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Links</strong></td>
+                                <td>Đường nối giữa object, hiện thực hóa association trong runtime.</td>
+                                <td>Object nào đang liên kết trực tiếp với object nào?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Links: relationship ở runtime</h2>
+                    <div class="diagram-frame">
+                        <svg viewBox="0 0 920 360" style="max-height:55vh;" aria-label="Object links">
+                            <rect x="20" y="20" width="880" height="320" rx="8" fill="#fff" stroke="#d9e2ec"
+                                stroke-width="2" />
+                            <g class="svg-label">
+                                <rect x="70" y="78" width="210" height="78" fill="#e3f2fd" stroke="#1f2933"
+                                    stroke-width="3" />
+                                <line x1="70" y1="116" x2="280" y2="116" stroke="#1f2933" stroke-width="2" />
+                                <text x="80" y="105" class="svg-mid" text-decoration="underline">cart7 : ShoppingCart</text>
+                                <text x="88" y="142" class="svg-small">created = "2026-03-22"</text>
+
+                                <rect x="360" y="78" width="190" height="78" fill="#e8f5e9" stroke="#1f2933"
+                                    stroke-width="3" />
+                                <line x1="360" y1="116" x2="550" y2="116" stroke="#1f2933" stroke-width="2" />
+                                <text x="386" y="105" class="svg-mid" text-decoration="underline">item1 : LineItem</text>
+                                <text x="378" y="142" class="svg-small">quantity = 2</text>
+
+                                <rect x="635" y="78" width="210" height="78" fill="#fff3e0" stroke="#1f2933"
+                                    stroke-width="3" />
+                                <line x1="635" y1="116" x2="845" y2="116" stroke="#1f2933" stroke-width="2" />
+                                <text x="672" y="105" class="svg-mid" text-decoration="underline">book9 : Product</text>
+                                <text x="653" y="142" class="svg-small">name = "UML Basics"</text>
+
+                                <line x1="280" y1="117" x2="360" y2="117" stroke="#1f2933" stroke-width="3" />
+                                <line x1="550" y1="117" x2="635" y2="117" stroke="#1f2933" stroke-width="3" />
+                                <text x="298" y="102" class="svg-small">contains</text>
+                                <text x="568" y="102" class="svg-small">for product</text>
+
+                                <rect x="250" y="230" width="420" height="58" fill="#fce4ec" stroke="#ad1457"
+                                    stroke-width="2" />
+                                <text x="265" y="266" class="svg-mid">Link = association được hiện thực hóa</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p class="caption">Class Diagram nói có association; Object Diagram cho biết hiện tại object nào đang nối với object nào.</p>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Tại sao cần Object Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Runtime snapshot</h4>
+                            <ul>
+                                <li>Mô tả cấu trúc dữ liệu phức tạp tại lúc chạy.</li>
+                                <li>Cho ví dụ thực tế khi class diagram quá trừu tượng.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Validate design</h4>
+                            <ul>
+                                <li>Kiểm chứng bản thiết kế class diagram.</li>
+                                <li>Kiểm tra tính đúng đắn của multiplicity.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Khi nào dùng Object Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Validate cấu trúc</h4>
+                            <ul>
+                                <li>Cần validate class diagram và quy tắc liên kết.</li>
+                                <li>Muốn kiểm multiplicity bằng một ví dụ cụ thể.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Giải thích runtime</h4>
+                            <ul>
+                                <li>Muốn thấy trạng thái và dữ liệu object tại một thời điểm.</li>
+                                <li>Cung cấp runtime example cho cấu trúc phức tạp.</li>
+                                <li>Phân tích sự hình thành object trong một use case.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ví dụ từ Lab 02: Object Diagram</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.12fr 0.88fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/login-controller-object.png"
+                                alt="Login Controller object diagram" style="max-height:56vh; width:auto;" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Object diagram mô tả trạng thái cụ thể tại runtime.</li>
+                                <li><span class="inline-code">loginCtrl</span> là instance của Login Controller.</li>
+                                <li>Slot lưu giá trị cụ thể như <span class="inline-code">attemptLimit</span>,
+                                    <span class="inline-code">lockoutTime</span>, URI login/logout.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Phân tích object diagram mẫu</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Chi tiết</th>
+                                <th>Cách đọc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="inline-code">loginCtrl</span></td>
+                                <td>Instance của Login Controller với các slot Integer/String cụ thể.</td>
+                            </tr>
+                            <tr>
+                                <td>User Manager, Cookie Manager, Logger</td>
+                                <td>Các object liên quan trực tiếp đến quá trình login.</td>
+                            </tr>
+                            <tr>
+                                <td>Hibernate User DAO</td>
+                                <td>DAO được User Manager dùng để tìm user theo loginID hoặc email.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">defaultURIs</span></td>
+                                <td>Collection 5 String có thứ tự và unique.</td>
+                            </tr>
+                            <tr>
+                                <td>Link không navigable backward</td>
+                                <td>Đọc được hướng biết/gọi giữa các object ở thời điểm chụp.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">4.</span><br />
+                        So sánh và thực hành
+                    </h1>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Hai diagram bổ trợ cho nhau</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Cùng hệ thống tĩnh</h4>
+                            <p>Cùng mô tả cấu trúc của một hệ thống, nhưng ở hai mức khác nhau.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Khuôn mẫu và sản phẩm</h4>
+                            <p>Class Diagram là khuôn mẫu; Object Diagram là sản phẩm instance từ khuôn mẫu.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Đối chiếu qua lại</h4>
+                            <p>Có thể dùng object snapshot để kiểm chứng class, multiplicity và quan hệ.</p>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        Điểm khác nhau nằm ở cách tổ chức thông tin: class/rule hay object/state.
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Class Diagram vs Object Diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Tiêu chí</th>
+                                <th>Class Diagram</th>
+                                <th>Object Diagram</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Mục đích chính</strong></td>
+                                <td>Mô tả cấu trúc, quy tắc và khuôn mẫu của hệ thống.</td>
+                                <td>Mô tả trạng thái của hệ thống tại một thời điểm thực thi.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cách tổ chức biểu đồ</strong></td>
+                                <td>Mô tả quan hệ giữa các lớp.</td>
+                                <td>Mô tả quan hệ thực tế giữa các đối tượng.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Thành phần chính</strong></td>
+                                <td>Class, Attribute, Method.</td>
+                                <td>Object, Attribute Values.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ứng dụng chính</strong></td>
+                                <td>Thiết kế kiến trúc, làm base cho code OOP.</td>
+                                <td>Validate thiết kế: snapshot, runtime example.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mức độ dùng thực tế</strong></td>
+                                <td>Rất phổ biến.</td>
+                                <td>Ít dùng hơn, thường dùng để test/validate.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Thực hành 1: GUI Drawing Application</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Thiết kế class diagram cho ứng dụng vẽ hình đơn giản: người dùng có thể tạo, chọn, di chuyển,
+                        thay đổi màu và lưu bản vẽ.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Yêu cầu class diagram</h4>
+                            <ul>
+                                <li>Có class cho Canvas, Shape, Tool và Drawing.</li>
+                                <li>Có ít nhất 3 loại shape cụ thể.</li>
+                                <li>Thể hiện inheritance và composition/aggregation.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Cần ghi rõ</h4>
+                            <ul>
+                                <li>Attribute chính của Shape: vị trí, màu, kích thước.</li>
+                                <li>Method chính: draw(), move(), resize().</li>
+                                <li>Multiplicity giữa Drawing, Canvas và Shape.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Gợi ý model cho GUI Drawing</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Core domain</h4>
+                            <ul class="tight-list">
+                                <li>Drawing</li>
+                                <li>Canvas</li>
+                                <li>Shape</li>
+                                <li>Layer</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Shape hierarchy</h4>
+                            <ul class="tight-list">
+                                <li>Rectangle</li>
+                                <li>Circle</li>
+                                <li>Line</li>
+                                <li>TextShape</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Interaction helpers</h4>
+                            <ul class="tight-list">
+                                <li>DrawingTool</li>
+                                <li>SelectionTool</li>
+                                <li>ColorPalette</li>
+                                <li>FileStorage</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Thực hành 2: Order Management System</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Từ class diagram rút gọn cho hệ thống quản lý đơn hàng, tạo một object diagram cho một đơn hàng
+                        cụ thể tại thời điểm checkout thành công.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card orange">
+                            <h4>Class diagram cần có</h4>
+                            <ul>
+                                <li>Customer, Account, Order, LineItem, Product, Payment.</li>
+                                <li>Relationship và multiplicity giữa các class.</li>
+                                <li>Ít nhất một composition hợp lý.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Object diagram cần có</h4>
+                            <ul>
+                                <li>Một customer cụ thể và một order cụ thể.</li>
+                                <li>Ít nhất 2 line item với product khác nhau.</li>
+                                <li>Payment đã có trạng thái thành công.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Yêu cầu nộp bài</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Bắt buộc</h4>
+                            <ul>
+                                <li>01 class diagram cho GUI Drawing Application hoặc Order Management System.</li>
+                                <li>01 object diagram snapshot tương ứng nếu chọn Order Management.</li>
+                                <li>Ghi rõ multiplicity trên các association quan trọng.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Mỗi diagram cần kèm</h4>
+                            <ul>
+                                <li>1-2 câu mô tả phạm vi bài toán.</li>
+                                <li>Danh sách class/object chính.</li>
+                                <li>Giải thích 2 relationship hoặc slot quan trọng.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Checklist tự kiểm tra</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card orange">
+                            <h4>Class</h4>
+                            <ul>
+                                <li>Class có tên là danh từ miền không?</li>
+                                <li>Attribute/method có nằm đúng class không?</li>
+                                <li>Relationship có đúng loại không?</li>
+                                <li>Multiplicity có đủ trên association quan trọng không?</li>
+                                <li>Có class nào vi phạm SRP rõ ràng không?</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Object</h4>
+                            <ul>
+                                <li>Tên object có dạng <span class="inline-code">obj : ClassName</span> không?</li>
+                                <li>Slot có giá trị cụ thể tại thời điểm chụp không?</li>
+                                <li>Link có map được sang association trong class diagram không?</li>
+                                <li>Snapshot có validate được multiplicity không?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section style="font-size:0.78em;">
+                <h2>Tổng kết Lab 05</h2>
+                <div class="lab-grid two">
+                    <div class="lab-card blue">
+                        <h4>Hôm nay cần nhớ</h4>
+                        <ul>
+                            <li>Class Diagram mô tả cấu trúc, quy tắc và khuôn mẫu của hệ thống.</li>
+                            <li>Object Diagram mô tả snapshot object tại một thời điểm thực thi.</li>
+                            <li>Relationship và multiplicity là phần quan trọng nhất khi đọc class diagram.</li>
+                            <li>SOLID/SRP giúp kiểm tra class có đang ôm quá nhiều trách nhiệm không.</li>
+                        </ul>
+                    </div>
+                    <div class="lab-card green">
+                        <h4>Tài liệu dùng trong lab</h4>
+                        <ul>
+                            <li>W5 - Class and Object Diagram.pdf.</li>
+                            <li>lecture-01b-uml-diagrams.html: class diagram và relationship.</li>
+                            <li>lecture-02b-OOP-design-principles.html: SOLID/SRP.</li>
+                            <li>lab-02-uml-diagrams.html: ví dụ Online Shopping và Login Controller.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="task-note" style="margin-top:0.8em;">
+                    Cách làm trên lớp: đọc sequence trước để tìm object/method, vẽ class diagram để chốt cấu trúc,
+                    rồi dùng object diagram để validate bằng một snapshot cụ thể.
+                </div>
+            </section>
+
+            <div class="footer">
+                Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §Lab05: Class &amp; Object Diagram
+            </div>
+        </div>
+    </div>
+
+    <script src="revealjs/dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/math/math.js"></script>
+    <script>
+        Reveal.initialize({
+            controlsLayout: "edges",
+            slideNumber: true,
+            hashOneBasedIndex: true,
+            hash: true,
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+        });
+    </script>
+</body>
+
+</html>

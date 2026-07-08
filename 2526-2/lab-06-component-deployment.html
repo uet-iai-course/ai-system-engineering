@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bài lab06: Component and Deployment Diagrams</title>
+
+    <link rel="stylesheet" href="revealjs/dist/reset.css" />
+    <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+    <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="lecture-style.css" />
+    <style>
+        .reveal {
+            font-size: 34px;
+        }
+
+        .reveal h1 {
+            font-size: 1.85em;
+            line-height: 1.08;
+        }
+
+        .reveal h2 {
+            font-size: 1.35em;
+            line-height: 1.12;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal h3 {
+            font-size: 1.1em;
+            line-height: 1.15;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal p,
+        .reveal li,
+        .reveal table {
+            line-height: 1.35;
+        }
+
+        .reveal ul,
+        .reveal ol {
+            margin-top: 0.25em;
+            margin-bottom: 0.25em;
+        }
+
+        .reveal .question-box {
+            padding: 0.6em;
+            border-radius: 12px;
+        }
+
+        .reveal .footer {
+            font-size: 0.9rem;
+        }
+
+        .lab-grid {
+            display: grid;
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .lab-grid.two {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .lab-grid.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .lab-grid.four {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .lab-card {
+            border: 2px solid #d9e2ec;
+            border-radius: 8px;
+            padding: 0.55em 0.65em;
+            background: #f8fafc;
+        }
+
+        .lab-card.blue {
+            border-color: #90caf9;
+            background: #e3f2fd;
+        }
+
+        .lab-card.green {
+            border-color: #a5d6a7;
+            background: #e8f5e9;
+        }
+
+        .lab-card.orange {
+            border-color: #ffcc80;
+            background: #fff3e0;
+        }
+
+        .lab-card.pink {
+            border-color: #f48fb1;
+            background: #fce4ec;
+        }
+
+        .lab-card h4 {
+            margin: 0 0 0.25em 0;
+            font-size: 0.95em;
+            color: #1E93AB;
+        }
+
+        .diagram-frame {
+            text-align: center;
+        }
+
+        .diagram-frame img,
+        .diagram-frame svg {
+            max-width: 100%;
+            object-fit: contain;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .compact-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.76em;
+        }
+
+        .compact-table th,
+        .compact-table td {
+            border: 1px solid #ddd;
+            padding: 0.45em 0.55em;
+            vertical-align: top;
+        }
+
+        .compact-table th {
+            background: #f3f2ec;
+            color: #1E93AB;
+        }
+
+        .task-note {
+            border-left: 5px solid #1E93AB;
+            background: #eef8fb;
+            border-radius: 8px;
+            padding: 0.55em 0.7em;
+            font-size: 0.85em;
+        }
+
+        .mini-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .mini-flow .arrow {
+            color: #1E93AB;
+            font-size: 1.7em;
+            font-weight: 700;
+        }
+
+        .arch-box {
+            border: 2px solid #1f2933;
+            border-radius: 6px;
+            background: #fff;
+            padding: 0.45em 0.55em;
+            text-align: center;
+            font-size: 0.82em;
+            min-height: 2.25em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arch-arrow {
+            color: #1E93AB;
+            font-weight: 700;
+            text-align: center;
+            align-self: center;
+        }
+
+        .tight-list li {
+            margin: 0.12em 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <section>
+                    <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+                    <h3>Lab 06: Component &amp; Deployment Diagram</h3>
+                    <p>Trường ĐH Công nghệ - Đại học Quốc gia Hà Nội</p>
+                    <p>Giảng viên: Lương Sơn Bá, Nguyễn Tiến Đạt</p>
+                </section>
+
+                <section>
+                    <h2>Nội dung</h2>
+                    <ol>
+                        <li>Từ OOP thinking sang architecture thinking</li>
+                        <li>Component Diagram</li>
+                        <li>Deployment Diagram</li>
+                        <li>So sánh và thực hành</li>
+                    </ol>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">1.</span><br />
+                        Từ OOP thinking sang architecture thinking
+                    </h1>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Buổi trước ta đã có gì?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Structural Diagram ở W5</h4>
+                            <ul>
+                                <li>Class Diagram: cấu trúc, quy tắc và khuôn mẫu của hệ thống.</li>
+                                <li>Object Diagram: snapshot object tại một thời điểm thực thi.</li>
+                                <li>Tập trung vào đối tượng, dữ liệu và mối quan hệ.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>OOP thinking</h4>
+                            <ul>
+                                <li>Góc nhìn cấu trúc, mang tính tĩnh.</li>
+                                <li>Nhìn các thực thể cốt lõi trong miền bài toán.</li>
+                                <li>Câu hỏi chính: hệ thống được cấu tạo từ những thành phần cốt lõi nào?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Mục tiêu tuần 6</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Chuyển từ cấu trúc OOP sang câu hỏi:
+                        <strong>hệ thống được chia thành các thành phần lớn nào và triển khai như thế nào?</strong>
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Structural Diagram</h4>
+                            <ul>
+                                <li>Component Diagram: module lớn và interface.</li>
+                                <li>Deployment Diagram: node, artifact, hạ tầng và kết nối.</li>
+                                <li>Cả hai cùng phục vụ thiết kế kiến trúc.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Architecture thinking</h4>
+                            <ul>
+                                <li>Góc nhìn kiến trúc tổng thể.</li>
+                                <li>Tập trung vào cách hệ thống được chia thành module lớn.</li>
+                                <li>Tập trung vào cách module chạy trên hạ tầng thực tế.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Từ class/object đến module/deployment</h2>
+                    <div class="mini-flow">
+                        <div class="lab-card blue">
+                            <h4>Class / Object</h4>
+                            <p>Class nào tồn tại, object nào là instance, dữ liệu và quan hệ ở mức OOP.</p>
+                        </div>
+                        <div class="arrow">&rarr;</div>
+                        <div class="lab-card green">
+                            <h4>Component / Deployment</h4>
+                            <p>Module nào đóng gói chức năng, artifact nào chạy trên node hoặc container nào.</p>
+                        </div>
+                    </div>
+                    <p class="caption">W6 nâng góc nhìn từ thiết kế lớp lên thiết kế kiến trúc hệ thống.</p>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Hai câu hỏi kiến trúc</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Component Diagram</h4>
+                            <div class="lab-grid" style="grid-template-columns:1fr auto 1fr; gap:8px; margin-top:0.5em;">
+                                <div class="arch-box">Frontend</div>
+                                <div class="arch-arrow">calls</div>
+                                <div class="arch-box">Backend API</div>
+                                <div class="arch-box">AI Service</div>
+                                <div class="arch-arrow">uses</div>
+                                <div class="arch-box">Model Store</div>
+                            </div>
+                            <p class="caption">Phần mềm chia thành module nào?</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Deployment Diagram</h4>
+                            <div class="lab-grid" style="grid-template-columns:1fr auto 1fr; gap:8px; margin-top:0.5em;">
+                                <div class="arch-box">Browser</div>
+                                <div class="arch-arrow">HTTPS</div>
+                                <div class="arch-box">Cloud VM</div>
+                                <div class="arch-box">API Container</div>
+                                <div class="arch-arrow">TCP</div>
+                                <div class="arch-box">Database Node</div>
+                            </div>
+                            <p class="caption">Phần mềm chạy ở đâu?</p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">2.</span><br />
+                        Component Diagram
+                    </h1>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Component Diagram là gì?</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        <div class="question-title">Tổng quan</div>
+                        Component Diagram là một sơ đồ kiến trúc trong UML dùng để mô tả các module lớn trong hệ thống,
+                        mối quan hệ giữa các module và phụ thuộc giữa các thành phần.
+                    </div>
+                    <ul>
+                        <li>Thể hiện các thành phần hệ thống.</li>
+                        <li>Thể hiện interface giữa các thành phần.</li>
+                        <li>Thể hiện quan hệ phụ thuộc giữa các module.</li>
+                    </ul>
+                </section>
+
+                <section style="font-size:0.72em;">
+                    <h2>Thành phần chính</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Thành phần</th>
+                                <th>Mô tả</th>
+                                <th>Ví dụ trong hệ thống AI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Component</strong></td>
+                                <td>Module lớn hoặc thành phần chức năng chính, có thể triển khai riêng.</td>
+                                <td>Frontend, Backend, AI Service, Database, API Gateway, Authentication Service.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Interface</strong></td>
+                                <td>Điểm giao tiếp giữa component; gồm provided interface và required interface.</td>
+                                <td>REST API, inference API, auth API, storage API.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Subsystem</strong></td>
+                                <td>Nhóm component liên quan thành một hệ thống con để dễ quản lý.</td>
+                                <td>ML subsystem, user management subsystem, data subsystem.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Port</strong></td>
+                                <td>Điểm giao tiếp cụ thể của component, dùng để kết nối interface.</td>
+                                <td>HTTP port, gRPC port, model inference endpoint.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Relationships</strong></td>
+                                <td>Association, composition, aggregation, constraint, dependency, links.</td>
+                                <td>Frontend phụ thuộc API Gateway; AI Service phụ thuộc Model Store.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Ký hiệu cần nhớ</h2>
+                    <div class="lab-grid four">
+                        <div class="lab-card blue">
+                            <h4>Component</h4>
+                            <p>Hình chữ nhật đại diện cho module lớn.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Provided interface</h4>
+                            <p>Dịch vụ component cung cấp cho component khác.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Required interface</h4>
+                            <p>Dịch vụ component cần từ bên ngoài.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Port</h4>
+                            <p>Điểm giao tiếp cụ thể nơi interface được nối vào.</p>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        Khi đọc component diagram, ưu tiên hỏi: module nào tự chịu trách nhiệm, interface nào là hợp đồng giao tiếp?
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Tại sao cần Component Diagram?</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Kiến trúc tổng thể</h4>
+                            <p>Hiểu hệ thống ở mức module thay vì từng class nhỏ.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Phân chia module</h4>
+                            <p>Chia hệ thống thành phần độc lập, dễ thay thế và dễ quản lý.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Microservices</h4>
+                            <p>Thiết kế service boundary, interface và dependency giữa services.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Làm việc nhóm</h4>
+                            <p>Mỗi nhóm có thể sở hữu một component hoặc subsystem.</p>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Tài liệu hóa</h4>
+                            <p>Lưu lại kiến trúc module để onboarding, review và bảo trì.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Giảm coupling</h4>
+                            <p>Nhìn rõ phụ thuộc bất hợp lý trước khi triển khai.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Khi nào dùng Component Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Thiết kế hệ thống lớn</h4>
+                            <ul>
+                                <li>Khi một class diagram không còn đủ để nói về kiến trúc.</li>
+                                <li>Khi cần chia nhóm phát triển theo module hoặc subsystem.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Thiết kế hệ thống AI/phân tán</h4>
+                            <ul>
+                                <li>Khi có AI Service, data pipeline, model store, API gateway.</li>
+                                <li>Khi thiết kế microservices hoặc hệ thống phân tán.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Cách vẽ Component Diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Bước</th>
+                                <th>Việc cần làm</th>
+                                <th>Câu hỏi kiểm tra</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. Xác định module lớn</td>
+                                <td>Liệt kê Frontend, Backend, AI Service, Database, Storage.</td>
+                                <td>Module này có trách nhiệm độc lập không?</td>
+                            </tr>
+                            <tr>
+                                <td>2. Xác định interface</td>
+                                <td>Ghi rõ dịch vụ component cung cấp hoặc cần dùng.</td>
+                                <td>Component giao tiếp qua API/contract nào?</td>
+                            </tr>
+                            <tr>
+                                <td>3. Xác định dependency</td>
+                                <td>Nối component theo quan hệ sử dụng/phụ thuộc.</td>
+                                <td>Dependency có tạo vòng lặp hoặc coupling quá chặt không?</td>
+                            </tr>
+                            <tr>
+                                <td>4. Tối ưu kiến trúc</td>
+                                <td>Tách/gộp component, đặt boundary và interface rõ hơn.</td>
+                                <td>Kiến trúc có dễ triển khai, test, thay thế và scale không?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Ví dụ từ Lab 02: Component Diagram</h2>
+                    <div class="diagram-frame">
+                        <img src="img/lab-02/retail-component.png" alt="Retail website component diagram"
+                            style="max-height:56vh; width:auto;" />
+                    </div>
+                    <p class="caption">Web Store gồm SearchEngine, Shopping Cart, Authentication, Inventory, Orders, Customers và Accounts.</p>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Đọc component diagram mẫu</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Nhìn module</h4>
+                            <ul>
+                                <li>Component là đơn vị phần mềm triển khai hoặc thay thế được.</li>
+                                <li>Subsystem bao quanh nhóm component liên quan.</li>
+                                <li>Tên component phản ánh trách nhiệm chính.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Nhìn interface</h4>
+                            <ul>
+                                <li>Interface cho biết component cung cấp hoặc cần dịch vụ gì.</li>
+                                <li>Orders nối Inventory, Customers và Shopping Cart.</li>
+                                <li>Accounts tách riêng khỏi Customers.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">3.</span><br />
+                        Deployment Diagram
+                    </h1>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Deployment Diagram là gì?</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        <div class="question-title">Tổng quan</div>
+                        Deployment Diagram là sơ đồ UML dùng để mô tả hệ thống được triển khai trên đâu: server nào,
+                        cloud nào, container nào.
+                    </div>
+                    <ul>
+                        <li>Thể hiện infrastructure.</li>
+                        <li>Thể hiện hardware hoặc runtime node.</li>
+                        <li>Thể hiện network và communication path.</li>
+                    </ul>
+                </section>
+
+                <section style="font-size:0.74em;">
+                    <h2>Thành phần chính</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Thành phần</th>
+                                <th>Mô tả</th>
+                                <th>Ví dụ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Node</strong></td>
+                                <td>Nơi phần mềm chạy hoặc được triển khai.</td>
+                                <td>Server, mobile, browser, cloud VM, Kubernetes node.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Artifact</strong></td>
+                                <td>Đơn vị phần mềm được triển khai lên node.</td>
+                                <td>Application, model, database, Docker image, WAR/JAR.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Communication Path</strong></td>
+                                <td>Kết nối mạng giữa các node hoặc runtime environment.</td>
+                                <td>HTTPS, TCP/IP, gRPC, message queue connection.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ký hiệu deployment cơ bản</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Node</h4>
+                            <p>Server, browser, mobile device, cloud hoặc execution environment.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Artifact</h4>
+                            <p>File/container/model/database được deploy lên node.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Communication Path</h4>
+                            <p>Đường kết nối mạng giữa các node, thường ghi protocol.</p>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        Deployment diagram trả lời câu hỏi vận hành: artifact nào chạy ở đâu và nói chuyện qua đường mạng nào?
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ví dụ deployment cho AI system</h2>
+                    <div class="lab-grid" style="grid-template-columns:1fr auto 1fr auto 1fr; gap:10px; align-items:center;">
+                        <div class="lab-card blue">
+                            <h4>Client Node</h4>
+                            <div class="arch-box">Browser</div>
+                        </div>
+                        <div class="arch-arrow">HTTPS</div>
+                        <div class="lab-card green">
+                            <h4>App Node</h4>
+                            <div class="arch-box">API container</div>
+                            <div class="arch-box" style="margin-top:8px;">AI service container</div>
+                        </div>
+                        <div class="arch-arrow">TCP/gRPC</div>
+                        <div class="lab-card orange">
+                            <h4>Data Node</h4>
+                            <div class="arch-box">PostgreSQL</div>
+                            <div class="arch-box" style="margin-top:8px;">Model artifact</div>
+                        </div>
+                    </div>
+                    <p class="caption">Component nói API/AI service là module; deployment nói container chạy trên node nào.</p>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Tại sao cần Deployment Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Hiểu cách triển khai</h4>
+                            <ul>
+                                <li>Biết hệ thống chạy trên server, cloud, container hay thiết bị nào.</li>
+                                <li>Biết artifact nào được đưa vào runtime nào.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Thiết kế hạ tầng</h4>
+                            <ul>
+                                <li>Thiết kế cloud và hệ thống phân tán.</li>
+                                <li>Tài liệu hóa kiến trúc triển khai để vận hành và debug.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Khi nào dùng Deployment Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Triển khai AI/cloud</h4>
+                            <ul>
+                                <li>Khi triển khai hệ thống AI lên server hoặc cloud.</li>
+                                <li>Khi có model artifact, database, object storage, API service.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Triển khai phân tán</h4>
+                            <ul>
+                                <li>Khi triển khai microservices.</li>
+                                <li>Khi dùng Docker hoặc Kubernetes.</li>
+                                <li>Khi cần mô tả network giữa node.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Cách vẽ Deployment Diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Bước</th>
+                                <th>Việc cần làm</th>
+                                <th>Câu hỏi kiểm tra</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. Xác định node</td>
+                                <td>Liệt kê browser, server, mobile, cloud VM, database server, Kubernetes node.</td>
+                                <td>Đây là nơi chạy phần mềm hay chỉ là module logic?</td>
+                            </tr>
+                            <tr>
+                                <td>2. Xác định artifact</td>
+                                <td>Đặt application, model, database, Docker image, JAR/WAR vào node phù hợp.</td>
+                                <td>Artifact nào thật sự được deploy?</td>
+                            </tr>
+                            <tr>
+                                <td>3. Xác định kết nối</td>
+                                <td>Nối node bằng communication path và ghi protocol nếu biết.</td>
+                                <td>Node giao tiếp qua HTTP, TCP, gRPC hay message queue?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Ví dụ từ Lab 02: Deployment Diagram</h2>
+                    <div class="diagram-frame">
+                        <img src="img/lab-02/webapp-deployment.png" alt="Web application deployment diagram"
+                            style="max-height:48vh; max-width:82%; width:auto;" />
+                    </div>
+                    <p class="caption">Deployment diagram nối artifact, execution environment, device và communication path.</p>
+                </section>
+
+                <section style="font-size:0.7em;">
+                    <h2>Đọc deployment diagram mẫu</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Chi tiết trên hình</th>
+                                <th>Cách đọc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="inline-code">book_club_app.war</span></td>
+                                <td>Artifact được deploy trong Catalina Servlet/JSP Container.</td>
+                            </tr>
+                            <tr>
+                                <td>Apache Tomcat 5.5 web server</td>
+                                <td>Execution environment chạy bên trong Application Server.</td>
+                            </tr>
+                            <tr>
+                                <td>OnlineOrders, UserServices</td>
+                                <td>Các component được artifact manifest hoặc embody.</td>
+                            </tr>
+                            <tr>
+                                <td>Application Server - Database Server</td>
+                                <td>Hai device giao tiếp qua communication path TCP/IP.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">4.</span><br />
+                        So sánh và thực hành
+                    </h1>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Component Diagram vs Deployment Diagram</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Component Diagram</h4>
+                            <p>Tập trung vào cấu trúc logic và cách tổ chức của các thành phần phần mềm.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Deployment Diagram</h4>
+                            <p>Tập trung vào việc triển khai vật lý các thành phần đó trên node phần cứng hoặc runtime.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Bảng so sánh</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Tiêu chí</th>
+                                <th>Component Diagram</th>
+                                <th>Deployment Diagram</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Mục tiêu</strong></td>
+                                <td>Mô tả cấu trúc phần mềm ở mức cao.</td>
+                                <td>Mô tả triển khai vật lý của hệ thống.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cấp độ</strong></td>
+                                <td>Mức trừu tượng cao.</td>
+                                <td>Mức trừu tượng thấp hơn, gần triển khai thực tế.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tập trung</strong></td>
+                                <td>Tổ chức logic và mối quan hệ giữa các component.</td>
+                                <td>Triển khai phần mềm trên phần cứng và node.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Thời điểm</strong></td>
+                                <td>Thiết kế.</td>
+                                <td>Triển khai.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Thực hành 1: Component Diagram</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Chọn hệ thống AI của nhóm bạn hoặc dùng ví dụ: hệ thống hỏi đáp tài liệu nội bộ bằng RAG.
+                        Vẽ component diagram ở mức kiến trúc.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Component cần có</h4>
+                            <ul>
+                                <li>Frontend / Web UI.</li>
+                                <li>Backend API / API Gateway.</li>
+                                <li>Auth Service.</li>
+                                <li>RAG / AI Service.</li>
+                                <li>Vector Database, Document Storage.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Cần ghi rõ</h4>
+                            <ul>
+                                <li>Interface giữa Frontend và Backend.</li>
+                                <li>Dependency giữa AI Service, Vector DB và Storage.</li>
+                                <li>Subsystem nếu nhóm các component AI hoặc data.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Thực hành 2: Deployment Diagram</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Với cùng hệ thống ở thực hành 1, vẽ deployment diagram để mô tả module chạy trên node hoặc
+                        container nào.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card orange">
+                            <h4>Node cần có</h4>
+                            <ul>
+                                <li>Client Browser.</li>
+                                <li>Cloud VM hoặc Kubernetes cluster.</li>
+                                <li>Database node hoặc managed database.</li>
+                                <li>Object storage hoặc model storage.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Artifact cần có</h4>
+                            <ul>
+                                <li>Frontend static app hoặc web container.</li>
+                                <li>Backend/API container.</li>
+                                <li>AI inference container hoặc model artifact.</li>
+                                <li>Communication path có protocol: HTTPS, TCP, gRPC.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Yêu cầu nộp bài</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Bắt buộc</h4>
+                            <ul>
+                                <li>01 component diagram cho hệ thống đã chọn.</li>
+                                <li>01 deployment diagram cho cùng hệ thống.</li>
+                                <li>Hai diagram phải map được component sang artifact/node triển khai.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Mỗi diagram cần kèm</h4>
+                            <ul>
+                                <li>1-2 câu mô tả phạm vi hệ thống.</li>
+                                <li>Danh sách component hoặc node chính.</li>
+                                <li>Giải thích 2 interface/dependency hoặc communication path quan trọng.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Checklist tự kiểm tra</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card orange">
+                            <h4>Component</h4>
+                            <ul>
+                                <li>Component có trách nhiệm rõ và đủ lớn không?</li>
+                                <li>Interface/provided/required có ghi rõ không?</li>
+                                <li>Dependency có chiều hợp lý không?</li>
+                                <li>Có component nào đang ôm quá nhiều chức năng không?</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Deployment</h4>
+                            <ul>
+                                <li>Node có phải nơi chạy phần mềm hoặc hạ tầng thật không?</li>
+                                <li>Artifact/container/model có được đặt vào node không?</li>
+                                <li>Communication path có protocol hoặc loại kết nối không?</li>
+                                <li>Deployment có phản ánh được kiến trúc cloud/Docker/Kubernetes nếu dùng không?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section style="font-size:0.78em;">
+                <h2>Tổng kết Lab 06</h2>
+                <div class="lab-grid two">
+                    <div class="lab-card blue">
+                        <h4>Hôm nay cần nhớ</h4>
+                        <ul>
+                            <li>Component Diagram mô tả module phần mềm, interface và dependency.</li>
+                            <li>Deployment Diagram mô tả node, artifact và communication path.</li>
+                            <li>Component là góc nhìn logic; deployment là góc nhìn triển khai.</li>
+                            <li>Hai diagram phải map được với nhau khi đi từ thiết kế sang vận hành.</li>
+                        </ul>
+                    </div>
+                    <div class="lab-card green">
+                        <h4>Tài liệu dùng trong lab</h4>
+                        <ul>
+                            <li>W6 - Component and Deployment Diagrams.pdf.</li>
+                            <li>lecture-01b-uml-diagrams.html: component/deployment diagram tổng quan.</li>
+                            <li>lab-02-uml-diagrams.html: ví dụ Retail component và Web application deployment.</li>
+                            <li>lecture-06-mlops.html: deployment và artifact trong hệ thống AI.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="task-note" style="margin-top:0.8em;">
+                    Cách làm trên lớp: vẽ component diagram trước để chốt module/interface, sau đó vẽ deployment
+                    diagram để xác định artifact chạy trên node và network nào.
+                </div>
+            </section>
+
+            <div class="footer">
+                Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §Lab06: Component &amp; Deployment Diagram
+            </div>
+        </div>
+    </div>
+
+    <script src="revealjs/dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/math/math.js"></script>
+    <script>
+        Reveal.initialize({
+            controlsLayout: "edges",
+            slideNumber: true,
+            hashOneBasedIndex: true,
+            hash: true,
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+        });
+    </script>
+</body>
+
+</html>

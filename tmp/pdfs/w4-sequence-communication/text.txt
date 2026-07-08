@@ -1,0 +1,225 @@
+Practice - Week 4
+Nội dung
+Sequence Diagram
+Communication Diagram
+Sequence Diagram vs Communication Diagram
+
+Nội dung
+1. Buổi học trước
+Behavior Diagram: Use-case Diagram + Activity Diagram
+Bussiness thinking:
+góc nhìn nghiêp vụ tập trung vào người dùng
+tập trung vào mục tiêu của người dùng và quy trình công việc
+chưa đi sâu vào cách hệ thống được lập trình hay cấu trúc bên trong.
+2. Mục tiêu
+
+Behavior Diagram: Use Sequence Diagram + Sequence Diagram
+Runtime thinking:
+cách các đối tượng trong hệ thống tương tác với nhau khi hệ thống
+đang chạy.
+
+Practice - Week 4
+
+1
+
+“hệ thống phải làm gì” →“hệ thống thực hiện điều đó như thế nào trong
+quá trình thực thi”.
+
+Sequence Diagram
+1. Định nghĩa
+Một sơ đồ tương tác trong UML, được sử dụng để mô tả cách các đối
+tượng tương tác với nhau theo thứ tự thời gian thông qua việc trao đổi
+thông điệp.
+Biểu đồ này thể hiện:
+các đối tượng tham gia trong một kịch bản
+các message được gửi giữa các đối tượng
+thứ tự thời gian của các tương tác
+2. Các thành phần chính và ký hiệu
+Actors: là thực thể bên ngoài hệ thống tương tác với hệ thống.
+Lifelines: biểu diễn sự tồn tại của một participant trong suốt interaction.
+Activations: biểu thị khoảng thời gian mà một phần tử đang thực hiện một
+thao tác.
+Note: cho phép đính kèm nhiều nhận xét khác nhau vào các phần tử.
+Messages: thông điệp gửi giữa các đối tượng.
+Call message: message dùng để kích hoạt một operation trên lifeline
+đích
+Synchronous message
+Asynchronous message
+Retrun message: thông điệp trả kết quả
+Create message: thông điệp dùng để tạo một đối tượng mới trong quá
+trình tương tác.
+Self Message: thông điệp mà một đối tượng gửi cho chính nó, thường
+để gọi một phương thức nội bộ hoặc thực hiện xử lý nội bộ.
+Practice - Week 4
+
+2
+
+Destroy Message: thông điệp dùng để kết thúc vòng đời của một đối
+tượng.
+Duration Message: thông điệp biểu diễn khoảng thời gian cần thiết để
+thực hiện một hành động hoặc interaction giữa hai sự kiện.
+Combined Fragments: hỗ trợ logic điều kiện và lặp
+alt (Alternative)
+opt (Optional)
+loop (Loop)
+par (Parallel)
+ref (Reference)
+region, neg, sd
+3. Tại sao cần Sequence Diagram
+Hiểu rõ luồng xử lý của hệ thống
+Hiện thực hóa Use Case
+Thiết kế interaction giữa các thành phần
+Phát hiện vấn đề trong thiết kế hệ thống
+Hỗ trợ giao tiếp giữa các thành viên
+Tài liệu hóa hệ thống
+4. Khi nào dùng Sequence Diagram
+Khi phân tích, hiện thực hóa một Use Case
+Khi cần mô tả tương tác giữa các đối tượng
+Khi thiết kế logic xử lý của hệ thống
+Khi cần mô tả thứ tự các bước xử lý
+5. Vẽ Sequence Diagrams
+Xác định kịch bản: Chọn một use case hoặc tình huống cụ thể cần mô tả.
+
+Practice - Week 4
+
+3
+
+Xác định các participant: Liệt kê các actor, hệ thống hoặc object tham gia
+vào interaction.
+Nguyên tắc BCE để xác định object
+Boundary: giao tiếp với actor
+Control: điều khiển logic của use case
+Entity: dữ liệu hoặc model
+Tạo lifeline: Vẽ đường sống (lifeline) cho mỗi participant để thể hiện sự tồn
+tại của đối tượng theo thời gian.
+Sắp xếp lifeline: Đặt các participant theo chiều ngang để dễ quan sát
+luồng tương tác.
+Vẽ message: Dùng mũi tên để biểu diễn các message giữa các đối tượng.
+Thêm activation: Thể hiện khoảng thời gian một object đang xử lý một
+message.
+Thêm điều kiện hoặc vòng lặp: Sử dụng combined fragments như alt ,
+opt , loop khi có điều kiện hoặc lặp.
+Kiểm tra và hoàn thiện: Xem lại sơ đồ để đảm bảo đúng logic và dễ hiểu,
+có thể thêm ghi chú nếu cần.
+6. Phân tích các biểu đồ mẫu ở bài học buổi trước
+
+Communication Diagram
+1. Định nghĩa
+một loại UML Interaction Diagram dùng để mô tả cách các đối tượng tương
+tác với nhau thông qua việc gửi message trong một kịch bản.
+2. Các thành phần chính và ký hiệu
+
+Practice - Week 4
+
+Thành phần
+
+Mô tả
+
+Objects
+
+Các đối tượng tham gia interaction, thường được biểu diễn bằng
+hình chữ nhật.
+
+4
+
+Thành phần
+
+Mô tả
+
+Links
+
+Đường nối giữa các object, thể hiện mối quan hệ cho phép
+chúng gửi message cho nhau.
+
+Messages
+
+Mũi tên biểu diễn message từ object gửi đến object nhận.
+
+Seqeunce Numbers
+
+Số thứ tự (1, 2, 1.1, 1.2…) dùng để thể hiện thứ tự thực hiện
+message.
+
+3. Tại sao cần Communication Diagram
+Mô tả cách các object cộng tác để thực hiện một chức năng.
+Mô hình hóa message passing giữa các object trong use case.
+Phân tích cơ chế collaboration trong thiết kế kiến trúc.
+Xác định các object và operation cần thiết trong hệ thống.
+4. Khi nào dùng Communication Diagram
+Cần phân tích sự cộng tác giữa các object trong một kịch bản để thực hiện
+một chức năng.
+Muốn thấy rõ mối quan hệ giữa các object và cách chúng kết nối với nhau.
+Thiết kế hoặc kiểm tra cấu trúc interaction giữa các thành phần trong hệ
+thống.
+Phân tích các object cần thiết trong một use case và cách chúng giao tiếp.
+Chuyển đổi từ Sequence Diagram để xem lại cấu trúc collaboration giữa
+các object.
+5. Phân tích các biểu đồ mẫu ở bài học buổi trước
+
+Sequence Diagram vs Communication
+Diagram
+1. So sánh
+Hai diagram có ý nghĩa tương đương:
+mô tả cùng một interaction giữa các object
+
+Practice - Week 4
+
+5
+
+chứa cùng thông tin về message và object
+có thể chuyển đổi qua lại
+Khác nhau về cách tổ chức thông tin
+Tiêu chí
+
+Sequence Diagram
+
+Communication Diagram
+
+Mục đích chính
+
+Mô tả thứ tự các message
+theo thời gian giữa các đối
+tượng
+
+Mô tả quan hệ và cấu trúc
+giao tiếp giữa các đối tượng
+
+Cách tổ chức biểu đồ
+
+Sắp xếp theo thời gian
+
+Mô tả quan hệ và cấu trúc
+giao tiếp giữa các đối tượng
+
+Đánh số message
+
+Không bắt buộc
+
+Bắt buộc
+
+Ứng dụng chính
+
+Mô tả runtime behavior của
+use case
+
+Phân tích collaboration giữa
+các object
+
+Mức độ sử dụng
+trong thực tế
+
+Rất phổ biến
+
+Ít dùng hơn
+
+2. Thực hành:
+Place Order
+Library Item Overdue
+Sequence diagram
+Communication diagram
+
+Practice - Week 4
+
+6
+
+

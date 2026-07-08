@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bài lab04: Sequence and Communication Diagrams</title>
+
+    <link rel="stylesheet" href="revealjs/dist/reset.css" />
+    <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+    <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="lecture-style.css" />
+    <style>
+        .reveal {
+            font-size: 34px;
+        }
+
+        .reveal h1 {
+            font-size: 1.85em;
+            line-height: 1.08;
+        }
+
+        .reveal h2 {
+            font-size: 1.35em;
+            line-height: 1.12;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal h3 {
+            font-size: 1.1em;
+            line-height: 1.15;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal p,
+        .reveal li,
+        .reveal table {
+            line-height: 1.35;
+        }
+
+        .reveal ul,
+        .reveal ol {
+            margin-top: 0.25em;
+            margin-bottom: 0.25em;
+        }
+
+        .reveal .question-box {
+            padding: 0.6em;
+            border-radius: 12px;
+        }
+
+        .reveal .footer {
+            font-size: 0.9rem;
+        }
+
+        .lab-grid {
+            display: grid;
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .lab-grid.two {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .lab-grid.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .lab-grid.four {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .lab-card {
+            border: 2px solid #d9e2ec;
+            border-radius: 8px;
+            padding: 0.55em 0.65em;
+            background: #f8fafc;
+        }
+
+        .lab-card.blue {
+            border-color: #90caf9;
+            background: #e3f2fd;
+        }
+
+        .lab-card.green {
+            border-color: #a5d6a7;
+            background: #e8f5e9;
+        }
+
+        .lab-card.orange {
+            border-color: #ffcc80;
+            background: #fff3e0;
+        }
+
+        .lab-card.pink {
+            border-color: #f48fb1;
+            background: #fce4ec;
+        }
+
+        .lab-card h4 {
+            margin: 0 0 0.25em 0;
+            font-size: 0.95em;
+            color: #1E93AB;
+        }
+
+        .diagram-frame {
+            text-align: center;
+        }
+
+        .diagram-frame img,
+        .diagram-frame svg {
+            max-width: 100%;
+            object-fit: contain;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .compact-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.76em;
+        }
+
+        .compact-table th,
+        .compact-table td {
+            border: 1px solid #ddd;
+            padding: 0.45em 0.55em;
+            vertical-align: top;
+        }
+
+        .compact-table th {
+            background: #f3f2ec;
+            color: #1E93AB;
+        }
+
+        .task-note {
+            border-left: 5px solid #1E93AB;
+            background: #eef8fb;
+            border-radius: 8px;
+            padding: 0.55em 0.7em;
+            font-size: 0.85em;
+        }
+
+        .mini-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .mini-flow .arrow {
+            color: #1E93AB;
+            font-size: 1.7em;
+            font-weight: 700;
+        }
+
+        .svg-label {
+            font-family: Arial, Helvetica, sans-serif;
+            fill: #1f2933;
+        }
+
+        .svg-small {
+            font-size: 16px;
+        }
+
+        .svg-mid {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .svg-title {
+            font-size: 22px;
+            font-weight: 700;
+            fill: #1E93AB;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <section>
+                    <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+                    <h3>Lab 04: Sequence &amp; Communication Diagram</h3>
+                    <p>Trường ĐH Công nghệ - Đại học Quốc gia Hà Nội</p>
+                    <p>Giảng viên: Lương Sơn Bá, Nguyễn Tiến Đạt</p>
+                </section>
+
+                <section>
+                    <h2>Nội dung</h2>
+                    <ol>
+                        <li>Từ business thinking sang runtime thinking</li>
+                        <li>Sequence Diagram</li>
+                        <li>Communication Diagram</li>
+                        <li>So sánh và thực hành</li>
+                    </ol>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">1.</span><br />
+                        Từ business thinking sang runtime thinking
+                    </h1>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Buổi trước ta đã có gì?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Behavior Diagram ở W3</h4>
+                            <ul>
+                                <li>Use Case Diagram: hệ thống cần làm gì cho actor?</li>
+                                <li>Activity Diagram: quy trình nghiệp vụ đi qua các bước nào?</li>
+                                <li>Tập trung vào mục tiêu người dùng và workflow.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Business thinking</h4>
+                            <ul>
+                                <li>Góc nhìn nghiệp vụ tập trung vào người dùng.</li>
+                                <li>Tập trung vào mục tiêu và quy trình công việc.</li>
+                                <li>Chưa đi sâu vào lập trình hoặc cấu trúc bên trong.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Mục tiêu tuần 4</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Chuyển từ câu hỏi <span class="inline-code">hệ thống phải làm gì?</span> sang
+                        <span class="inline-code">hệ thống thực hiện điều đó như thế nào trong quá trình thực thi?</span>
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Runtime thinking</h4>
+                            <ul>
+                                <li>Nhìn hệ thống khi đang chạy.</li>
+                                <li>Quan sát object nào gọi object nào.</li>
+                                <li>Theo dõi message và thứ tự xử lý.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Hai biểu đồ chính</h4>
+                            <ul>
+                                <li>Sequence Diagram: nhấn mạnh thời gian.</li>
+                                <li>Communication Diagram: nhấn mạnh cộng tác giữa object.</li>
+                                <li>Cả hai đều thuộc UML Interaction Diagram.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Từ use case đến interaction</h2>
+                    <div class="mini-flow">
+                        <div class="lab-card blue">
+                            <h4>Use Case / Activity</h4>
+                            <p>Mô tả mục tiêu nghiệp vụ và luồng công việc ở mức người dùng.</p>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="lab-card green">
+                            <h4>Sequence / Communication</h4>
+                            <p>Mô tả object tham gia, message được gửi và cách interaction diễn ra khi chạy.</p>
+                        </div>
+                    </div>
+                    <p class="caption">W4 tập trung vào cách hiện thực hóa use case bằng tương tác runtime.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">2.</span><br />
+                        Sequence Diagram
+                    </h1>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Sequence Diagram là gì?</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        <div class="question-title">Định nghĩa</div>
+                        Sequence Diagram là một UML Interaction Diagram mô tả cách các đối tượng tương tác với nhau
+                        theo <span class="keyword">thứ tự thời gian</span> thông qua việc trao đổi message.
+                    </div>
+                    <ul>
+                        <li>Thể hiện các đối tượng tham gia trong một kịch bản.</li>
+                        <li>Thể hiện các message được gửi giữa các đối tượng.</li>
+                        <li>Thể hiện thứ tự thời gian của các tương tác.</li>
+                    </ul>
+                </section>
+
+                <section style="font-size:0.72em;">
+                    <h2>Thành phần chính</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Thành phần</th>
+                                <th>Mô tả</th>
+                                <th>Khi đọc cần hỏi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Actor</strong></td>
+                                <td>Thực thể bên ngoài hệ thống tương tác với hệ thống.</td>
+                                <td>Ai kích hoạt kịch bản?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lifeline</strong></td>
+                                <td>Sự tồn tại của một participant trong suốt interaction.</td>
+                                <td>Participant sống trong khoảng nào?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Activation</strong></td>
+                                <td>Khoảng thời gian một phần tử đang thực hiện thao tác.</td>
+                                <td>Object đang xử lý message nào?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Note</strong></td>
+                                <td>Nhận xét hoặc giải thích gắn vào phần tử.</td>
+                                <td>Có giả định hoặc điều kiện cần ghi không?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Message</strong></td>
+                                <td>Thông điệp gửi giữa các đối tượng.</td>
+                                <td>Ai gọi ai, theo thứ tự nào?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ký hiệu sequence cơ bản</h2>
+                    <div class="diagram-frame">
+                        <svg viewBox="0 0 980 430" style="max-height:58vh;" aria-label="Sequence diagram notation">
+                            <rect x="20" y="20" width="940" height="390" rx="8" fill="#ffffff" stroke="#d9e2ec"
+                                stroke-width="2" />
+                            <rect x="75" y="62" width="150" height="46" rx="8" fill="#e3f2fd" stroke="#1E93AB"
+                                stroke-width="3" />
+                            <text x="105" y="92" class="svg-label svg-mid">Actor</text>
+                            <line x1="150" y1="108" x2="150" y2="360" stroke="#52606d" stroke-width="3"
+                                stroke-dasharray="8 8" />
+
+                            <rect x="400" y="62" width="180" height="46" rx="8" fill="#e8f5e9" stroke="#2e7d32"
+                                stroke-width="3" />
+                            <text x="430" y="92" class="svg-label svg-mid">:Controller</text>
+                            <line x1="490" y1="108" x2="490" y2="360" stroke="#52606d" stroke-width="3"
+                                stroke-dasharray="8 8" />
+                            <rect x="477" y="170" width="26" height="128" fill="#c8e6c9" stroke="#2e7d32"
+                                stroke-width="2" />
+
+                            <rect x="735" y="62" width="170" height="46" rx="8" fill="#fff3e0" stroke="#c2610f"
+                                stroke-width="3" />
+                            <text x="775" y="92" class="svg-label svg-mid">:Entity</text>
+                            <line x1="820" y1="108" x2="820" y2="360" stroke="#52606d" stroke-width="3"
+                                stroke-dasharray="8 8" />
+                            <rect x="807" y="220" width="26" height="74" fill="#ffe0b2" stroke="#c2610f"
+                                stroke-width="2" />
+
+                            <line x1="155" y1="180" x2="472" y2="180" stroke="#1f2933" stroke-width="3"
+                                marker-end="url(#arrow-seq)" />
+                            <text x="245" y="164" class="svg-label svg-small">call message</text>
+                            <line x1="503" y1="230" x2="802" y2="230" stroke="#1f2933" stroke-width="3"
+                                marker-end="url(#arrow-seq)" />
+                            <text x="585" y="214" class="svg-label svg-small">query()</text>
+                            <line x1="807" y1="290" x2="503" y2="290" stroke="#52606d" stroke-width="3"
+                                stroke-dasharray="8 8" marker-end="url(#arrow-return)" />
+                            <text x="612" y="276" class="svg-label svg-small">return</text>
+
+                            <defs>
+                                <marker id="arrow-seq" markerWidth="10" markerHeight="10" refX="8" refY="3"
+                                    orient="auto">
+                                    <path d="M0,0 L0,6 L8,3 z" fill="#1f2933" />
+                                </marker>
+                                <marker id="arrow-return" markerWidth="10" markerHeight="10" refX="8" refY="3"
+                                    orient="auto">
+                                    <path d="M0,0 L0,6 L8,3 z" fill="#52606d" />
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    <p class="caption">Thời gian đọc từ trên xuống dưới; lifeline xếp theo chiều ngang.</p>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Các loại message</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Loại message</th>
+                                <th>Ý nghĩa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Call message</strong></td>
+                                <td>Kích hoạt một operation trên lifeline đích.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Synchronous message</strong></td>
+                                <td>Caller chờ receiver xử lý xong rồi mới tiếp tục.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Asynchronous message</strong></td>
+                                <td>Caller gửi message và có thể tiếp tục xử lý mà không chờ kết quả ngay.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Return message</strong></td>
+                                <td>Thông điệp trả kết quả về nơi gọi.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Create message</strong></td>
+                                <td>Tạo một đối tượng mới trong quá trình tương tác.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Self message</strong></td>
+                                <td>Một đối tượng gửi message cho chính nó để gọi xử lý nội bộ.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Destroy message</strong></td>
+                                <td>Kết thúc vòng đời của một đối tượng.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Duration message</strong></td>
+                                <td>Biểu diễn khoảng thời gian cần để thực hiện một hành động hoặc interaction.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.72em;">
+                    <h2>Combined fragments</h2>
+                    <div class="lab-grid four">
+                        <div class="lab-card blue">
+                            <h4>alt</h4>
+                            <p>Alternative: nhiều nhánh điều kiện.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>opt</h4>
+                            <p>Optional: nhánh tùy chọn.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>loop</h4>
+                            <p>Lặp lại một đoạn interaction.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>par</h4>
+                            <p>Parallel: các luồng song song.</p>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>ref</h4>
+                            <p>Tham chiếu sang interaction khác.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>region</h4>
+                            <p>Vùng logic trong interaction.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>neg</h4>
+                            <p>Negative: trace không hợp lệ.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>sd</h4>
+                            <p>Frame của sequence/interaction diagram.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Tại sao cần Sequence Diagram?</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Hiểu luồng xử lý</h4>
+                            <p>Theo dõi thứ tự message khi hệ thống chạy.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Hiện thực use case</h4>
+                            <p>Chuyển use case thành interaction giữa các object.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Thiết kế interaction</h4>
+                            <p>Làm rõ thành phần nào gọi thành phần nào.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Phát hiện vấn đề</h4>
+                            <p>Nhìn sớm logic thiếu, vòng lặp sai hoặc dependency lạ.</p>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Giao tiếp nhóm</h4>
+                            <p>Developer, tester và stakeholder kỹ thuật cùng đọc được.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Tài liệu hóa</h4>
+                            <p>Lưu lại runtime behavior của các kịch bản quan trọng.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Khi nào dùng Sequence Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Phân tích use case</h4>
+                            <ul>
+                                <li>Khi phân tích hoặc hiện thực hóa một use case.</li>
+                                <li>Khi cần mô tả tương tác giữa các đối tượng.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Thiết kế logic xử lý</h4>
+                            <ul>
+                                <li>Khi thiết kế logic xử lý của hệ thống.</li>
+                                <li>Khi cần mô tả thứ tự các bước xử lý.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Cách vẽ Sequence Diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Bước</th>
+                                <th>Việc cần làm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. Xác định kịch bản</td>
+                                <td>Chọn một use case hoặc tình huống cụ thể cần mô tả.</td>
+                            </tr>
+                            <tr>
+                                <td>2. Xác định participant</td>
+                                <td>Liệt kê actor, hệ thống hoặc object tham gia interaction.</td>
+                            </tr>
+                            <tr>
+                                <td>3. Tạo lifeline</td>
+                                <td>Vẽ đường sống cho mỗi participant.</td>
+                            </tr>
+                            <tr>
+                                <td>4. Sắp xếp lifeline</td>
+                                <td>Đặt participant theo chiều ngang để dễ quan sát luồng tương tác.</td>
+                            </tr>
+                            <tr>
+                                <td>5. Vẽ message</td>
+                                <td>Dùng mũi tên biểu diễn message giữa các đối tượng.</td>
+                            </tr>
+                            <tr>
+                                <td>6. Thêm activation</td>
+                                <td>Thể hiện khoảng thời gian object đang xử lý message.</td>
+                            </tr>
+                            <tr>
+                                <td>7. Thêm điều kiện/lặp</td>
+                                <td>Dùng combined fragments như alt, opt, loop.</td>
+                            </tr>
+                            <tr>
+                                <td>8. Kiểm tra</td>
+                                <td>Đảm bảo logic đúng, dễ hiểu, thêm note nếu cần.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Nguyên tắc BCE để xác định object</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Boundary</h4>
+                            <p>Đối tượng giao tiếp với actor: UI, API endpoint, form, screen.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Control</h4>
+                            <p>Đối tượng điều khiển logic của use case hoặc orchestration.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Entity</h4>
+                            <p>Đối tượng dữ liệu, domain model hoặc persistence model.</p>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        Khi bí participant, bắt đầu từ actor rồi tìm Boundary, Control, Entity cho kịch bản đó.
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ví dụ từ Lab 02: Online Bookshop</h2>
+                    <div class="lab-grid two" style="grid-template-columns:0.84fr 1.16fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/online-bookshop-sequence.png"
+                                alt="Online Bookshop sequence diagram" style="max-height:58vh;" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Online customer search book catalog.</li>
+                                <li>Customer xem mô tả của sách được chọn.</li>
+                                <li>Customer add book to shopping cart.</li>
+                                <li>Checkout được tách thành interaction tham chiếu.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">3.</span><br />
+                        Communication Diagram
+                    </h1>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Communication Diagram là gì?</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        <div class="question-title">Định nghĩa</div>
+                        Communication Diagram là một UML Interaction Diagram mô tả cách các đối tượng tương tác với
+                        nhau thông qua việc gửi message trong một kịch bản.
+                    </div>
+                    <ul>
+                        <li>Nhấn mạnh object nào liên kết với object nào.</li>
+                        <li>Nhấn mạnh collaboration để thực hiện một chức năng.</li>
+                        <li>Thứ tự message được thể hiện bằng số thứ tự.</li>
+                    </ul>
+                </section>
+
+                <section style="font-size:0.7em;">
+                    <h2>Thành phần chính</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Thành phần</th>
+                                <th>Mô tả</th>
+                                <th>Khi đọc cần hỏi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Objects</strong></td>
+                                <td>Các đối tượng tham gia interaction, thường biểu diễn bằng hình chữ nhật.</td>
+                                <td>Object nào tham gia use case?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Links</strong></td>
+                                <td>Đường nối giữa object, thể hiện quan hệ cho phép gửi message.</td>
+                                <td>Object nào có thể giao tiếp trực tiếp?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Messages</strong></td>
+                                <td>Mũi tên biểu diễn message từ object gửi đến object nhận.</td>
+                                <td>Message nào được gửi qua link?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sequence Numbers</strong></td>
+                                <td>Số thứ tự như 1, 2, 1.1, 1.2 để thể hiện thứ tự message.</td>
+                                <td>Message nào xảy ra trước/sau?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ví dụ từ Lab 02: Communication Diagram</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.14fr 0.86fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/online-bookshop-communication.png"
+                                alt="Online Bookshop communication diagram" style="max-height:58vh;" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Web Customer gửi <span class="inline-code">find_books()</span>.</li>
+                                <li>Online Bookshop gọi Inventory, Book, Shopping Cart và Order.</li>
+                                <li>Số thứ tự message thể hiện trình tự.</li>
+                                <li>Các điều kiện như <span class="inline-code">[interested]</span> gắn trên message.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Tại sao cần Communication Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Collaboration</h4>
+                            <ul>
+                                <li>Mô tả cách object cộng tác để thực hiện chức năng.</li>
+                                <li>Mô hình hóa message passing trong use case.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Thiết kế kiến trúc</h4>
+                            <ul>
+                                <li>Phân tích cơ chế collaboration trong thiết kế kiến trúc.</li>
+                                <li>Xác định object và operation cần thiết trong hệ thống.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.72em;">
+                    <h2>Khi nào dùng Communication Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Khi cần thấy cấu trúc</h4>
+                            <ul>
+                                <li>Phân tích sự cộng tác giữa object trong một kịch bản.</li>
+                                <li>Muốn thấy rõ quan hệ giữa object và cách chúng kết nối.</li>
+                                <li>Thiết kế hoặc kiểm tra cấu trúc interaction giữa các thành phần.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Khi kiểm tra use case</h4>
+                            <ul>
+                                <li>Phân tích object cần thiết trong một use case.</li>
+                                <li>Phân tích cách object giao tiếp.</li>
+                                <li>Chuyển đổi từ sequence diagram để xem collaboration structure.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">4.</span><br />
+                        So sánh và thực hành
+                    </h1>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Hai diagram có ý nghĩa tương đương</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Cùng interaction</h4>
+                            <p>Cùng mô tả một interaction giữa các object trong một kịch bản.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Cùng thông tin</h4>
+                            <p>Cùng chứa thông tin về message và object.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Có thể chuyển đổi</h4>
+                            <p>Có thể chuyển qua lại khi cần đổi góc nhìn.</p>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        Điểm khác nhau nằm ở cách tổ chức thông tin: thời gian hay cấu trúc cộng tác.
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Sequence Diagram vs Communication Diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Tiêu chí</th>
+                                <th>Sequence Diagram</th>
+                                <th>Communication Diagram</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Mục đích chính</strong></td>
+                                <td>Mô tả thứ tự message theo thời gian giữa các đối tượng.</td>
+                                <td>Mô tả quan hệ và cấu trúc giao tiếp giữa các đối tượng.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cách tổ chức biểu đồ</strong></td>
+                                <td>Sắp xếp theo thời gian.</td>
+                                <td>Mô tả quan hệ và cấu trúc giao tiếp giữa các đối tượng.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Đánh số message</strong></td>
+                                <td>Không bắt buộc.</td>
+                                <td>Bắt buộc.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ứng dụng chính</strong></td>
+                                <td>Mô tả runtime behavior của use case.</td>
+                                <td>Phân tích collaboration giữa các object.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mức độ dùng thực tế</strong></td>
+                                <td>Rất phổ biến.</td>
+                                <td>Ít dùng hơn.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Thực hành 1: Place Order</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Kịch bản: khách hàng đặt hàng, hệ thống kiểm tra giỏ hàng, kiểm tra tồn kho, xử lý thanh toán
+                        và tạo đơn hàng.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Sequence diagram</h4>
+                            <ul>
+                                <li>Chọn participant theo BCE.</li>
+                                <li>Thể hiện message theo thứ tự thời gian.</li>
+                                <li>Dùng alt nếu payment thất bại hoặc hết hàng.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Communication diagram</h4>
+                            <ul>
+                                <li>Giữ cùng object và message.</li>
+                                <li>Vẽ link giữa object có trao đổi message.</li>
+                                <li>Đánh số message bắt buộc.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Gợi ý participant cho Place Order</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Boundary</h4>
+                            <ul>
+                                <li>Customer</li>
+                                <li>Checkout UI / API</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Control</h4>
+                            <ul>
+                                <li>Order Controller</li>
+                                <li>Payment Service</li>
+                                <li>Inventory Service</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Entity</h4>
+                            <ul>
+                                <li>Shopping Cart</li>
+                                <li>Order</li>
+                                <li>Product / Stock</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Thực hành 2: Library Item Overdue</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Kịch bản: hệ thống thư viện phát hiện item quá hạn, thông báo cho người mượn, tính phí phạt
+                        nếu cần và cập nhật trạng thái.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card orange">
+                            <h4>Sequence diagram</h4>
+                            <ul>
+                                <li>Thể hiện scheduler hoặc librarian kích hoạt kiểm tra.</li>
+                                <li>Dùng loop cho nhiều loan/item.</li>
+                                <li>Dùng opt/alt cho nhắc hạn hoặc tính phí.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Communication diagram</h4>
+                            <ul>
+                                <li>Vẽ quan hệ giữa Loan, Member, Notification, Fine.</li>
+                                <li>Đánh số message như 1, 1.1, 1.2.</li>
+                                <li>Kiểm tra object nào thực sự cần operation.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Yêu cầu nộp bài</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Bắt buộc</h4>
+                            <ul>
+                                <li>01 sequence diagram cho Place Order hoặc Library Item Overdue.</li>
+                                <li>01 communication diagram cho cùng kịch bản.</li>
+                                <li>Hai diagram phải giữ cùng object và message chính.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Mỗi diagram cần kèm</h4>
+                            <ul>
+                                <li>1-2 câu mô tả kịch bản.</li>
+                                <li>Danh sách participant theo BCE nếu dùng.</li>
+                                <li>Giải thích fragment hoặc số thứ tự message quan trọng.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Checklist tự kiểm tra</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card orange">
+                            <h4>Sequence</h4>
+                            <ul>
+                                <li>Thời gian đọc từ trên xuống có rõ không?</li>
+                                <li>Lifeline có đúng actor/object tham gia không?</li>
+                                <li>Activation và fragment có dùng đúng chỗ không?</li>
+                                <li>Message name có giống operation/action không?</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Communication</h4>
+                            <ul>
+                                <li>Mọi message có sequence number không?</li>
+                                <li>Các object gửi message có link nối không?</li>
+                                <li>Số thứ tự có thể map lại sang sequence diagram không?</li>
+                                <li>Diagram có làm rõ collaboration structure không?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section style="font-size:0.78em;">
+                <h2>Tổng kết Lab 04</h2>
+                <div class="lab-grid two">
+                    <div class="lab-card blue">
+                        <h4>Hôm nay cần nhớ</h4>
+                        <ul>
+                            <li>Sequence Diagram mô tả interaction theo thời gian.</li>
+                            <li>Communication Diagram mô tả collaboration giữa object.</li>
+                            <li>Cả hai có cùng object/message và có thể chuyển đổi qua lại.</li>
+                            <li>BCE giúp tìm participant: Boundary, Control, Entity.</li>
+                        </ul>
+                    </div>
+                    <div class="lab-card green">
+                        <h4>Tài liệu dùng trong lab</h4>
+                        <ul>
+                            <li>W4 - Sequence and Communication Diagrams.pdf.</li>
+                            <li>lecture-01b-uml-diagrams.html: sequence diagram tổng quan.</li>
+                            <li>lab-02-uml-diagrams.html: ví dụ Online Bookshop.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="task-note" style="margin-top:0.8em;">
+                    Cách làm trên lớp: chọn một kịch bản, vẽ sequence trước để chốt thời gian, rồi chuyển sang
+                    communication để kiểm tra collaboration giữa object.
+                </div>
+            </section>
+
+            <div class="footer">
+                Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §Lab04: Sequence &amp; Communication Diagram
+            </div>
+        </div>
+    </div>
+
+    <script src="revealjs/dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/math/math.js"></script>
+    <script>
+        Reveal.initialize({
+            controlsLayout: "edges",
+            slideNumber: true,
+            hashOneBasedIndex: true,
+            hash: true,
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+        });
+    </script>
+</body>
+
+</html>

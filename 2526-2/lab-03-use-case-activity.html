@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bài lab03: Use Case and Activity Diagrams</title>
+
+    <link rel="stylesheet" href="revealjs/dist/reset.css" />
+    <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+    <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="lecture-style.css" />
+    <style>
+        .reveal {
+            font-size: 34px;
+        }
+
+        .reveal h1 {
+            font-size: 1.85em;
+            line-height: 1.08;
+        }
+
+        .reveal h2 {
+            font-size: 1.35em;
+            line-height: 1.12;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal h3 {
+            font-size: 1.1em;
+            line-height: 1.15;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal p,
+        .reveal li,
+        .reveal table {
+            line-height: 1.35;
+        }
+
+        .reveal ul,
+        .reveal ol {
+            margin-top: 0.25em;
+            margin-bottom: 0.25em;
+        }
+
+        .reveal .question-box {
+            padding: 0.6em;
+            border-radius: 12px;
+        }
+
+        .reveal .footer {
+            font-size: 0.9rem;
+        }
+
+        .lab-grid {
+            display: grid;
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .lab-grid.two {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .lab-grid.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .lab-card {
+            border: 2px solid #d9e2ec;
+            border-radius: 8px;
+            padding: 0.55em 0.65em;
+            background: #f8fafc;
+        }
+
+        .lab-card.blue {
+            border-color: #90caf9;
+            background: #e3f2fd;
+        }
+
+        .lab-card.green {
+            border-color: #a5d6a7;
+            background: #e8f5e9;
+        }
+
+        .lab-card.orange {
+            border-color: #ffcc80;
+            background: #fff3e0;
+        }
+
+        .lab-card.pink {
+            border-color: #f48fb1;
+            background: #fce4ec;
+        }
+
+        .lab-card h4 {
+            margin: 0 0 0.25em 0;
+            font-size: 0.95em;
+            color: #1E93AB;
+        }
+
+        .diagram-frame {
+            text-align: center;
+        }
+
+        .diagram-frame img,
+        .diagram-frame svg {
+            max-width: 100%;
+            object-fit: contain;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .compact-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.76em;
+        }
+
+        .compact-table th,
+        .compact-table td {
+            border: 1px solid #ddd;
+            padding: 0.45em 0.55em;
+            vertical-align: top;
+        }
+
+        .compact-table th {
+            background: #f3f2ec;
+            color: #1E93AB;
+        }
+
+        .task-note {
+            border-left: 5px solid #1E93AB;
+            background: #eef8fb;
+            border-radius: 8px;
+            padding: 0.55em 0.7em;
+            font-size: 0.85em;
+        }
+
+        .svg-label {
+            font-family: Arial, Helvetica, sans-serif;
+            fill: #1f2933;
+        }
+
+        .svg-small {
+            font-size: 16px;
+        }
+
+        .svg-mid {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .svg-title {
+            font-size: 22px;
+            font-weight: 700;
+            fill: #1E93AB;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <section>
+                    <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+                    <h3>Lab 03: Use Case &amp; Activity Diagram</h3>
+                    <p>Trường ĐH Công nghệ - Đại học Quốc gia Hà Nội</p>
+                    <p>Giảng viên: Trịnh Ngọc Huỳnh</p>
+                </section>
+
+                <section>
+                    <h2>Nội dung</h2>
+                    <ol>
+                        <li>Ôn mục tiêu và cách chọn biểu đồ</li>
+                        <li>Use Case Diagram</li>
+                        <li>Activity Diagram</li>
+                        <li>Phối hợp hai biểu đồ và thực hành</li>
+                    </ol>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">1.</span><br />
+                        Ôn mục tiêu và cách chọn biểu đồ
+                    </h1>
+                </section>
+
+                <section style="font-size:0.84em;">
+                    <h2>Buổi trước ta đã có gì?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>UML</h4>
+                            <ul>
+                                <li>Ngôn ngữ mô hình hóa thống nhất.</li>
+                                <li>Dùng để trực quan hóa và tài liệu hóa hệ thống.</li>
+                                <li>Giúp nhóm thống nhất trước khi code.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Hai nhóm diagram</h4>
+                            <ul>
+                                <li><strong>Structural:</strong> hệ thống gồm gì.</li>
+                                <li><strong>Behavioral:</strong> hệ thống hoạt động ra sao.</li>
+                                <li>W3 tập trung vào nhóm behavioral.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Mục tiêu buổi thực hành</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Sinh viên xây dựng được Use Case Diagram và Activity Diagram cho một hệ thống đơn giản.
+                    </div>
+                    <ol>
+                        <li>Hiểu vai trò của hai loại biểu đồ trong UML.</li>
+                        <li>Xác định actor và use case trong hệ thống.</li>
+                        <li>Mô tả quy trình hoạt động bằng Activity Diagram.</li>
+                        <li>Phân biệt khi nào nên dùng mỗi loại diagram.</li>
+                        <li>Vẽ hai diagram cho bài toán online bookstore.</li>
+                    </ol>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Một câu hỏi, một loại biểu đồ</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Câu hỏi thiết kế</th>
+                                <th>Biểu đồ phù hợp</th>
+                                <th>Điều cần nhìn thấy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Hệ thống cần làm gì cho người dùng?</td>
+                                <td><strong>Use Case Diagram</strong></td>
+                                <td>Actor, use case, system boundary.</td>
+                            </tr>
+                            <tr>
+                                <td>Một quy trình chạy từng bước như thế nào?</td>
+                                <td><strong>Activity Diagram</strong></td>
+                                <td>Action, decision, flow, start/end.</td>
+                            </tr>
+                            <tr>
+                                <td>Một actor đạt mục tiêu bằng những bước nào?</td>
+                                <td><strong>Kết hợp cả hai</strong></td>
+                                <td>Use case chính, rồi activity cho use case đó.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Liên hệ biểu đồ mẫu từ W2</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Use Case</h4>
+                            <p>Online Shopping cho thấy actor, system boundary và các mục tiêu như View Items,
+                                Make Purchase, Checkout.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Activity</h4>
+                            <p>Online Shopping Activity cho thấy search/browse, view item, cart update và checkout.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Sequence</h4>
+                            <p>Sequence Diagram là bước thiết kế chi tiết tiếp theo khi đã rõ use case và activity.</p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">2.</span><br />
+                        Use Case Diagram
+                    </h1>
+                </section>
+
+                <section style="font-size:0.84em;">
+                    <h2>Use Case Diagram là gì?</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        <div class="question-title">Định nghĩa</div>
+                        Use Case Diagram mô tả <span class="keyword">hệ thống làm gì</span> thông qua tương tác giữa
+                        actor và các chức năng hệ thống cung cấp.
+                    </div>
+                    <ul>
+                        <li>Tập trung vào mục tiêu và chức năng.</li>
+                        <li>Không mô tả cấu trúc nội bộ hay thuật toán xử lý.</li>
+                        <li>Thích hợp khi khởi động dự án và thu thập yêu cầu.</li>
+                    </ul>
+                </section>
+
+                <section style="font-size:0.74em;">
+                    <h2>Thành phần chính</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Thành phần</th>
+                                <th>Mô tả</th>
+                                <th>Ký hiệu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Actor</strong></td>
+                                <td>Người dùng hoặc hệ thống ngoài tương tác với hệ thống.</td>
+                                <td>Hình người</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Use Case</strong></td>
+                                <td>Chức năng hệ thống cung cấp.</td>
+                                <td>Hình elip</td>
+                            </tr>
+                            <tr>
+                                <td><strong>System boundary</strong></td>
+                                <td>Ranh giới hệ thống đang xét.</td>
+                                <td>Hình chữ nhật</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Association</strong></td>
+                                <td>Liên kết actor với use case hoặc mô tả quan hệ giữa use case.</td>
+                                <td>Đường thẳng</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Include</strong></td>
+                                <td>Use case luôn gọi một use case khác.</td>
+                                <td><span class="inline-code">&lt;&lt;include&gt;&gt;</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Extend</strong></td>
+                                <td>Use case mở rộng trong điều kiện nhất định.</td>
+                                <td><span class="inline-code">&lt;&lt;extend&gt;&gt;</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Ký hiệu Use Case</h2>
+                    <div class="diagram-frame">
+                        <svg viewBox="0 0 980 430" style="max-height:58vh;" aria-label="Use case notation examples">
+                            <rect x="20" y="20" width="940" height="390" rx="8" fill="#ffffff" stroke="#d9e2ec"
+                                stroke-width="2" />
+                            <text x="55" y="62" class="svg-label svg-title">System boundary</text>
+                            <rect x="260" y="76" width="620" height="270" rx="4" fill="#f8fafc" stroke="#1E93AB"
+                                stroke-width="3" />
+                            <text x="290" y="116" class="svg-label svg-small">Online Bookstore</text>
+
+                            <circle cx="120" cy="145" r="24" fill="none" stroke="#1f2933" stroke-width="5" />
+                            <line x1="120" y1="169" x2="120" y2="250" stroke="#1f2933" stroke-width="5" />
+                            <line x1="75" y1="198" x2="165" y2="198" stroke="#1f2933" stroke-width="5" />
+                            <line x1="120" y1="250" x2="85" y2="312" stroke="#1f2933" stroke-width="5" />
+                            <line x1="120" y1="250" x2="155" y2="312" stroke="#1f2933" stroke-width="5" />
+                            <text x="64" y="354" class="svg-label svg-mid">Actor</text>
+
+                            <ellipse cx="445" cy="170" rx="115" ry="45" fill="#e3f2fd" stroke="#1E93AB"
+                                stroke-width="3" />
+                            <text x="383" y="178" class="svg-label svg-mid">Browse Books</text>
+                            <line x1="165" y1="205" x2="332" y2="176" stroke="#1f2933" stroke-width="3" />
+                            <text x="225" y="188" class="svg-label svg-small">association</text>
+
+                            <ellipse cx="700" cy="170" rx="105" ry="45" fill="#e8f5e9" stroke="#2e7d32"
+                                stroke-width="3" />
+                            <text x="653" y="178" class="svg-label svg-mid">Checkout</text>
+                            <line x1="560" y1="170" x2="594" y2="170" stroke="#1f2933" stroke-width="3"
+                                stroke-dasharray="8 8" marker-end="url(#arrow-uc)" />
+                            <text x="575" y="150" class="svg-label svg-small">&lt;&lt;include&gt;&gt;</text>
+
+                            <ellipse cx="700" cy="280" rx="110" ry="45" fill="#fff3e0" stroke="#c2610f"
+                                stroke-width="3" />
+                            <text x="636" y="288" class="svg-label svg-mid">Apply Coupon</text>
+                            <line x1="700" y1="235" x2="700" y2="215" stroke="#1f2933" stroke-width="3"
+                                stroke-dasharray="8 8" marker-end="url(#arrow-uc)" />
+                            <text x="725" y="246" class="svg-label svg-small">&lt;&lt;extend&gt;&gt;</text>
+
+                            <defs>
+                                <marker id="arrow-uc" markerWidth="10" markerHeight="10" refX="8" refY="3"
+                                    orient="auto">
+                                    <path d="M0,0 L0,6 L8,3 z" fill="#1f2933" />
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    <p class="caption">Use case diagram chỉ nói mục tiêu và phạm vi, chưa nói chi tiết xử lý.</p>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Tại sao cần Use Case Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Làm rõ phạm vi</h4>
+                            <ul>
+                                <li>Hệ thống phục vụ actor nào?</li>
+                                <li>Chức năng nào nằm trong boundary?</li>
+                                <li>Hệ thống ngoài nào chỉ là actor?</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Tạo nền cho thiết kế</h4>
+                            <ul>
+                                <li>Use case chính dẫn sang activity diagram.</li>
+                                <li>Use case giúp chia nhỏ yêu cầu.</li>
+                                <li>Stakeholder dễ kiểm tra phạm vi.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Khi nào dùng Use Case Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Đầu dự án</h4>
+                            <ul>
+                                <li>Khi khởi động dự án.</li>
+                                <li>Khi thu thập yêu cầu.</li>
+                                <li>Khi cần xác định phạm vi hệ thống.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Trước thiết kế chi tiết</h4>
+                            <ul>
+                                <li>Truyền đạt scope cho khách hàng hoặc stakeholder.</li>
+                                <li>Làm nền cho Activity Diagram.</li>
+                                <li>Làm nền cho Sequence Diagram.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ví dụ: Create account</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.12fr 0.88fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-03/create-account-usecase.png" alt="Create account use case example"
+                                style="max-height:58vh;" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Actor thực hiện mục tiêu <span class="inline-code">Create account</span>.</li>
+                                <li>Hệ thống hướng dẫn nhập thông tin cá nhân, xác minh email và hoàn thiện hồ sơ.</li>
+                                <li><span class="inline-code">Add basic details</span> và <span
+                                        class="inline-code">Verify email</span> là bước được include.</li>
+                                <li><span class="inline-code">Add advanced details</span>, <span
+                                        class="inline-code">Set privacy options</span> là mở rộng tùy chọn.</li>
+                                <li><span class="inline-code">Post warning message</span> chỉ xảy ra khi email chưa
+                                    xác minh.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Thực hành 1: tìm actor và use case</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Bài toán: hệ thống online bookstore cho phép người dùng duyệt sách, thêm vào giỏ, checkout,
+                        theo dõi đơn hàng và quản lý tài khoản.
+                    </div>
+                    <ol>
+                        <li>Liệt kê actor chính và actor phụ.</li>
+                        <li>Đưa 5 use case vào system boundary.</li>
+                        <li>Chọn use case nào nên có <span class="inline-code">&lt;&lt;include&gt;&gt;</span>.</li>
+                        <li>Chọn use case nào có thể là <span class="inline-code">&lt;&lt;extend&gt;&gt;</span>.</li>
+                    </ol>
+                    <div class="task-note" style="margin-top:0.7em;">
+                        Output: một bản phác thảo use case diagram cho online bookstore.
+                    </div>
+                </section>
+
+                <section style="font-size:0.8em;">
+                    <h2>Gợi ý layout cho Online Bookstore</h2>
+                    <div class="diagram-frame">
+                        <img src="img/lab-03/online-bookstore-usecase-sketch.png"
+                            alt="Online bookstore use case sketch" style="max-height:62vh;" />
+                    </div>
+                    <p class="caption">Đây là gợi ý đọc bài toán, không phải đáp án duy nhất.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">3.</span><br />
+                        Activity Diagram
+                    </h1>
+                </section>
+
+                <section style="font-size:0.84em;">
+                    <h2>Activity Diagram là gì?</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        <div class="question-title">Định nghĩa</div>
+                        Activity Diagram mô tả <span class="keyword">luồng hoạt động</span> hoặc trình tự xử lý logic
+                        của một quy trình trong hệ thống.
+                    </div>
+                    <ul>
+                        <li>Trả lời câu hỏi: hệ thống hoạt động như thế nào?</li>
+                        <li>Thể hiện điểm bắt đầu, điểm kết thúc và các bước theo trình tự.</li>
+                        <li>Thể hiện decision, điều kiện, swimlane, luồng song song và fork/join.</li>
+                    </ul>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Thành phần chính</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Thành phần</th>
+                                <th>Mô tả</th>
+                                <th>Khi đọc cần hỏi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Initial Node</strong></td>
+                                <td>Điểm bắt đầu.</td>
+                                <td>Quy trình bắt đầu ở đâu?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Activity / Action</strong></td>
+                                <td>Một bước xử lý.</td>
+                                <td>Bước này do ai thực hiện?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Decision Node</strong></td>
+                                <td>Điểm rẽ nhánh.</td>
+                                <td>Điều kiện nhánh có rõ không?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Merge Node</strong></td>
+                                <td>Hợp nhất các nhánh.</td>
+                                <td>Các nhánh quay về luồng chính ở đâu?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fork</strong></td>
+                                <td>Tách luồng song song.</td>
+                                <td>Các luồng có thật sự chạy song song không?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Join</strong></td>
+                                <td>Đồng bộ luồng song song.</td>
+                                <td>Các luồng được gom lại ở đâu?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Final Node</strong></td>
+                                <td>Điểm kết thúc.</td>
+                                <td>Quy trình kết thúc thành công ở đâu?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Swimlane</strong></td>
+                                <td>Phân chia vai trò hoặc bộ phận.</td>
+                                <td>Trách nhiệm có bị lẫn không?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Tại sao cần Activity Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Hiểu logic quy trình</h4>
+                            <ul>
+                                <li>Làm rõ logic chi tiết của quy trình.</li>
+                                <li>Làm rõ quy trình phức tạp hoặc có điều kiện.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Kết nối vai trò</h4>
+                            <ul>
+                                <li>Kết nối hành vi giữa nhiều phòng ban hoặc vai trò.</li>
+                                <li>Hỗ trợ cải tiến quy trình và tự động hóa.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Ký hiệu Activity</h2>
+                    <div class="diagram-frame">
+                        <svg viewBox="0 0 980 430" style="max-height:58vh;" aria-label="Activity diagram notation">
+                            <rect x="20" y="20" width="940" height="390" rx="8" fill="#ffffff" stroke="#d9e2ec"
+                                stroke-width="2" />
+                            <circle cx="95" cy="110" r="22" fill="#1f2933" />
+                            <text x="55" y="170" class="svg-label svg-small">Initial</text>
+
+                            <rect x="200" y="78" width="165" height="64" rx="22" fill="#e3f2fd" stroke="#1E93AB"
+                                stroke-width="3" />
+                            <text x="228" y="118" class="svg-label svg-mid">Action</text>
+
+                            <polygon points="500,68 560,128 500,188 440,128" fill="#fff3e0" stroke="#c2610f"
+                                stroke-width="3" />
+                            <text x="460" y="132" class="svg-label svg-mid">Decision</text>
+
+                            <line x1="672" y1="78" x2="852" y2="78" stroke="#1f2933" stroke-width="10" />
+                            <line x1="672" y1="178" x2="852" y2="178" stroke="#1f2933" stroke-width="10" />
+                            <text x="708" y="122" class="svg-label svg-small">Fork / Join</text>
+
+                            <line x1="117" y1="110" x2="197" y2="110" stroke="#1f2933" stroke-width="3"
+                                marker-end="url(#arrow-act)" />
+                            <line x1="365" y1="110" x2="435" y2="125" stroke="#1f2933" stroke-width="3"
+                                marker-end="url(#arrow-act)" />
+                            <line x1="560" y1="128" x2="668" y2="82" stroke="#1f2933" stroke-width="3"
+                                marker-end="url(#arrow-act)" />
+
+                            <rect x="105" y="265" width="190" height="80" rx="8" fill="#f8fafc" stroke="#90caf9"
+                                stroke-width="3" />
+                            <text x="132" y="313" class="svg-label svg-mid">Swimlane</text>
+
+                            <circle cx="490" cy="305" r="28" fill="none" stroke="#1f2933" stroke-width="5" />
+                            <circle cx="490" cy="305" r="18" fill="#1f2933" />
+                            <text x="450" y="365" class="svg-label svg-small">Final</text>
+
+                            <defs>
+                                <marker id="arrow-act" markerWidth="10" markerHeight="10" refX="8" refY="3"
+                                    orient="auto">
+                                    <path d="M0,0 L0,6 L8,3 z" fill="#1f2933" />
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Ví dụ: Registration activity</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.1fr 0.9fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-03/registration-activity.png"
+                                alt="Registration activity diagram example" style="max-height:58vh;" />
+                        </div>
+                        <div>
+                            <ol>
+                                <li>Start: user mở trang đăng ký.</li>
+                                <li>Enter Details: nhập tên, email, password.</li>
+                                <li>Validate Input: system kiểm tra dữ liệu.</li>
+                                <li>Nếu invalid: hiển thị lỗi và quay lại nhập liệu.</li>
+                                <li>Nếu valid: tạo account record và gửi confirmation email.</li>
+                                <li>End: quy trình đăng ký hoàn tất.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Khi nào dùng Activity Diagram?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Nên dùng khi</h4>
+                            <ul>
+                                <li>Mô hình hóa quy trình kinh doanh.</li>
+                                <li>Giải thích cách một tính năng hoạt động nội bộ.</li>
+                                <li>Mô tả logic trải rộng trên nhiều actor.</li>
+                                <li>Chuẩn bị cho sequence hoặc state diagram.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Đặc biệt hữu ích khi</h4>
+                            <ul>
+                                <li>Quy trình có nhiều bước.</li>
+                                <li>Có nhánh điều kiện.</li>
+                                <li>Cần chia trách nhiệm bằng swimlane.</li>
+                                <li>Có luồng song song cần fork/join.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Thực hành 2: Activity cho Checkout</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Vẽ Activity Diagram cho use case <span class="inline-code">Checkout</span>.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Các bước bắt buộc</h4>
+                            <ol>
+                                <li>Review cart</li>
+                                <li>Enter shipping details</li>
+                                <li>Choose payment method</li>
+                                <li>Process payment</li>
+                                <li>Confirm order</li>
+                                <li>Send email receipt</li>
+                            </ol>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Cần thể hiện</h4>
+                            <ul>
+                                <li>Điểm bắt đầu và kết thúc.</li>
+                                <li>Thứ tự xử lý chính.</li>
+                                <li>Ít nhất một nhánh điều kiện nếu nhóm bổ sung.</li>
+                                <li>Swimlane nếu chia vai trò rõ.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">4.</span><br />
+                        Phối hợp hai biểu đồ và thực hành
+                    </h1>
+                </section>
+
+                <section style="font-size:0.74em;">
+                    <h2>Use Case Diagram vs Activity Diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Tiêu chí</th>
+                                <th>Use Case Diagram</th>
+                                <th>Activity Diagram</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Trọng tâm</strong></td>
+                                <td>Mục tiêu và tương tác.</td>
+                                <td>Luồng xử lý và logic.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Câu hỏi</strong></td>
+                                <td>Hệ thống làm gì?</td>
+                                <td>Hệ thống hoạt động như thế nào?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mức chi tiết</strong></td>
+                                <td>Cao, tổng quan.</td>
+                                <td>Chi tiết theo quy trình cụ thể.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Thể hiện</strong></td>
+                                <td>Actor, Use Case.</td>
+                                <td>Action, Decision, Flow.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Phù hợp khi</strong></td>
+                                <td>Thu thập yêu cầu.</td>
+                                <td>Thiết kế quy trình.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.8em;">
+                    <h2>Quy trình phối hợp</h2>
+                    <div class="diagram-frame">
+                        <svg viewBox="0 0 980 320" style="max-height:48vh;" aria-label="Use case to activity workflow">
+                            <rect x="20" y="20" width="940" height="280" rx="8" fill="#ffffff" stroke="#d9e2ec"
+                                stroke-width="2" />
+                            <rect x="70" y="105" width="210" height="92" rx="12" fill="#e3f2fd" stroke="#1E93AB"
+                                stroke-width="3" />
+                            <text x="112" y="142" class="svg-label svg-mid">1. Actor</text>
+                            <text x="98" y="171" class="svg-label svg-small">Ai dùng hệ thống?</text>
+
+                            <rect x="385" y="105" width="210" height="92" rx="12" fill="#fff3e0" stroke="#c2610f"
+                                stroke-width="3" />
+                            <text x="420" y="142" class="svg-label svg-mid">2. Use case</text>
+                            <text x="408" y="171" class="svg-label svg-small">Họ muốn đạt gì?</text>
+
+                            <rect x="700" y="105" width="210" height="92" rx="12" fill="#e8f5e9" stroke="#2e7d32"
+                                stroke-width="3" />
+                            <text x="728" y="142" class="svg-label svg-mid">3. Activity</text>
+                            <text x="722" y="171" class="svg-label svg-small">Quy trình chạy ra sao?</text>
+
+                            <line x1="280" y1="151" x2="382" y2="151" stroke="#1f2933" stroke-width="4"
+                                marker-end="url(#arrow-flow)" />
+                            <line x1="595" y1="151" x2="697" y2="151" stroke="#1f2933" stroke-width="4"
+                                marker-end="url(#arrow-flow)" />
+                            <defs>
+                                <marker id="arrow-flow" markerWidth="10" markerHeight="10" refX="8" refY="3"
+                                    orient="auto">
+                                    <path d="M0,0 L0,6 L8,3 z" fill="#1f2933" />
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    <p class="caption">Mỗi use case quan trọng có thể được chi tiết hóa bằng một activity diagram.</p>
+                </section>
+
+                <section style="font-size:0.74em;">
+                    <h2>Chi tiết quy trình phối hợp</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>1. Bắt đầu bằng Use Case</h4>
+                            <ul>
+                                <li>Xác định actor.</li>
+                                <li>Xác định mục tiêu của người dùng.</li>
+                                <li>Làm rõ phạm vi hệ thống.</li>
+                                <li>Trả lời: hệ thống cần làm gì?</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>2. Chi tiết bằng Activity</h4>
+                            <ul>
+                                <li>Chọn use case chính.</li>
+                                <li>Mỗi use case quan trọng có thể có một activity diagram.</li>
+                                <li>Thể hiện bước xử lý, nhánh điều kiện và luồng song song nếu có.</li>
+                                <li>Trả lời: quy trình đó hoạt động như thế nào?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Nguyên tắc khi vẽ</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Đơn giản</h4>
+                            <p>Giữ biểu đồ đơn giản, tránh nhồi quá nhiều chi tiết.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Chuẩn UML</h4>
+                            <p>Dùng đúng ký hiệu actor, use case, action, decision.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Rõ nhánh</h4>
+                            <p>Điều kiện rẽ nhánh phải được ghi ngay trên luồng.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Một mục tiêu</h4>
+                            <p>Tập trung vào một mục tiêu hoặc một quy trình chính.</p>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Đặt tên rõ</h4>
+                            <p>Tên actor, use case và action phải dễ hiểu.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Đồng bộ</h4>
+                            <p>Activity phải mô tả quy trình nằm trong use case đã chọn.</p>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        Quan trọng nhất: đồng bộ giữa use case và activity. Activity không nên mô tả quy trình nằm
+                        ngoài use case đã chọn.
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Gợi ý Activity cho Checkout</h2>
+                    <div class="diagram-frame">
+                        <img src="img/lab-03/checkout-activity-sketch.png" alt="Checkout activity sketch"
+                            style="max-height:63vh;" />
+                    </div>
+                    <p class="caption">Có thể thêm nhánh lỗi thanh toán nếu nhóm muốn mô tả kỹ hơn.</p>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Yêu cầu nộp bài</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Use Case Diagram</h4>
+                            <ul>
+                                <li>Actor chính và actor phụ nếu có.</li>
+                                <li>5 use case: Browse Books, Add to Cart, Checkout, Track Order, Manage Account.</li>
+                                <li>System boundary rõ ràng.</li>
+                                <li>Include/extend nếu dùng phải có lý do.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Activity Diagram</h4>
+                            <ul>
+                                <li>Cho use case <span class="inline-code">Checkout</span>.</li>
+                                <li>Có start/end, action và flow.</li>
+                                <li>Có decision nếu nhóm thêm luồng lỗi.</li>
+                                <li>Có swimlane nếu chia trách nhiệm.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Checklist tự kiểm tra</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card orange">
+                            <h4>Use case</h4>
+                            <ul>
+                                <li>Actor có nằm ngoài system boundary không?</li>
+                                <li>Use case có đặt tên bằng mục tiêu người dùng không?</li>
+                                <li>Include có thật sự bắt buộc không?</li>
+                                <li>Extend có điều kiện rõ không?</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Activity</h4>
+                            <ul>
+                                <li>Có đúng một điểm bắt đầu chính không?</li>
+                                <li>Mỗi decision có nhãn điều kiện không?</li>
+                                <li>Luồng lỗi có quay về bước hợp lý không?</li>
+                                <li>Biểu đồ có còn đọc được khi chiếu không?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section style="font-size:0.78em;">
+                <h2>Tổng kết Lab 03</h2>
+                <div class="lab-grid two">
+                    <div class="lab-card blue">
+                        <h4>Hôm nay cần nhớ</h4>
+                        <ul>
+                            <li>Use Case Diagram trả lời: hệ thống làm gì?</li>
+                            <li>Activity Diagram trả lời: quy trình hoạt động như thế nào?</li>
+                            <li>Mỗi use case quan trọng có thể có một activity diagram riêng.</li>
+                            <li>Diagram tốt phải đơn giản, đúng ký hiệu và rõ điều kiện nhánh.</li>
+                        </ul>
+                    </div>
+                    <div class="lab-card green">
+                        <h4>Tài liệu dùng trong lab</h4>
+                        <ul>
+                            <li>W3 - Use case and Activity Diagrams.pdf.</li>
+                            <li>W2 - UML Diagrams.pdf để xem lại ví dụ mẫu.</li>
+                            <li>lab-02-uml-diagrams.html để ôn UML tổng quan.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="task-note" style="margin-top:0.8em;">
+                    Cách làm trên lớp: bắt đầu bằng use case để chốt phạm vi, rồi chọn một use case chính để vẽ
+                    activity chi tiết.
+                </div>
+            </section>
+
+            <div class="footer">
+                Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §Lab03: Use Case &amp; Activity Diagram
+            </div>
+        </div>
+    </div>
+
+    <script src="revealjs/dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/math/math.js"></script>
+    <script>
+        Reveal.initialize({
+            controlsLayout: "edges",
+            slideNumber: true,
+            hashOneBasedIndex: true,
+            hash: true,
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+        });
+    </script>
+</body>
+
+</html>

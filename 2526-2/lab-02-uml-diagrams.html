@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bài lab02: UML Diagrams</title>
+
+    <link rel="stylesheet" href="revealjs/dist/reset.css" />
+    <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+    <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="lecture-style.css" />
+    <style>
+        .reveal {
+            font-size: 34px;
+        }
+
+        .reveal h1 {
+            font-size: 1.85em;
+            line-height: 1.08;
+        }
+
+        .reveal h2 {
+            font-size: 1.35em;
+            line-height: 1.12;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal h3 {
+            font-size: 1.1em;
+            line-height: 1.15;
+            margin-bottom: 0.35em;
+        }
+
+        .reveal p,
+        .reveal li,
+        .reveal table {
+            line-height: 1.35;
+        }
+
+        .reveal ul,
+        .reveal ol {
+            margin-top: 0.25em;
+            margin-bottom: 0.25em;
+        }
+
+        .reveal .question-box {
+            padding: 0.6em;
+            border-radius: 12px;
+        }
+
+        .reveal .footer {
+            font-size: 0.9rem;
+        }
+
+        .lab-grid {
+            display: grid;
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .lab-grid.two {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .lab-grid.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .lab-grid.four {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .lab-card {
+            border: 2px solid #d9e2ec;
+            border-radius: 8px;
+            padding: 0.55em 0.65em;
+            background: #f8fafc;
+        }
+
+        .lab-card.blue {
+            border-color: #90caf9;
+            background: #e3f2fd;
+        }
+
+        .lab-card.green {
+            border-color: #a5d6a7;
+            background: #e8f5e9;
+        }
+
+        .lab-card.orange {
+            border-color: #ffcc80;
+            background: #fff3e0;
+        }
+
+        .lab-card.pink {
+            border-color: #f48fb1;
+            background: #fce4ec;
+        }
+
+        .lab-card h4 {
+            margin: 0 0 0.25em 0;
+            font-size: 0.95em;
+            color: #1E93AB;
+        }
+
+        .diagram-frame {
+            text-align: center;
+        }
+
+        .diagram-frame img {
+            max-width: 100%;
+            max-height: 64vh;
+            object-fit: contain;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .compact-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.76em;
+        }
+
+        .compact-table th,
+        .compact-table td {
+            border: 1px solid #ddd;
+            padding: 0.45em 0.55em;
+            vertical-align: top;
+        }
+
+        .compact-table th {
+            background: #f3f2ec;
+            color: #1E93AB;
+        }
+
+        .task-note {
+            border-left: 5px solid #1E93AB;
+            background: #eef8fb;
+            border-radius: 8px;
+            padding: 0.55em 0.7em;
+            font-size: 0.85em;
+        }
+
+        .reveal .pipeline.lab-flow {
+            flex-wrap: nowrap;
+            gap: 0.35em;
+            font-size: 0.68em;
+        }
+
+        .reveal .pipeline.lab-flow .stage {
+            width: 124px;
+            padding: 0.45em;
+        }
+
+        .reveal .pipeline.lab-flow .arrow {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <section>
+                    <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+                    <h3>Lab 02: Thực hành biểu đồ UML</h3>
+                    <p>Trường ĐH Công nghệ - Đại học Quốc gia Hà Nội</p>
+                    <p>Giảng viên: Lương Sơn Bá, Nguyễn Tiến Đạt</p>
+                </section>
+
+                <section>
+                    <h2>Nội dung</h2>
+                    <ol>
+                        <li>UML dùng để làm gì trong lab?</li>
+                        <li>Đọc mô hình Online Shopping và Payment Gateway</li>
+                        <li>Vẽ hành vi và tương tác hệ thống</li>
+                        <li>Object, component, manifestation và deployment</li>
+                        <li>Nộp bài thực hành</li>
+                    </ol>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">1.</span><br />
+                        UML dùng để làm gì trong lab?
+                    </h1>
+                </section>
+
+                <section style="font-size:0.85em;">
+                    <h2>Mục tiêu buổi thực hành</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Sau buổi này, sinh viên đọc được một mô hình UML có sẵn và vẽ được bộ biểu đồ tối thiểu cho
+                        một hệ thống nhỏ.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Đọc mô hình</h4>
+                            <ul>
+                                <li>Xác định actor, use case, boundary</li>
+                                <li>Đọc lớp, quan hệ và bội số</li>
+                                <li>Theo dõi thứ tự thông điệp</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Vẽ mô hình</h4>
+                            <ul>
+                                <li>Chọn đúng loại biểu đồ</li>
+                                <li>Giữ mỗi biểu đồ một mục đích rõ</li>
+                                <li>Giải thích được quyết định thiết kế</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.84em;">
+                    <h2>UML là gì?</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        <div class="question-title">Định nghĩa</div>
+                        UML (<span class="keyword">Unified Modeling Language</span>) là ngôn ngữ mô hình hóa tiêu
+                        chuẩn để trực quan hóa, đặc tả, thiết kế và tài liệu hóa hệ thống phần mềm.
+                    </div>
+                    <ul>
+                        <li>Trong OOAD, UML giúp mô hình hóa cách các thành phần tương tác với nhau.</li>
+                        <li>UML có nhiều loại sơ đồ, thường chia thành <strong>cấu trúc</strong> và
+                            <strong>hành vi</strong>.</li>
+                        <li>Trong lab, UML là công cụ để suy nghĩ trước khi code.</li>
+                    </ul>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Vì sao UML quan trọng?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Chuẩn hóa giao tiếp</h4>
+                            <ul>
+                                <li>Developer quan tâm class, API, service.</li>
+                                <li>Data Scientist quan tâm model và data flow.</li>
+                                <li>MLOps Engineer quan tâm deployment và infrastructure.</li>
+                                <li>Business Analyst quan tâm use case.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Giảm rủi ro trước khi code</h4>
+                            <ul>
+                                <li>Phát hiện thiếu requirement.</li>
+                                <li>Phát hiện dependency phức tạp.</li>
+                                <li>Tránh circular dependency.</li>
+                                <li>Nhìn sớm bottleneck kiến trúc.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="caption">Sửa lỗi ở giai đoạn design thường rẻ hơn nhiều so với sửa sau khi đã triển khai.
+                    </p>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>AI system không chỉ là một mô hình ML</h2>
+                    <div class="pipeline lab-flow">
+                        <div class="stage">
+                            <div class="stage-title">Data ingestion</div>
+                            <div class="stage-desc">thu thập dữ liệu</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="stage">
+                            <div class="stage-title">Preprocessing</div>
+                            <div class="stage-desc">làm sạch dữ liệu</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="stage">
+                            <div class="stage-title">Training</div>
+                            <div class="stage-desc">huấn luyện model</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="stage">
+                            <div class="stage-title">Serving</div>
+                            <div class="stage-desc">phục vụ dự đoán</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="stage">
+                            <div class="stage-title">Monitoring</div>
+                            <div class="stage-desc">theo dõi và phản hồi</div>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        UML giúp nhìn toàn hệ thống: module nào tồn tại, ai gọi ai, dữ liệu đi qua đâu, phần nào sẽ
+                        triển khai và theo dõi.
+                    </div>
+                </section>
+
+                <section style="font-size:0.72em;">
+                    <h2>Pipeline đầy đủ trong tài liệu</h2>
+                    <div class="lab-grid four">
+                        <div class="lab-card blue">
+                            <h4>Data ingestion</h4>
+                            <p>Thu thập dữ liệu từ nguồn vào.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Data preprocessing</h4>
+                            <p>Làm sạch, chuẩn hóa, chuẩn bị dữ liệu.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Feature engineering</h4>
+                            <p>Tạo đặc trưng phục vụ học máy.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Model training</h4>
+                            <p>Huấn luyện và đánh giá model.</p>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Model serving</h4>
+                            <p>Đưa model vào luồng phục vụ dự đoán.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Monitoring</h4>
+                            <p>Theo dõi dữ liệu, chất lượng và vận hành.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Feedback loop</h4>
+                            <p>Thu phản hồi từ người dùng/hệ thống.</p>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Retraining</h4>
+                            <p>Cập nhật model khi dữ liệu hoặc yêu cầu đổi.</p>
+                        </div>
+                    </div>
+                    <p class="caption">UML giúp xác định boundary giữa module và thiết kế pipeline rõ ràng.</p>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Tài liệu hóa hệ thống</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card orange">
+                            <h4>Trong thực tế</h4>
+                            <ul>
+                                <li>Nhân sự thay đổi.</li>
+                                <li>Model được nâng cấp.</li>
+                                <li>Kiến trúc phát triển theo thời gian.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Nếu thiếu thiết kế</h4>
+                            <ul>
+                                <li>Người mới mất nhiều thời gian hiểu hệ thống.</li>
+                                <li>Refactor trở nên rủi ro.</li>
+                                <li>Audit AI system khó khăn.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        UML đóng vai trò như tài liệu kỹ thuật chính thức, bản đồ kiến trúc và cơ sở cho bảo trì,
+                        mở rộng.
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Tách biệt Design và Implementation</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Bắt đầu code ngay khi chưa thiết kế thường làm hệ thống phụ thuộc sớm vào framework, ngôn
+                        ngữ hoặc chi tiết triển khai.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>UML giúp</h4>
+                            <ul>
+                                <li>Tập trung vào abstraction.</li>
+                                <li>Không bị lệ thuộc framework.</li>
+                                <li>Không bị ràng buộc bởi ngôn ngữ lập trình.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Design tốt có thể</h4>
+                            <ul>
+                                <li>Triển khai bằng Python.</li>
+                                <li>Triển khai bằng Java.</li>
+                                <li>Hoặc tách thành microservices.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="caption">Design không nên phụ thuộc implementation.</p>
+                </section>
+
+                <section style="font-size:0.74em;">
+                    <h2>Hai nhóm biểu đồ cần nhớ</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Nhóm</th>
+                                <th>Câu hỏi chính</th>
+                                <th>Ví dụ trong lab</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Structural Diagrams</strong><br />Sơ đồ cấu trúc</td>
+                                <td>Hệ thống gồm thành phần nào? Quan hệ giữa chúng là gì?</td>
+                                <td>Class, Object, Component, Deployment</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Behavioral Diagrams</strong><br />Sơ đồ hành vi</td>
+                                <td>Hệ thống hoạt động ra sao theo thời gian?</td>
+                                <td>Use Case, Sequence, Communication, Activity</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="caption">Trong bài thực hành, chọn biểu đồ theo câu hỏi cần trả lời.</p>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Vì sao chia hai nhóm?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Hệ thống là gì?</h4>
+                            <ul>
+                                <li>Những thành phần nào tồn tại?</li>
+                                <li>Quan hệ giữa chúng là gì?</li>
+                                <li>Ai phụ thuộc vào ai?</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Hệ thống hoạt động thế nào?</h4>
+                            <ul>
+                                <li>Khi có sự kiện thì điều gì diễn ra tiếp?</li>
+                                <li>Luồng xử lý đi qua các bước nào?</li>
+                                <li>Trạng thái đổi ra sao theo thời gian?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="caption">Hai nhóm biểu đồ phản ánh hai cách con người tư duy về hệ thống.</p>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Structural Diagrams trong tài liệu</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Biểu đồ</th>
+                                <th>Mô tả</th>
+                                <th>Ví dụ trong PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Class Diagram</strong></td>
+                                <td>Lớp, thuộc tính, phương thức và quan hệ.</td>
+                                <td>Customer, Account, Shopping Cart, Order, Payment, Product.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Object Diagram</strong></td>
+                                <td>Snapshot đối tượng tại một thời điểm.</td>
+                                <td>Login Controller, User Manager, Cookie Manager, Logger.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Component Diagram</strong></td>
+                                <td>Thành phần phần mềm và cách chúng giao tiếp.</td>
+                                <td>Search Engine, Shopping Cart, Authentication, Orders.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Deployment Diagram</strong></td>
+                                <td>Phần mềm được triển khai trên phần cứng/server.</td>
+                                <td>Apache Tomcat, Application Server, Database Server.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Behavioral Diagrams trong tài liệu</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Biểu đồ</th>
+                                <th>Mô tả</th>
+                                <th>Ví dụ trong PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Use Case Diagram</strong></td>
+                                <td>Actor bên ngoài và mục tiêu khi tương tác với hệ thống.</td>
+                                <td>View Items, Client Register, Make Purchase, Checkout.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sequence Diagram</strong></td>
+                                <td>Trình tự thông điệp theo thời gian.</td>
+                                <td>Khách hàng tìm sách, xem mô tả, thêm vào giỏ, checkout.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Communication Diagram</strong></td>
+                                <td>Đối tượng liên kết và trao đổi dữ liệu với nhau.</td>
+                                <td>Online Bookshop, Inventory, Book, Shopping Cart, Order.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Activity / Interaction Overview</strong></td>
+                                <td>Workflow và tổng quan các tương tác.</td>
+                                <td>Search/Browse, View Item, Add/Remove Cart, Checkout.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Khi nào cần UML?</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Nên dùng UML khi</h4>
+                            <ul>
+                                <li>Hệ thống hướng tới production.</li>
+                                <li>Có nhiều người cùng phát triển.</li>
+                                <li>Cần bảo trì lâu dài.</li>
+                                <li>Có deployment và monitoring.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Có thể bỏ qua khi</h4>
+                            <ul>
+                                <li>Prototype rất nhanh.</li>
+                                <li>Project nhỏ, một người làm.</li>
+                                <li>Research code đang thử nghiệm.</li>
+                                <li>Thiết kế chưa ổn định.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="caption">Không vẽ UML để trang trí; vẽ khi biểu đồ giúp ra quyết định hoặc giao tiếp.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">2.</span><br />
+                        Đọc mô hình Online Shopping
+                    </h1>
+                </section>
+
+                <section style="font-size:0.84em;">
+                    <h2>Case study dùng trong lab</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Tài liệu <span class="inline-code">W2 - UML Diagrams.pdf</span> cung cấp nhiều biểu đồ UML
+                        cùng mô tả một mô hình Online Shopping giả lập, kèm một ví dụ Payment Gateway độc lập.
+                    </div>
+                    <div class="lab-grid three" style="font-size:0.9em;">
+                        <div class="lab-card blue">
+                            <h4>Chức năng</h4>
+                            <p>View Items, Make Purchase, Client Register, Checkout, Payment.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Dữ liệu miền</h4>
+                            <p>Customer, Account, Shopping Cart, Order, Payment, Product.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Triển khai</h4>
+                            <p>Web app, Tomcat server, database server, artifacts và components.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.8em;">
+                    <h2>Use Case: nhìn ranh giới hệ thống</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.25fr 0.75fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/online-shopping-usecase-top.png"
+                                alt="Online Shopping top-level use cases" />
+                        </div>
+                        <div>
+                            <div class="task-note">
+                                Khi đọc use case diagram, hỏi ba câu:
+                            </div>
+                            <ul>
+                                <li><strong>Actor</strong> nào đứng ngoài hệ thống?</li>
+                                <li>Use case nào là chức năng chính?</li>
+                                <li>Quan hệ <span class="inline-code">include</span> có bắt buộc không?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="caption">Web Customer tương tác với hệ Online Shopping và các service bên ngoài.</p>
+                </section>
+
+                <section style="font-size:0.74em;">
+                    <h2>Use Case: include và extend</h2>
+                    <div class="lab-grid two">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/online-shopping-usecase-view-items.png"
+                                alt="View Items use case with optional extensions" />
+                            <p class="caption">View Items có các hành vi mở rộng để tìm sản phẩm.</p>
+                        </div>
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/online-shopping-usecase-checkout.png"
+                                alt="Checkout, authentication and payment use cases" />
+                            <p class="caption">Checkout bao gồm xác thực, tính tổng và thanh toán.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Đọc Online Shopping use cases</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Phần trong PDF</th>
+                                <th>Cách đọc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Top-level use cases</td>
+                                <td>Web Customer có View Items, Make Purchase và Client Register.</td>
+                            </tr>
+                            <tr>
+                                <td>View Items</td>
+                                <td>Có thể dùng độc lập khi chỉ muốn tìm/xem sản phẩm, hoặc là một phần của Make Purchase.</td>
+                            </tr>
+                            <tr>
+                                <td>Optional extensions</td>
+                                <td>Search Items, Browse Items, View Recommended Items, Add to Shopping Cart, Add to Wish List.</td>
+                            </tr>
+                            <tr>
+                                <td>Authentication</td>
+                                <td>View Recommended Items và Add to Wish List include Customer Authentication; Add to Shopping Cart thì không bắt buộc.</td>
+                            </tr>
+                            <tr>
+                                <td>Checkout</td>
+                                <td>Là included use case của Make Purchase, gồm authentication và payment qua credit card hoặc PayPal.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Use Case: Payment Gateway</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.08fr 0.92fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/credit-card-processing-usecase.png"
+                                alt="Credit Card Processing System use cases" style="max-height:56vh; width:auto;" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Subject: <span class="inline-code">Credit Card Payment Gateway</span>.</li>
+                                <li>Actor chính: hệ xử lý thẻ của merchant.</li>
+                                <li>Bank phát hành thẻ có thể approve hoặc reject transaction.</li>
+                                <li>Merchant's Bank nhận funds sau settlement.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Đọc Payment Gateway use cases</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Use case</th>
+                                <th>Ý nghĩa trong tài liệu gốc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Authorize and Capture</strong></td>
+                                <td>Transaction phổ biến nhất: authorize trước, nếu được duyệt thì gửi settlement.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Authorize</strong></td>
+                                <td>Chỉ kiểm tra khả dụng funds; dùng khi hàng chưa có hoặc merchant cần review.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Capture</strong></td>
+                                <td>Hoàn tất một transaction đã được authorize trước đó.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Credit</strong></td>
+                                <td>Refund cho transaction đã xử lý hoặc transaction không gửi qua gateway.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Void</strong></td>
+                                <td>Hủy transaction chưa settlement; nếu thất bại thì có thể transaction đã settled.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Verify</strong></td>
+                                <td>Giao dịch số tiền bằng 0 hoặc nhỏ để kiểm tra dữ liệu như address.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="caption">Tài liệu gốc cũng gợi ý đọc thêm tài nguyên về payment gateway của Authorize.Net.</p>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Thực hành 1: đọc use case</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Làm theo cặp. Dùng các use case diagram trong tài liệu để trả lời ngắn gọn.
+                    </div>
+                    <ol>
+                        <li>Liệt kê actor chính và actor phụ trong mô hình Online Shopping.</li>
+                        <li>Chọn 3 use case bắt buộc khi khách hàng mua hàng.</li>
+                        <li>Chọn 3 use case tùy chọn khi khách hàng xem sản phẩm.</li>
+                        <li>Giải thích vì sao Checkout không nên là use case độc lập bên ngoài Make Purchase.</li>
+                        <li>Trong Payment Gateway, phân biệt Authorize, Capture và Void.</li>
+                    </ol>
+                    <div class="task-note" style="margin-top:0.7em;">
+                        Output: 6-8 dòng trả lời, không cần vẽ lại diagram.
+                    </div>
+                </section>
+
+                <section style="font-size:0.84em;">
+                    <h2>Class Diagram: mô hình miền</h2>
+                    <div class="diagram-frame">
+                        <img src="img/lab-02/online-shopping-class-domain.png"
+                            alt="Online Shopping domain class diagram"
+                            style="max-height:46vh; max-width:78%; width:auto;" />
+                    </div>
+                </section>
+
+                <section style="font-size:0.72em;">
+                    <h2>Đọc class diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Chi tiết trên hình</th>
+                                <th>Cách đọc trong mô hình</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="inline-code">Customer - Account</span></td>
+                                <td>Mỗi customer có đúng một account.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">WebUser - Customer</span></td>
+                                <td>Customer có thể có web user identity; WebUser có trạng thái hợp lệ.</td>
+                            </tr>
+                            <tr>
+                                <td>Kim cương đen tại <span class="inline-code">Account</span></td>
+                                <td>Account sở hữu Shopping Cart và Orders theo quan hệ hợp thành.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">Account.orders</span></td>
+                                <td>Orders được mô tả là collection có thứ tự và unique.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">Order - Payment</span> với <span
+                                        class="inline-code">0..*</span></td>
+                                <td>Một order có thể chưa có payment hoặc có nhiều payment.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">LineItem - Product</span></td>
+                                <td>Line item nối cart/order với một sản phẩm cụ thể.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">UserState</span>, <span
+                                        class="inline-code">OrderStatus</span></td>
+                                <td>Enumeration giữ các trạng thái hợp lệ.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Object Diagram: snapshot lúc login</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.12fr 0.88fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/login-controller-object.png"
+                                alt="Login Controller object diagram" style="max-height:56vh; width:auto;" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Object diagram mô tả trạng thái cụ thể tại runtime.</li>
+                                <li><span class="inline-code">loginCtrl</span> là instance của Login Controller.</li>
+                                <li>Các slot lưu giá trị cụ thể như <span class="inline-code">attemptLimit</span>,
+                                    <span class="inline-code">lockoutTime</span>, URI login/logout.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Đọc object diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Chi tiết</th>
+                                <th>Cách đọc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="inline-code">loginCtrl</span></td>
+                                <td>Instance của Login Controller với các slot Integer/String cụ thể.</td>
+                            </tr>
+                            <tr>
+                                <td>User Manager, Cookie Manager, Logger</td>
+                                <td>Các object liên quan trực tiếp đến quá trình login.</td>
+                            </tr>
+                            <tr>
+                                <td>Hibernate User DAO</td>
+                                <td>DAO được User Manager dùng để tìm user theo loginID hoặc email.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">defaultURIs</span></td>
+                                <td>Collection 5 String có thứ tự và unique.</td>
+                            </tr>
+                            <tr>
+                                <td>Link không navigable backward</td>
+                                <td>Đọc được hướng biết/gọi giữa các object ở thời điểm này.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Thực hành 2: rút gọn class diagram</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Từ class diagram Online Shopping, vẽ lại một phiên bản rút gọn chỉ giữ phần đặt hàng.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Giữ lại</h4>
+                            <ul>
+                                <li>Customer, Account, Shopping Cart</li>
+                                <li>Order, LineItem, Product, Payment</li>
+                                <li>Bội số quan trọng</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Bỏ khỏi bản rút gọn</h4>
+                            <ul>
+                                <li>Thuộc tính ít ảnh hưởng đến quan hệ</li>
+                                <li>Enumeration nếu chưa dùng trong câu hỏi</li>
+                                <li>Quan hệ không phục vụ luồng đặt hàng</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="caption">Mục tiêu: biểu đồ nhỏ hơn nhưng vẫn đọc được quan hệ chính.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">3.</span><br />
+                        Vẽ hành vi và tương tác
+                    </h1>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Sequence Diagram: đọc theo thời gian</h2>
+                    <div class="lab-grid two" style="grid-template-columns:0.82fr 1.18fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/online-bookshop-sequence.png"
+                                alt="Online Bookshop sequence diagram" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Lifeline thể hiện actor hoặc object tham gia tương tác.</li>
+                                <li>Mũi tên ngang là thông điệp theo thứ tự từ trên xuống.</li>
+                                <li><span class="inline-code">loop</span> mô tả bước có thể lặp.</li>
+                                <li><span class="inline-code">opt</span> mô tả nhánh tùy chọn.</li>
+                                <li><span class="inline-code">ref Checkout</span> trỏ sang tương tác khác.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Communication Diagram: đọc mạng liên kết</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.12fr 0.88fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/online-bookshop-communication.png"
+                                alt="Online Bookshop communication diagram" style="max-height:56vh; width:auto;" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Actor Web Customer có thể search, view và buy books.</li>
+                                <li>Số thứ tự message cho biết trình tự logic.</li>
+                                <li>Dấu <span class="inline-code">1 *</span> thể hiện message có thể lặp.</li>
+                                <li>Điều kiện như <span class="inline-code">[interested]</span> và
+                                    <span class="inline-code">[decided to buy]</span> gắn trên message.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Thông điệp trong Communication Diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Message</th>
+                                <th>Ý nghĩa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="inline-code">1*: find_books()</span></td>
+                                <td>Customer tìm sách, có thể lặp nhiều lần.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">1.1: search()</span></td>
+                                <td>Online Bookshop gọi Inventory để search.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">1.2 [interested]: view_book()</span></td>
+                                <td>Nếu quan tâm, customer xem mô tả Book.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">1.3 [decided to buy]: add_to_cart()</span></td>
+                                <td>Nếu quyết định mua, sách được thêm vào Shopping Cart.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">2: checkout()</span></td>
+                                <td>Checkout lấy sách trong cart, tạo order và cập nhật inventory khi order hoàn tất.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Activity Diagram: đọc theo luồng công việc</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.2fr 0.8fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/online-shopping-activity.png"
+                                alt="Online Shopping activity diagram" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Nút đen là điểm bắt đầu, nút tròn kép là điểm kết thúc.</li>
+                                <li>Diamond thể hiện quyết định hoặc hợp luồng.</li>
+                                <li>Nhãn trong ngoặc vuông là điều kiện nhánh.</li>
+                                <li>Luồng có thể quay lại để search, browse hoặc update cart.</li>
+                                <li>Ví dụ không dùng partitions; Checkout giả định gồm registration và login.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Interaction Overview Diagram</h2>
+                    <div class="lab-grid two" style="grid-template-columns:1.18fr 0.82fr; align-items:center;">
+                        <div class="diagram-frame">
+                            <img src="img/lab-02/online-shopping-interaction-overview.png"
+                                alt="Online Shopping interaction overview diagram" style="max-height:56vh; width:auto;" />
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Tổng hợp nhiều tương tác trong frame <span class="inline-code">sd</span>.</li>
+                                <li>Các node <span class="inline-code">ref</span> là interaction uses.</li>
+                                <li>Luồng chính: search/browse, view item, add/remove cart, checkout.</li>
+                                <li>Decision node giữ các nhánh <span class="inline-code">[find]</span>,
+                                    <span class="inline-code">[shopping cart]</span>, <span class="inline-code">[done]</span>.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.74em;">
+                    <h2>Sequence, Communication hay Activity?</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Nếu muốn trả lời...</th>
+                                <th>Dùng biểu đồ</th>
+                                <th>Lý do</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ai gửi thông điệp cho ai, theo thứ tự nào?</td>
+                                <td><strong>Sequence Diagram</strong></td>
+                                <td>Nhấn vào lifeline và thứ tự thông điệp theo thời gian.</td>
+                            </tr>
+                            <tr>
+                                <td>Các object liên kết với nhau và trao đổi message nào?</td>
+                                <td><strong>Communication Diagram</strong></td>
+                                <td>Nhấn vào network object và số thứ tự message.</td>
+                            </tr>
+                            <tr>
+                                <td>Quy trình đi qua các nhánh và vòng lặp nào?</td>
+                                <td><strong>Activity Diagram</strong></td>
+                                <td>Nhấn vào workflow, decision và điều kiện chuyển bước.</td>
+                            </tr>
+                            <tr>
+                                <td>Actor dùng hệ thống để đạt mục tiêu gì?</td>
+                                <td><strong>Use Case Diagram</strong></td>
+                                <td>Nhấn vào mục tiêu người dùng và boundary của hệ thống.</td>
+                            </tr>
+                            <tr>
+                                <td>Muốn gom nhiều interaction thành một workflow?</td>
+                                <td><strong>Interaction Overview</strong></td>
+                                <td>Dùng node tham chiếu <span class="inline-code">ref</span> tới các tương tác.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Thực hành 3: vẽ một luồng mua hàng</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Vẽ một sequence diagram hoặc activity diagram cho luồng: tìm sách, xem mô tả, thêm vào giỏ,
+                        checkout.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Nếu chọn sequence</h4>
+                            <ul>
+                                <li>Có Web Customer và Online Bookshop.</li>
+                                <li>Có message search inventory.</li>
+                                <li>Có nhánh tùy chọn view description.</li>
+                                <li>Có bước add to shopping cart.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Nếu chọn activity</h4>
+                            <ul>
+                                <li>Có start/end rõ ràng.</li>
+                                <li>Có nhánh search hoặc browse.</li>
+                                <li>Có nhánh view cart hoặc proceed.</li>
+                                <li>Có vòng lặp update cart khi cần.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.8em;">
+                    <h2>Checkpoint giữa lab</h2>
+                    <div class="lab-grid three">
+                        <div class="lab-card blue">
+                            <h4>Use case</h4>
+                            <p>Có actor, system boundary, use case chính và quan hệ include/extend.</p>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Class</h4>
+                            <p>Có class chính, quan hệ, bội số và tên quan hệ nếu cần.</p>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Behavior</h4>
+                            <p>Có thứ tự hoặc luồng xử lý đủ để người khác đọc lại.</p>
+                        </div>
+                    </div>
+                    <div class="task-note" style="margin-top:0.8em;">
+                        Nếu một biểu đồ cần quá nhiều chữ để giải thích, biểu đồ đó đang thiếu cấu trúc hoặc thiếu nhãn.
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1>
+                        <span class="text-light">4.</span><br />
+                        Component, manifestation và deployment
+                    </h1>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Component Diagram: module và interface</h2>
+                    <div class="diagram-frame">
+                        <img src="img/lab-02/retail-component.png" alt="Retail website component diagram"
+                            style="max-height:62vh; width:auto;" />
+                    </div>
+                    <p class="caption">Component diagram cho thấy Web Store gồm SearchEngine, Shopping Cart,
+                        Authentication, Inventory, Orders, Customers và Accounts.</p>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Đọc component diagram</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Nhìn module</h4>
+                            <ul>
+                                <li>Component là đơn vị phần mềm triển khai hoặc thay thế được.</li>
+                                <li>Subsystem bao quanh nhóm component liên quan.</li>
+                                <li>Tên component nên phản ánh trách nhiệm chính.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card green">
+                            <h4>Nhìn interface</h4>
+                            <ul>
+                                <li>Interface cho biết component cung cấp hoặc cần dịch vụ gì.</li>
+                                <li>Orders nối Inventory, Customers và Shopping Cart.</li>
+                                <li>Accounts tách riêng khỏi Customers.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Manifestation Diagram: artifact hiện thực component</h2>
+                    <div class="diagram-frame">
+                        <img src="img/lab-02/webapp-manifestation.png" alt="Web application manifestation diagram"
+                            style="max-height:54vh; width:auto;" />
+                    </div>
+                    <p class="caption">book_club_app.war chứa file, folder, library và các JAR manifest component.</p>
+                </section>
+
+                <section style="font-size:0.68em;">
+                    <h2>Đọc manifestation diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Chi tiết</th>
+                                <th>Cách đọc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="inline-code">book_club_app.war</span></td>
+                                <td>Artifact web application archive, chứa cấu trúc triển khai của web app.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">META-INF</span>, <span class="inline-code">WEB-INF</span>,
+                                    <span class="inline-code">pages</span>, <span class="inline-code">classes</span></td>
+                                <td>Các folder/file nội bộ của artifact.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">shp-cart.jar</span>, <span class="inline-code">orders.jar</span>,
+                                    <span class="inline-code">customers.jar</span></td>
+                                <td>Các library JAR manifest Shopping Cart, Orders và Customers.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">file</span>, <span class="inline-code">library</span>,
+                                    <span class="inline-code">folder</span></td>
+                                <td>Stereotypes file/library áp dụng cho artifact; folder là stereotype không chuẩn trong ví dụ.</td>
+                            </tr>
+                            <tr>
+                                <td>Không có node server</td>
+                                <td>Đây là implementation/manifestation view, chưa phải deployment runtime thật.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.82em;">
+                    <h2>Deployment Diagram: phần mềm chạy ở đâu?</h2>
+                    <div class="diagram-frame">
+                        <img src="img/lab-02/webapp-deployment.png" alt="Web application deployment diagram"
+                            style="max-height:44vh; max-width:82%; width:auto;" />
+                    </div>
+                    <p class="caption">Deployment diagram nối artifact, execution environment, device và communication
+                        path.</p>
+                </section>
+
+                <section style="font-size:0.7em;">
+                    <h2>Đọc deployment diagram</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Chi tiết trên hình</th>
+                                <th>Cách đọc từ tài liệu gốc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="inline-code">book_club_app.war</span></td>
+                                <td>Artifact được deploy trong Catalina Servlet/JSP Container.</td>
+                            </tr>
+                            <tr>
+                                <td>Apache Tomcat 5.5 web server</td>
+                                <td>Execution environment chạy bên trong Application Server.</td>
+                            </tr>
+                            <tr>
+                                <td>OnlineOrders, UserServices</td>
+                                <td>Các component được artifact manifest/embody.</td>
+                            </tr>
+                            <tr>
+                                <td>Application Server - Database Server</td>
+                                <td>Hai device giao tiếp qua communication path TCP/IP.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.74em;">
+                    <h2>Component, Manifestation hay Deployment?</h2>
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Biểu đồ</th>
+                                <th>Trả lời câu hỏi</th>
+                                <th>Trong ví dụ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Component</strong></td>
+                                <td>Phần mềm chia thành module nào? Module nào cần interface nào?</td>
+                                <td>SearchEngine dùng IInventory; Shopping Cart dùng IOrders.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manifestation</strong></td>
+                                <td>Artifact/file nào hiện thực component nào?</td>
+                                <td>shp-cart.jar manifest Shopping Cart; orders.jar manifest Orders.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Deployment</strong></td>
+                                <td>Artifact nào chạy trên node nào? Node nào giao tiếp với node nào?</td>
+                                <td>book_club_app.war chạy trong Tomcat; Application Server nói chuyện Database Server
+                                    qua TCP/IP.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Thực hành 4: nối thiết kế với triển khai</h2>
+                    <div class="question-box" style="margin-bottom:0.7em;">
+                        Chọn hệ thống của nhóm bạn hoặc dùng lại Online Shopping. Vẽ một component diagram và một
+                        deployment diagram tối giản.
+                    </div>
+                    <div class="lab-grid two">
+                        <div class="lab-card blue">
+                            <h4>Component diagram</h4>
+                            <ul>
+                                <li>3-6 component chính.</li>
+                                <li>Mỗi component có trách nhiệm rõ.</li>
+                                <li>Interface hoặc dependency có tên.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card orange">
+                            <h4>Deployment diagram</h4>
+                            <ul>
+                                <li>Node chạy ứng dụng và node lưu dữ liệu.</li>
+                                <li>Artifact hoặc container được triển khai.</li>
+                                <li>Communication path có protocol nếu biết.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.76em;">
+                    <h2>Yêu cầu nộp bài</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card green">
+                            <h4>Bộ biểu đồ tối thiểu</h4>
+                            <ul>
+                                <li>01 use case diagram.</li>
+                                <li>01 class diagram rút gọn.</li>
+                                <li>01 sequence hoặc activity diagram.</li>
+                                <li>01 component hoặc deployment diagram.</li>
+                                <li>Tham khảo object/communication/interaction overview/manifestation nếu cần giải thích thêm.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card pink">
+                            <h4>Mỗi biểu đồ cần kèm</h4>
+                            <ul>
+                                <li>1-2 câu mô tả mục đích.</li>
+                                <li>Giả định quan trọng nếu có.</li>
+                                <li>Tên nhóm và thành viên.</li>
+                                <li>File ảnh hoặc link công cụ vẽ.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-size:0.78em;">
+                    <h2>Lỗi thường gặp</h2>
+                    <div class="lab-grid two">
+                        <div class="lab-card orange">
+                            <h4>Về nội dung</h4>
+                            <ul>
+                                <li>Nhầm actor với class trong hệ thống.</li>
+                                <li>Thiếu system boundary ở use case.</li>
+                                <li>Không ghi bội số trong class diagram.</li>
+                                <li>Sequence/communication diagram thiếu thứ tự thông điệp.</li>
+                            </ul>
+                        </div>
+                        <div class="lab-card blue">
+                            <h4>Về trình bày</h4>
+                            <ul>
+                                <li>Nhồi quá nhiều chi tiết vào một biểu đồ.</li>
+                                <li>Tên quan hệ hoặc interface quá mơ hồ.</li>
+                                <li>Mũi tên chồng chéo, khó đọc.</li>
+                                <li>Không giải thích giả định thiết kế.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section style="font-size:0.78em;">
+                <h2>Tổng kết Lab 02</h2>
+                <div class="lab-grid two">
+                    <div class="lab-card blue">
+                        <h4>Hôm nay cần nhớ</h4>
+                        <ul>
+                            <li>Use case trả lời ai dùng hệ thống để làm gì.</li>
+                            <li>Class/object trả lời cấu trúc miền và snapshot runtime.</li>
+                            <li>Sequence/communication/activity/interaction overview trả lời hành vi.</li>
+                            <li>Component/manifestation/deployment nối module, artifact và server.</li>
+                        </ul>
+                    </div>
+                    <div class="lab-card green">
+                        <h4>Tài liệu dùng trong lab</h4>
+                        <ul>
+                            <li>W2 - UML Diagram Examples.pdf: nội dung lý thuyết tuần 2.</li>
+                            <li>W2 - UML Diagrams.pdf: toàn bộ ví dụ Online Shopping và web app.</li>
+                            <li>lecture-01b-uml-diagrams.html: lý thuyết và ký hiệu.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="task-note" style="margin-top:0.8em;">
+                    Một biểu đồ tốt không cần nói hết mọi thứ. Nó cần trả lời đúng câu hỏi mà nhóm đang thiết kế.
+                </div>
+            </section>
+
+            <div class="footer">
+                Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §Lab02: UML Diagrams
+            </div>
+        </div>
+    </div>
+
+    <script src="revealjs/dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/math/math.js"></script>
+    <script>
+        Reveal.initialize({
+            controlsLayout: "edges",
+            slideNumber: true,
+            hashOneBasedIndex: true,
+            hash: true,
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+        });
+    </script>
+</body>
+
+</html>

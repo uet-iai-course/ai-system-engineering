@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bài 4a: RUP và Agile</title>
+
+  <link rel="stylesheet" href="revealjs/dist/reset.css" />
+  <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+  <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+  <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="lecture-style.css" />
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ================================================================
+           COVER & AGENDA
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+          <h3>Bài 4a: RUP và Agile</h3>
+          <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Nội dung</h2>
+          <ol start="0">
+            <li>Vì sao cần quy trình phát triển?</li>
+            <li>Waterfall và các phương pháp kế thừa</li>
+            <li>RUP: lặp và tăng trưởng</li>
+            <li>Agile / Scrum — công cụ Kanban &amp; Burndown chart</li>
+            <li>Agile / XP</li>
+            <li>Chất lượng thiết kế trong Agile</li>
+          </ol>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Lộ trình bài học</h2>
+          <div style="display:flex; align-items:center; padding:0 0.3em; margin:0.8em 0 0.5em;">
+            <div style="width:2.4em; height:2.4em; border-radius:50%; background:#888; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">0</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#888,#1E93AB);"></div>
+            <div style="width:2.4em; height:2.4em; border-radius:50%; background:#1E93AB; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">1</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#1E93AB,#2E7D32);"></div>
+            <div style="width:2.4em; height:2.4em; border-radius:50%; background:#2E7D32; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">2</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#2E7D32,#E65100);"></div>
+            <div style="width:2.4em; height:2.4em; border-radius:50%; background:#E65100; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">3</div>
+            <div style="flex:1; height:5px; background:linear-gradient(to right,#E65100,#6A1B9A);"></div>
+            <div style="width:2.4em; height:2.4em; border-radius:50%; background:#6A1B9A; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">4</div>
+          </div>
+          <div style="display:flex; gap:0.45em; font-size:0.8em;">
+            <div style="flex:1; border:2px solid #888; border-radius:8px; padding:0.5em; background:#f5f5f5;">
+              <div style="font-weight:bold; color:#555;">Động lực</div>
+              <div style="color:#666; font-size:0.9em;">vì sao cần quy trình</div>
+            </div>
+            <div style="flex:1; border:2px solid #1E93AB; border-radius:8px; padding:0.5em; background:#e0f4f8;">
+              <div style="font-weight:bold; color:#1E93AB;">Waterfall</div>
+              <div style="color:#555; font-size:0.9em;">tuần tự · hạn chế</div>
+            </div>
+            <div style="flex:1; border:2px solid #2E7D32; border-radius:8px; padding:0.5em; background:#e8f5e9;">
+              <div style="font-weight:bold; color:#2E7D32;">RUP</div>
+              <div style="color:#555; font-size:0.9em;">lặp · tăng trưởng</div>
+            </div>
+            <div style="flex:1; border:2px solid #E65100; border-radius:8px; padding:0.5em; background:#fff3e0;">
+              <div style="font-weight:bold; color:#E65100;">Agile / Scrum</div>
+              <div style="color:#555; font-size:0.9em;">quản lý công việc</div>
+            </div>
+            <div style="flex:1; border:2px solid #6A1B9A; border-radius:8px; padding:0.5em; background:#ede7f6;">
+              <div style="font-weight:bold; color:#6A1B9A;">Agile / XP</div>
+              <div style="color:#555; font-size:0.9em;">thực hành kỹ thuật</div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 0
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">0.</span><br />
+            Vì sao cần<br />quy trình phát triển?
+          </h1>
+        </section>
+
+        <section>
+          <h2>Câu hỏi mở đầu</h2>
+          <div class="question-box">
+            <div class="question-title">Thảo luận</div>
+            <div class="question-content">
+              Nếu không có quy trình, team sẽ thất bại ở đâu trước:
+              <strong>yêu cầu</strong>, <strong>thiết kế</strong>, hay <strong>tích hợp</strong>?
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Quy trình giúp làm gì?</h2>
+          <ul>
+            <li>Chia việc lớn thành các bước có kiểm soát.</li>
+            <li>Làm rõ <span class="keyword">ai làm gì</span>, khi nào giao, khi nào dừng.</li>
+            <li>Giảm rủi ro: phát hiện sai sớm hơn sửa muộn.</li>
+            <li>Giữ nhịp giao sản phẩm chạy được.</li>
+          </ul>
+          <p class="caption">Quy trình không thay thế kỹ năng kỹ thuật — nó định hướng cách team phối hợp.</p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Bản đồ các phương pháp sẽ gặp</h2>
+          <ul>
+            <li><strong>Waterfall / SDLC</strong> — tuần tự theo giai đoạn</li>
+            <li><strong>RUP</strong> — vòng lặp + tăng trưởng, có pha rõ</li>
+            <li><strong>Agile</strong> — giá trị linh hoạt</li>
+            <li><strong>Agile / Scrum · Kanban</strong> — tổ chức công việc</li>
+            <li><strong>Agile / XP</strong> — thực hành kỹ thuật (pair, TDD, CI…)</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 1 – WATERFALL
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">1.</span><br />
+            Waterfall và<br />các phương pháp kế thừa
+          </h1>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Waterfall là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Ý tưởng cốt lõi</div>
+            <div class="question-content">
+              Phát triển như dòng thác: hoàn tất gần như trọn một giai đoạn
+              rồi mới sang giai đoạn sau — ít quay lại.
+            </div>
+          </div>
+          <ul style="margin-top:0.55em">
+            <li>Gắn với SDLC cổ điển: Requirements → Design → Implementation → Verification → Maintenance.</li>
+            <li>Winston Royce (1970) mô tả mô hình tuần tự này — và cũng cảnh báo rủi ro nếu áp dụng cứng nhắc.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Nhìn thác nước theo giai đoạn</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/waterfall.svg" style="width:92%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">Mỗi giai đoạn gần như “khóa” trước khi sang bước sau — feedback muộn thường đắt.</p>
+        </section>
+
+        <section>
+          <h2>Sơ đồ Waterfall cổ điển</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/waterfall-classic.svg" style="width:70%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">
+            Tài liệu / thiết kế / coding / kiểm thử xếp tầng xuống —
+            Wikimedia Commons (CC BY 3.0, Peter Kemp / Paul Smith).
+          </p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Từng giai đoạn làm gì?</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:0.9em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">Giai đoạn</th>
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">Đầu ra chính</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Requirements</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Tài liệu yêu cầu (SRS) đã “đóng”</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Design</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Kiến trúc, thiết kế chi tiết</td>
+              </tr>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Implementation</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Mã nguồn theo thiết kế</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Verification</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Kiểm thử so với đặc tả</td>
+              </tr>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Maintenance</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Sửa lỗi / nâng cấp sau khi phát hành</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Điểm mạnh và điểm yếu</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7em">
+            <div style="background:#e8f5e9; border-radius:10px; padding:0.7em">
+              <strong style="color:#2E7D32">Mạnh</strong>
+              <ul>
+                <li>Dễ lập kế hoạch, báo cáo, ký hợp đồng theo milestone.</li>
+                <li>Tài liệu sớm, rõ trách nhiệm từng pha.</li>
+                <li>Hợp khi yêu cầu ít đổi.</li>
+              </ul>
+            </div>
+            <div style="background:#ffebee; border-radius:10px; padding:0.7em">
+              <strong class="text-red">Yếu</strong>
+              <ul>
+                <li>Feedback người dùng đến muộn.</li>
+                <li>Đổi yêu cầu giữa chừng rất đắt.</li>
+                <li>Rủi ro tích tụ đến cuối (integration / test).</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Waterfall hợp khi nào?</h2>
+          <ul>
+            <li>Yêu cầu <strong>ổn định</strong>, ít thay đổi giữa chừng.</li>
+            <li>Ràng buộc pháp lý / hợp đồng đòi tài liệu đầy đủ sớm.</li>
+            <li>Phạm vi và công nghệ đã quen.</li>
+          </ul>
+          <div class="question-box" style="margin-top:0.6em">
+            <div class="question-title">Cảnh báo</div>
+            <div class="question-content">
+              Dự án AI thường <em>không</em> ổn định yêu cầu sớm — data và metric thay đổi liên tục.
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Các mô hình khác (nhìn nhanh)</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.7em; margin-top:0.5em">
+            <div style="background:#e3f2fd; border-top:4px solid #1565C0; border-radius:8px; padding:0.7em">
+              <strong>Spiral</strong>
+              <p style="margin:0.4em 0 0; font-size:0.9em">Boehm: xoắn ốc theo vòng rủi ro + nguyên mẫu.</p>
+            </div>
+            <div style="background:#e8f5e9; border-top:4px solid #2E7D32; border-radius:8px; padding:0.7em">
+              <strong>V-Model</strong>
+              <p style="margin:0.4em 0 0; font-size:0.9em">Mỗi bước phát triển gắn với một bước kiểm thử tương ứng.</p>
+            </div>
+            <div style="background:#fff3e0; border-top:4px solid #E65100; border-radius:8px; padding:0.7em">
+              <strong>RAD</strong>
+              <p style="margin:0.4em 0 0; font-size:0.9em">Phát triển nhanh bằng prototype và vòng feedback ngắn.</p>
+            </div>
+          </div>
+          <p class="caption">Đây là họ hàng của tư duy “giảm rủi ro / tăng feedback” trước Agile hiện đại.</p>
+        </section>
+
+      </section>
+
+      <!-- ================================================================
+           SECTION 2 – RUP
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">2.</span><br />
+            RUP:<br />lặp và tăng trưởng
+          </h1>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>RUP là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa làm việc</div>
+            <div class="question-content">
+              <strong>Rational Unified Process (RUP)</strong> là khung phát triển phần mềm:
+              <em>tuần tự ở mức lớn</em> (bốn pha), <em>lặp ở mức nhỏ</em> (vòng lặp — iteration — trong mỗi pha).
+            </div>
+          </div>
+          <ul style="margin-top:0.6em">
+            <li>Xuất phát từ Rational Software; sau này thuộc IBM.</li>
+            <li>Nhấn mạnh use case, kiến trúc, và giảm rủi ro theo vòng lặp.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Bốn pha của RUP</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/rup-phases.svg" style="width:95%; display:block; margin:0 auto" />
+          </div>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Mỗi pha kết thúc bằng milestone</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:0.92em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.35em 0.5em; text-align:left; border-bottom:2px solid #ccc">Pha</th>
+                <th style="padding:0.35em 0.5em; text-align:left; border-bottom:2px solid #ccc">Câu hỏi chốt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.35em 0.5em; border-bottom:1px solid #eee"><strong>Inception</strong></td>
+                <td style="padding:0.35em 0.5em; border-bottom:1px solid #eee">Có đáng làm không? Phạm vi đủ rõ chưa?</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.35em 0.5em; border-bottom:1px solid #eee"><strong>Elaboration</strong></td>
+                <td style="padding:0.35em 0.5em; border-bottom:1px solid #eee">Kiến trúc đã ổn? Rủi ro chính đã giảm?</td>
+              </tr>
+              <tr>
+                <td style="padding:0.35em 0.5em; border-bottom:1px solid #eee"><strong>Construction</strong></td>
+                <td style="padding:0.35em 0.5em; border-bottom:1px solid #eee">Đã có bản chạy đủ dùng để chuẩn bị phát hành?</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.35em 0.5em; border-bottom:1px solid #eee"><strong>Transition</strong></td>
+                <td style="padding:0.35em 0.5em; border-bottom:1px solid #eee">Người dùng nhận và dùng được chưa?</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Vòng lặp khác tăng trưởng thế nào?</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/iterative-incremental.svg" style="width:95%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">RUP dùng cả hai: mỗi vòng lặp tinh chỉnh, đồng thời thêm chức năng mới (tăng trưởng).</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Vòng lặp (iteration) trong RUP</h2>
+          <ul>
+            <li>Một vòng đủ: chọn yêu cầu → thiết kế → code → kiểm thử → tích hợp.</li>
+            <li>Kết thúc bằng <strong>bản chạy được</strong> (internal hoặc external).</li>
+            <li>Ưu tiên xử lý <span class="keyword">rủi ro cao</span> trước.</li>
+          </ul>
+          <p class="caption">Khác Waterfall: không chờ “xong hết yêu cầu” mới code.</p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Vai trò trong RUP (ý tưởng)</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em; margin-top:0.5em">
+            <div style="background:#e3f2fd; border-radius:10px; padding:0.8em">
+              <strong style="color:#1565C0">Architect</strong>
+              <ul style="margin-top:0.4em">
+                <li>Giữ kiến trúc ổn định</li>
+                <li>Chặn rủi ro kỹ thuật lớn</li>
+              </ul>
+            </div>
+            <div style="background:#e8f5e9; border-radius:10px; padding:0.8em">
+              <strong style="color:#2E7D32">Designer / Developer</strong>
+              <ul style="margin-top:0.4em">
+                <li>Hiện thực theo use case</li>
+                <li>Giao bản tăng trưởng (increment) mỗi vòng lặp</li>
+              </ul>
+            </div>
+          </div>
+          <p class="caption">RUP có nhiều role; trên lớp chỉ cần thấy: kiến trúc và hiện thực tách trách nhiệm rõ.</p>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 3 – AGILE / SCRUM
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">3.</span><br />
+            Agile / Scrum
+          </h1>
+          <p style="margin-top:0.4em; color:#666">Khung quản lý công việc trong Agile</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Agile theo Robert C. Martin</h2>
+          <div style="display:grid; grid-template-columns:1fr 2.2fr; gap:0.8em; align-items:center">
+            <div style="font-size:0; line-height:0;">
+              <img src="img/lec-01b/agile-martin.jpg" style="width:100%; border-radius:6px" />
+            </div>
+            <div class="question-box">
+              <div class="question-title">Trích dẫn</div>
+              <div class="question-content" style="font-size:0.92em">
+                Trong Agile, bức tranh tổng thể phát triển cùng với phần mềm.
+                Mỗi lần lặp, thiết kế được cải thiện tốt nhất có thể tại thời điểm đó —
+                không cần dành quá nhiều thời gian nhìn trước mọi yêu cầu tương lai.
+                <br /><br />
+                <em>— Robert C. Martin, Agile Software Development</em>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Agile ra đời thế nào?</h2>
+          <div style="display:flex; align-items:stretch; gap:0.6em; margin-top:0.5em">
+            <div style="flex:1; background:#e3f2fd; border-top:4px solid #1565C0; border-radius:8px; padding:0.65em">
+              <strong style="color:#1565C0">Thập niên 1990</strong>
+              <p style="margin:0.35em 0 0; font-size:0.9em">
+                Các phương pháp "gọn nhẹ" xuất hiện để phản ứng lại quy trình nặng nề:
+                Scrum, XP, Crystal, Adaptive Software Development…
+              </p>
+            </div>
+            <div style="display:flex; align-items:center; color:#90a4ae; font-size:1.5em">→</div>
+            <div style="flex:1; background:#fff3e0; border-top:4px solid #E65100; border-radius:8px; padding:0.65em">
+              <strong style="color:#E65100">Tháng 2/2001</strong>
+              <p style="margin:0.35em 0 0; font-size:0.9em">
+                17 người (Kent Beck, Martin Fowler, Robert Martin, Ken Schwaber, Jeff Sutherland…)
+                họp tại Snowbird, Utah.
+              </p>
+            </div>
+            <div style="display:flex; align-items:center; color:#90a4ae; font-size:1.5em">→</div>
+            <div style="flex:1; background:#e8f5e9; border-top:4px solid #2E7D32; border-radius:8px; padding:0.65em">
+              <strong style="color:#2E7D32">Agile Manifesto</strong>
+              <p style="margin:0.35em 0 0; font-size:0.9em">
+                Chốt tên chung "Agile" cùng 4 giá trị và 12 nguyên tắc —
+                nền của Scrum, Kanban, XP ngày nay.
+              </p>
+            </div>
+          </div>
+          <p class="caption">Agile không phải một phát minh đơn lẻ — nó là điểm hội tụ của nhiều phương pháp gọn nhẹ.</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Bốn giá trị Agile Manifesto (2001)</h2>
+          <ul style="line-height:1.55">
+            <li><strong>Cá nhân và sự tương tác</strong> hơn là quy trình và công cụ<br />
+              <span class="text-light" style="font-size:0.85em">(Individuals and interactions over processes and tools)</span></li>
+            <li><strong>Phần mềm chạy được</strong> hơn là tài liệu đầy đủ<br />
+              <span class="text-light" style="font-size:0.85em">(Working software over comprehensive documentation)</span></li>
+            <li><strong>Cộng tác với khách hàng</strong> hơn là đàm phán hợp đồng<br />
+              <span class="text-light" style="font-size:0.85em">(Customer collaboration over contract negotiation)</span></li>
+            <li><strong>Phản hồi với thay đổi</strong> hơn là bám theo kế hoạch<br />
+              <span class="text-light" style="font-size:0.85em">(Responding to change over following a plan)</span></li>
+          </ul>
+          <p class="caption">Vế phải vẫn có giá trị — nhưng khi phải chọn, ưu tiên vế trái.</p>
+        </section>
+
+        <section style="font-size:0.62em;">
+          <h2>12 nguyên tắc Agile</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 1.2em; margin-top:0.4em">
+            <ol style="margin:0">
+              <li>Ưu tiên cao nhất: làm khách hàng hài lòng bằng cách <strong>giao phần mềm có giá trị, sớm và liên tục</strong>.</li>
+              <li><strong>Chào đón thay đổi yêu cầu</strong>, kể cả khi đã muộn — thay đổi là lợi thế cạnh tranh cho khách hàng.</li>
+              <li><strong>Giao phần mềm chạy được thường xuyên</strong>, chu kỳ vài tuần đến vài tháng — càng ngắn càng tốt.</li>
+              <li>Người kinh doanh và developer <strong>làm việc cùng nhau hằng ngày</strong> trong suốt dự án.</li>
+              <li>Xây dự án quanh những <strong>cá nhân có động lực</strong>; cho họ môi trường, hỗ trợ, và niềm tin.</li>
+              <li><strong>Trò chuyện trực tiếp</strong> là cách truyền đạt hiệu quả nhất trong team.</li>
+            </ol>
+            <ol start="7" style="margin:0">
+              <li><strong>Phần mềm chạy được</strong> là thước đo tiến độ chính.</li>
+              <li>Giữ <strong>nhịp phát triển bền vững</strong> — mọi người duy trì được tốc độ đều vô hạn định.</li>
+              <li>Liên tục chú ý tới <strong>chất lượng kỹ thuật và thiết kế tốt</strong> làm tăng tính linh hoạt.</li>
+              <li><strong>Đơn giản</strong> — nghệ thuật tối đa hoá lượng việc <em>không</em> phải làm — là thiết yếu.</li>
+              <li>Kiến trúc, yêu cầu, thiết kế tốt nhất nảy sinh từ <strong>team tự tổ chức</strong>.</li>
+              <li>Định kỳ, team <strong>nhìn lại cách làm việc</strong> và điều chỉnh cho hiệu quả hơn.</li>
+            </ol>
+          </div>
+          <p class="caption">Dịch thoát ý từ agilemanifesto.org/principles — Scrum và XP đều là cách hiện thực các nguyên tắc này.</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Agile là gì — và không phải gì?</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em">
+            <div style="background:#e8f5e9; border-radius:10px; padding:0.8em">
+              <strong style="color:#2E7D32">Là</strong>
+              <ul>
+                <li>Tập giá trị và nguyên tắc</li>
+                <li>Ưu tiên feedback sớm</li>
+                <li>Chấp nhận yêu cầu đổi</li>
+              </ul>
+            </div>
+            <div style="background:#ffebee; border-radius:10px; padding:0.8em">
+              <strong style="color:#C62828">Không phải</strong>
+              <ul>
+                <li>Một tool cụ thể</li>
+                <li>“Không cần tài liệu”</li>
+                <li>Làm tùy hứng không kế hoạch</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Scrum nằm đâu trong Agile?</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa làm việc</div>
+            <div class="question-content">
+              <strong>Scrum</strong> là khung (framework) để tổ chức công việc theo sprint —
+              giúp team áp dụng giá trị Agile, nhưng <em>không</em> quy định cách viết code.
+            </div>
+          </div>
+          <ul style="margin-top:0.5em">
+            <li>Nhịp cố định (thường 1–4 tuần).</li>
+            <li>Mỗi sprint kết thúc bằng <strong>Increment</strong> chạy được.</li>
+            <li>Ba trụ: transparency · inspection · adaptation (Scrum Guide).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Khung Scrum (tóm tắt)</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/scrum.svg" style="width:96%; display:block; margin:0 auto" />
+          </div>
+        </section>
+
+        <section>
+          <h2>Sơ đồ quy trình Scrum</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/scrum-classic.svg" style="width:92%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">
+            Product Backlog → Sprint → Daily Scrum → Increment —
+            Wikimedia Commons (Lakeworks, dựa trên Open Clip Art).
+          </p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Ba thành phần cốt lõi của Scrum</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.6em; font-size:0.92em">
+            <div style="background:#e3f2fd; border-radius:8px; padding:0.65em">
+              <strong>Roles</strong>
+              <ul>
+                <li>Product Owner</li>
+                <li>Scrum Master</li>
+                <li>Developers</li>
+              </ul>
+            </div>
+            <div style="background:#e8f5e9; border-radius:8px; padding:0.65em">
+              <strong>Events</strong>
+              <ul>
+                <li>Sprint</li>
+                <li>Daily Scrum</li>
+                <li>Review / Retro</li>
+              </ul>
+            </div>
+            <div style="background:#fff3e0; border-radius:8px; padding:0.65em">
+              <strong>Artifacts</strong>
+              <ul>
+                <li>Product Backlog</li>
+                <li>Sprint Backlog</li>
+                <li>Increment</li>
+              </ul>
+            </div>
+          </div>
+          <p class="caption">Scrum Guide: khung quản lý công việc — không quy định kỹ thuật coding.</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Hai công cụ trực quan trong Scrum</h2>
+          <p>Sprint chạy tốt khi cả team <strong>nhìn thấy</strong> công việc và tiến độ:</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em; margin-top:0.5em">
+            <div style="background:#e0f4f8; border-top:4px solid #1E93AB; border-radius:10px; padding:0.75em">
+              <strong style="color:#1E93AB">Bảng Kanban</strong>
+              <p style="margin:0.35em 0 0; font-size:0.9em">Việc nào đang ở đâu? Ai đang làm gì? Chỗ nào tắc?</p>
+            </div>
+            <div style="background:#fff3e0; border-top:4px solid #E65100; border-radius:10px; padding:0.75em">
+              <strong style="color:#E65100">Burndown chart</strong>
+              <p style="margin:0.35em 0 0; font-size:0.9em">Còn bao nhiêu việc? Có kịp hết sprint không?</p>
+            </div>
+          </div>
+          <p class="caption">Kanban trả lời "trạng thái", burndown trả lời "tiến độ" — dùng cùng nhau trong sprint.</p>
+        </section>
+
+        <section>
+          <h2>Công cụ 1: bảng Kanban</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/kanban.svg" style="width:92%; display:block; margin:0 auto" />
+          </div>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Ví dụ: bảng Kanban trong một sprint</h2>
+          <p><strong>Tình huống:</strong> team 5 người làm app đặt đồ ăn, sprint 2 tuần, bảng trên Jira / Trello.</p>
+          <ul>
+            <li>Sáng thứ Ba, cột <span class="inline-code">In Progress</span> đã chạm WIP limit (3 thẻ)
+              — không ai được kéo thẻ mới vào.</li>
+            <li>Daily Scrum nhìn bảng thấy thẻ "Tích hợp cổng thanh toán" đứng yên 3 ngày
+              → cả team xúm vào gỡ thay vì nhận việc mới.</li>
+            <li>Cuối sprint, cột <span class="inline-code">Done</span> chính là danh sách demo cho Sprint Review.</li>
+          </ul>
+          <div class="question-box" style="margin-top:0.4em">
+            <div class="question-title">Chốt</div>
+            <div class="question-content" style="font-size:0.95em">
+              WIP limit ép team <strong>làm xong việc cũ trước khi nhận việc mới</strong> — chống "ai cũng bận mà chẳng gì xong".
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Công cụ 2: Burndown chart</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/burndown.svg" style="width:92%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">Trục dọc: điểm (story points) còn lại · trục ngang: ngày trong sprint.</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Ví dụ: đọc burndown chart</h2>
+          <p><strong>Cùng sprint trên</strong> — nhìn đường thực tế (đỏ) so với đường lý tưởng (xanh):</p>
+          <ul>
+            <li><strong>Ngày 1–4:</strong> đường đỏ nằm <em>trên</em> đường xanh → cháy chậm hơn kế hoạch;
+              Scrum Master hỏi ngay tại daily thay vì đợi cuối sprint.</li>
+            <li><strong>Ngày 5:</strong> đường đỏ <em>nhảy lên</em> → khách thêm yêu cầu giữa sprint (scope tăng);
+              Product Owner phải đánh đổi — bỏ bớt story khác ra.</li>
+            <li><strong>Ngày 6–10:</strong> dốc xuống đều và về 0 → team bắt kịp, sprint về đích.</li>
+          </ul>
+          <div class="question-box" style="margin-top:0.4em">
+            <div class="question-title">Chốt</div>
+            <div class="question-content" style="font-size:0.95em">
+              Burndown biến "cảm giác tiến độ" thành <strong>dữ liệu nhìn được mỗi ngày</strong> — vấn đề lộ ra sớm, còn kịp xử lý.
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Kanban cũng có thể đứng riêng</h2>
+          <div class="slide-badge-row"><span class="self-study-badge">📖 Tự học</span></div>
+          <table style="width:100%; border-collapse:collapse; font-size:0.9em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.35em 0.5em; text-align:left; border-bottom:2px solid #ccc"></th>
+                <th style="padding:0.35em 0.5em; text-align:left; border-bottom:2px solid #ccc">Trong Scrum (công cụ)</th>
+                <th style="padding:0.35em 0.5em; text-align:left; border-bottom:2px solid #ccc">Kanban độc lập (phương pháp)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee"><strong>Nhịp</strong></td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Theo sprint cố định</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Luồng liên tục, không sprint</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee"><strong>Giới hạn</strong></td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Phạm vi sprint + WIP limit</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Chỉ WIP limit</td>
+              </tr>
+              <tr>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee"><strong>Hợp khi</strong></td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Phát triển sản phẩm theo nhịp</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Việc đến liên tục: vận hành, hỗ trợ</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 4 – AGILE / XP
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">4.</span><br />
+            Agile / XP
+          </h1>
+          <p style="margin-top:0.4em; color:#666">Extreme Programming — thực hành kỹ thuật trong Agile</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>XP là gì trong Agile?</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa làm việc</div>
+            <div class="question-content">
+              <strong>Extreme Programming (XP)</strong> là phương pháp Agile nhấn mạnh
+              <em>thực hành kỹ thuật</em> để phần mềm vẫn đổi được khi yêu cầu thay đổi.
+            </div>
+          </div>
+          <ul style="margin-top:0.5em">
+            <li>Kent Beck phát triển vào cuối những năm 1990.</li>
+            <li>XP có trước Agile Manifesto (2001) — và góp phần định hình Agile.</li>
+            <li>Khác Scrum: XP nói rõ <span class="keyword">cách viết và kiểm thử code</span>.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>XP theo Kent Beck</h2>
+          <div class="question-box">
+            <div class="question-title">Trích dẫn</div>
+            <div class="question-content">
+              Liên tục tinh chỉnh thiết kế, bắt đầu từ khởi đầu rất đơn giản.
+              Loại bỏ sự linh hoạt không hiệu quả.
+              <br /><br />
+              <em>— Kent Beck, Extreme Programming Explained</em>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Năm giá trị của XP</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5em; font-size:0.92em">
+            <div style="background:#e3f2fd; border-radius:8px; padding:0.6em; text-align:center"><strong>Communication</strong></div>
+            <div style="background:#e8f5e9; border-radius:8px; padding:0.6em; text-align:center"><strong>Simplicity</strong></div>
+            <div style="background:#fff3e0; border-radius:8px; padding:0.6em; text-align:center"><strong>Feedback</strong></div>
+            <div style="background:#fce4ec; border-radius:8px; padding:0.6em; text-align:center"><strong>Courage</strong></div>
+            <div style="background:#ede7f6; border-radius:8px; padding:0.6em; text-align:center"><strong>Respect</strong></div>
+          </div>
+          <p class="caption" style="margin-top:0.7em">
+            Bốn giá trị đầu trong ấn bản 1999; <em>Respect</em> thêm ở ấn bản 2004.
+          </p>
+        </section>
+
+        <section>
+          <h2>XP: lập kế hoạch và feedback nhiều tầng</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/xp-feedback.svg" style="width:58%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">
+            Vòng feedback theo năm / quý / tuần / ngày / giờ —
+            Wikimedia Commons (dựa trên sơ đồ của Don Wells, CC BY-SA 3.0).
+          </p>
+        </section>
+
+        <section>
+          <h2>Một số thực hành XP</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/xp-practices.svg" style="width:95%; display:block; margin:0 auto" />
+          </div>
+        </section>
+
+        <section style="font-size:0.8em;">
+          <h2>Thực hành then chốt — hiểu nhanh</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:0.88em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">Thực hành</th>
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">Ý chính</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Pair Programming</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Hai người một máy — review liên tục, chia sẻ kiến thức</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>TDD</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Viết test trước → code vừa đủ → refactor</td>
+              </tr>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Continuous Integration</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Tích hợp thường xuyên, tránh “big bang” cuối kỳ</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Refactoring</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Cải thiện thiết kế liên tục mà không đổi hành vi</td>
+              </tr>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Simple Design</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Chỉ đủ cho nhu cầu hiện tại — tránh over-engineering</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Small Releases</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Phát hành nhỏ, sớm, thường xuyên để nhận feedback</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Tình huống thực tế: thanh toán QR</h2>
+          <div class="question-box">
+            <div class="question-title">Bối cảnh</div>
+            <div class="question-content">
+              Team 6 người của một app bán hàng cần thêm <strong>thanh toán QR</strong> trong 3 tuần.
+              Rủi ro: API của ngân hàng <em>có thể đổi</em> giữa chừng.
+            </div>
+          </div>
+          <ul style="margin-top:0.5em">
+            <li>Yêu cầu chưa chốt hẳn → Waterfall (đóng băng đặc tả rồi mới code) rất rủi ro.</li>
+            <li>Đây là tình huống XP phát huy: <span class="keyword">đón thay đổi</span> bằng kỷ luật kỹ thuật.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.72em;">
+          <h2>Một vòng lặp XP (1 tuần) trong tình huống này</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.55em; margin-top:0.4em">
+            <div style="background:#e3f2fd; border-left:4px solid #1565C0; border-radius:8px; padding:0.55em 0.7em">
+              <strong style="color:#1565C0">1. Planning game (thứ Hai)</strong>
+              <p style="margin:0.3em 0 0">Khách chọn story ưu tiên: "Người mua quét QR và thấy xác nhận trong 5 giây".
+                Team ước lượng, cam kết cho tuần này.</p>
+            </div>
+            <div style="background:#e8f5e9; border-left:4px solid #2E7D32; border-radius:8px; padding:0.55em 0.7em">
+              <strong style="color:#2E7D32">2. Pair + TDD (hằng ngày)</strong>
+              <p style="margin:0.3em 0 0">Hai người một máy: viết test "QR hết hạn sau 15 phút" <em>trước</em>,
+                rồi code vừa đủ cho test xanh, rồi refactor.</p>
+            </div>
+            <div style="background:#fff3e0; border-left:4px solid #E65100; border-radius:8px; padding:0.55em 0.7em">
+              <strong style="color:#E65100">3. CI (mỗi lần push)</strong>
+              <p style="margin:0.3em 0 0">Toàn bộ test chạy tự động. Thứ Tư ngân hàng đổi format API —
+                test tích hợp đỏ ngay trong 10 phút, sửa trong ngày.</p>
+            </div>
+            <div style="background:#ede7f6; border-left:4px solid #6A1B9A; border-radius:8px; padding:0.55em 0.7em">
+              <strong style="color:#6A1B9A">4. Small release (thứ Sáu)</strong>
+              <p style="margin:0.3em 0 0">Phát hành cho 5% người dùng. Feedback: nút quét khó thấy
+                → thành story cho vòng lặp tuần sau.</p>
+            </div>
+          </div>
+          <p class="caption">API đổi giữa chừng không phá dự án: test bắt lỗi sớm, thiết kế đơn giản nên sửa nhanh.</p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Scrum quản lý — XP kỹ thuật</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7em">
+            <div style="background:#fff3e0; border-radius:10px; padding:0.75em">
+              <strong style="color:#E65100">Agile / Scrum</strong>
+              <ul>
+                <li>Ai làm gì trong sprint?</li>
+                <li>Khi nào review / retro?</li>
+                <li>Backlog ưu tiên ra sao?</li>
+              </ul>
+            </div>
+            <div style="background:#ede7f6; border-radius:10px; padding:0.75em">
+              <strong style="color:#6A1B9A">Agile / XP</strong>
+              <ul>
+                <li>Pair, TDD, CI, refactor</li>
+                <li>Làm sao để code vẫn đổi được?</li>
+                <li>Feedback kỹ thuật theo giờ / ngày</li>
+              </ul>
+            </div>
+          </div>
+          <p class="caption">Nhiều team thực tế: Scrum + một phần thực hành XP.</p>
+        </section>
+
+        <section>
+          <h2>Chi phí sửa lỗi theo thời điểm phát hiện</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04a/cost-of-bug.svg" style="width:90%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">XP đẩy kiểm thử và feedback sớm — giảm chi phí sửa muộn.</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Khi nào XP đặc biệt hữu ích?</h2>
+          <ul>
+            <li>Yêu cầu thay đổi nhanh, cần giữ chất lượng code.</li>
+            <li>Team nhỏ–vừa, làm việc gần nhau (pair dễ hơn).</li>
+            <li>Cần kỷ luật kỹ thuật rõ: test, CI, thiết kế đơn giản.</li>
+          </ul>
+          <div class="question-box" style="margin-top:0.5em">
+            <div class="question-title">Chốt</div>
+            <div class="question-content">
+              Agile / Scrum tổ chức <em>công việc</em>.
+              Agile / XP tổ chức <em>cách viết phần mềm</em>.
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 5 – DESIGN QUALITY
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">5.</span><br />
+            Chất lượng thiết kế<br />trong Agile
+          </h1>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Tính đơn giản</h2>
+          <ul>
+            <li><span class="keyword">Kent Beck:</span> đầu tư thiết kế nhỏ nhất có thể trước khi nhận lợi nhuận từ nó.</li>
+            <li><span class="keyword">Robert Martin:</span> phức tạp không cần thiết thường đến từ việc đoán trước thay đổi.</li>
+            <li><span class="keyword">Grady Booch:</span> không làm chủ độ phức tạp → trễ, vượt ngân sách, thiếu yêu cầu.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Kiến trúc sư giỏi giảm phức tạp</h2>
+          <div class="question-box">
+            <div class="question-title">Yegor Bugayenko</div>
+            <div class="question-content" style="font-size:0.95em">
+              Đức tính chính của kiến trúc sư là khả năng <strong>giảm bớt sự phức tạp</strong>.
+              Họ không tự hào về sơ đồ rối — mà về bản vẽ đơn giản nhưng giải thích đúng hệ thống.
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Không trùng lặp (DRY)</h2>
+          <ul>
+            <li>Mã dư thừa làm mỗi lần sửa lỗi phải sửa ở nhiều chỗ.</li>
+            <li>Mỗi bản copy hơi khác → sửa không đồng nhất → bug quay lại.</li>
+          </ul>
+          <p class="caption">Robert Martin: redundancy làm hệ thống khó thay đổi an toàn.</p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Tính mô-đun: cứng và bất động</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7em">
+            <div style="background:#ffebee; border-radius:10px; padding:0.75em">
+              <strong class="text-red">Rigidity (cứng)</strong>
+              <p style="margin:0.4em 0 0; font-size:0.92em">
+                Một thay đổi kéo theo chuỗi sửa ở nhiều module phụ thuộc.
+              </p>
+            </div>
+            <div style="background:#fff3e0; border-radius:10px; padding:0.75em">
+              <strong style="color:#E65100">Immobility (bất động)</strong>
+              <p style="margin:0.4em 0 0; font-size:0.92em">
+                Có phần đáng tái dùng, nhưng tách ra quá rủi ro / tốn công.
+              </p>
+            </div>
+          </div>
+          <p class="caption">Hai mùi thiết kế Martin nhấn mạnh — nối trực tiếp với SOLID ở bài trước.</p>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           CLOSING
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>Tổng kết</h1>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Nhớ gì sau bài 4a?</h2>
+          <ul>
+            <li><strong>Waterfall</strong>: rõ giai đoạn, yếu khi yêu cầu đổi nhiều.</li>
+            <li><strong>RUP</strong>: bốn pha + vòng lặp; giảm rủi ro sớm.</li>
+            <li><strong>Agile / Scrum</strong>: khung quản lý sprint, backlog, increment — theo dõi bằng Kanban và burndown.</li>
+            <li><strong>Agile / XP</strong>: thực hành kỹ thuật (TDD, pair, CI…) để đổi code an toàn.</li>
+            <li>Thiết kế tốt trong Agile = <span class="keyword">đơn giản</span>, ít trùng, dễ tách module.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Khi nào dùng gì?</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:0.88em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.35em 0.5em; text-align:left; border-bottom:2px solid #ccc">Tình huống</th>
+                <th style="padding:0.35em 0.5em; text-align:left; border-bottom:2px solid #ccc">Gợi ý</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Yêu cầu ổn, hợp đồng cứng</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Waterfall / V-Model (có kiểm soát)</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Dự án lớn, cần kiến trúc sớm</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">RUP (Elaboration mạnh)</td>
+              </tr>
+              <tr>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Sản phẩm đổi nhanh, team nhỏ–vừa</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Scrum + thực hành XP</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Luồng việc liên tục / hỗ trợ</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Kanban</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section style="font-size:0.8em;">
+          <h2>Tài liệu tham khảo</h2>
+          <ul>
+            <li>Per Kroll et al. — <em>A Practitioner's Guide to the RUP</em></li>
+            <li>Robert C. Martin — <em>Agile Software Development: Principles, Patterns, and Practices</em></li>
+            <li>Kent Beck — <em>Extreme Programming Explained</em></li>
+            <li>Robert C. Martin — <em>Clean Architecture</em></li>
+            <li>Steve McConnell — <em>Code Complete</em></li>
+            <li>Frederick Brooks — <em>The Mythical Man-Month</em></li>
+            <li>Agile Manifesto — <a href="https://agilemanifesto.org/">agilemanifesto.org</a></li>
+            <li>Scrum Guide — <a href="https://scrumguides.org/">scrumguides.org</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Bài sau</h2>
+          <div class="question-box">
+            <div class="question-title">Bài 4b</div>
+            <div class="question-content">
+              Yêu cầu chức năng / phi chức năng, V&amp;V, và ước lượng (FPA, COCOMO, Cone of Uncertainty).
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <div class="footer">
+        Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §4a: RUP và Agile
+      </div>
+    </div>
+  </div>
+
+  <script src="revealjs/dist/reveal.js"></script>
+  <script src="plugin/notes/notes.js"></script>
+  <script src="plugin/markdown/markdown.js"></script>
+  <script src="plugin/highlight/highlight.js"></script>
+  <script src="plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+    });
+  </script>
+</body>
+
+</html>

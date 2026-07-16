@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 380" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="920" height="380" fill="#fafafa"/>
+  <text x="460" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Nón không chắc chắn (Cone of Uncertainty)</text>
+  <line x1="80" y1="320" x2="860" y2="320" stroke="#999" stroke-width="2"/>
+  <line x1="80" y1="50" x2="80" y2="320" stroke="#999" stroke-width="2"/>
+  <polygon points="80,80 80,300 820,200 820,180" fill="#ffcdd2" fill-opacity="0.55" stroke="#E62727" stroke-width="2"/>
+  <line x1="80" y1="190" x2="820" y2="190" stroke="#1565C0" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="100" y="75" font-size="13" fill="#E62727">ước lượng cao (×4)</text>
+  <text x="100" y="310" font-size="13" fill="#E62727">ước lượng thấp (×0.25)</text>
+  <text x="500" y="175" font-size="12" fill="#1565C0">ước lượng “đúng nhất có thể”</text>
+  <text x="200" y="350" text-anchor="middle" font-size="12" fill="#555">Ý tưởng ban đầu</text>
+  <text x="460" y="350" text-anchor="middle" font-size="12" fill="#555">Yêu cầu rõ hơn</text>
+  <text x="760" y="350" text-anchor="middle" font-size="12" fill="#555">Gần hoàn thành</text>
+  <text x="460" y="370" text-anchor="middle" font-size="12" fill="#888">Steve McConnell — khoảng sai số tốt nhất có thể thu hẹp khi dự án tiến triển</text>
+</svg>

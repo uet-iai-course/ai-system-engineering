@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 360" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="980" height="360" fill="#fafafa"/>
+  <text x="490" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Khung Scrum (tóm tắt)</text>
+  <rect x="30" y="70" width="160" height="200" rx="10" fill="#e3f2fd" stroke="#1565C0" stroke-width="2"/>
+  <text x="110" y="100" text-anchor="middle" font-size="15" font-weight="700" fill="#1565C0">Product</text>
+  <text x="110" y="120" text-anchor="middle" font-size="15" font-weight="700" fill="#1565C0">Backlog</text>
+  <text x="110" y="160" text-anchor="middle" font-size="12" fill="#444">Danh sách</text>
+  <text x="110" y="178" text-anchor="middle" font-size="12" fill="#444">ưu tiên việc</text>
+  <text x="110" y="210" text-anchor="middle" font-size="12" fill="#666">Product Owner</text>
+  <path d="M200 170 L250 170" stroke="#1E93AB" stroke-width="3" marker-end="url(#a)"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1E93AB"/></marker></defs>
+  <rect x="260" y="100" width="140" height="140" rx="10" fill="#e8f5e9" stroke="#2E7D32" stroke-width="2"/>
+  <text x="330" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="#2E7D32">Sprint</text>
+  <text x="330" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#2E7D32">Backlog</text>
+  <text x="330" y="195" text-anchor="middle" font-size="12" fill="#444">Việc chọn</text>
+  <text x="330" y="213" text-anchor="middle" font-size="12" fill="#444">cho sprint</text>
+  <path d="M410 170 L460 170" stroke="#1E93AB" stroke-width="3" marker-end="url(#a)"/>
+  <rect x="470" y="60" width="280" height="220" rx="12" fill="#fff3e0" stroke="#E65100" stroke-width="2.5"/>
+  <text x="610" y="95" text-anchor="middle" font-size="16" font-weight="700" fill="#E65100">Sprint (1–4 tuần)</text>
+  <circle cx="610" cy="160" r="48" fill="none" stroke="#E65100" stroke-width="4"/>
+  <text x="610" y="155" text-anchor="middle" font-size="12" fill="#444">Daily</text>
+  <text x="610" y="173" text-anchor="middle" font-size="12" fill="#444">Scrum</text>
+  <text x="610" y="240" text-anchor="middle" font-size="12" fill="#666">Dev Team + Scrum Master</text>
+  <path d="M760 170 L810 170" stroke="#1E93AB" stroke-width="3" marker-end="url(#a)"/>
+  <rect x="820" y="90" width="140" height="160" rx="10" fill="#fce4ec" stroke="#AD1457" stroke-width="2"/>
+  <text x="890" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="#AD1457">Increment</text>
+  <text x="890" y="175" text-anchor="middle" font-size="12" fill="#444">Sản phẩm</text>
+  <text x="890" y="193" text-anchor="middle" font-size="12" fill="#444">chạy được</text>
+  <text x="890" y="220" text-anchor="middle" font-size="12" fill="#666">Review +</text>
+  <text x="890" y="238" text-anchor="middle" font-size="12" fill="#666">Retrospective</text>
+  <text x="490" y="340" text-anchor="middle" font-size="13" fill="#666">Scrum Guide: roles · events · artifacts — khung quản lý, không quy định kỹ thuật coding.</text>
+</svg>

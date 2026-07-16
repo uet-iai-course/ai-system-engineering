@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="960" height="380" fill="#fafafa"/>
+  <text x="480" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#333">RUP: bốn pha theo thời gian</text>
+  <rect x="40" y="70" width="210" height="180" rx="12" fill="#e3f2fd" stroke="#1565C0" stroke-width="2.5"/>
+  <text x="145" y="105" text-anchor="middle" font-size="18" font-weight="700" fill="#1565C0">Inception</text>
+  <text x="145" y="140" text-anchor="middle" font-size="13" fill="#444">Phạm vi &amp; business case</text>
+  <text x="145" y="162" text-anchor="middle" font-size="13" fill="#444">Rủi ro ban đầu</text>
+  <text x="145" y="195" text-anchor="middle" font-size="12" font-style="italic" fill="#666">Milestone: Lifecycle Objective</text>
+  <rect x="270" y="70" width="210" height="180" rx="12" fill="#e8f5e9" stroke="#2E7D32" stroke-width="2.5"/>
+  <text x="375" y="105" text-anchor="middle" font-size="18" font-weight="700" fill="#2E7D32">Elaboration</text>
+  <text x="375" y="140" text-anchor="middle" font-size="13" fill="#444">Kiến trúc ổn định</text>
+  <text x="375" y="162" text-anchor="middle" font-size="13" fill="#444">Giảm rủi ro chính</text>
+  <text x="375" y="195" text-anchor="middle" font-size="12" font-style="italic" fill="#666">Milestone: Lifecycle Architecture</text>
+  <rect x="500" y="70" width="210" height="180" rx="12" fill="#fff3e0" stroke="#E65100" stroke-width="2.5"/>
+  <text x="605" y="105" text-anchor="middle" font-size="18" font-weight="700" fill="#E65100">Construction</text>
+  <text x="605" y="140" text-anchor="middle" font-size="13" fill="#444">Xây dựng incremental</text>
+  <text x="605" y="162" text-anchor="middle" font-size="13" fill="#444">Phần lớn coding</text>
+  <text x="605" y="195" text-anchor="middle" font-size="12" font-style="italic" fill="#666">Milestone: Initial Operational</text>
+  <rect x="730" y="70" width="210" height="180" rx="12" fill="#fce4ec" stroke="#AD1457" stroke-width="2.5"/>
+  <text x="835" y="105" text-anchor="middle" font-size="18" font-weight="700" fill="#AD1457">Transition</text>
+  <text x="835" y="140" text-anchor="middle" font-size="13" fill="#444">Triển khai cho người dùng</text>
+  <text x="835" y="162" text-anchor="middle" font-size="13" fill="#444">Beta, đào tạo</text>
+  <text x="835" y="195" text-anchor="middle" font-size="12" font-style="italic" fill="#666">Milestone: Product Release</text>
+
+  <text x="480" y="300" text-anchor="middle" font-size="15" fill="#333">Trong mỗi pha: nhiều <tspan font-weight="700" fill="#E62727">iteration</tspan> — mỗi lần lặp cho ra bản chạy được.</text>
+  <text x="480" y="330" text-anchor="middle" font-size="14" fill="#666">Serial ở mức lớn (các pha) · Iterative ở mức nhỏ (trong mỗi pha).</text>
+  <text x="480" y="360" text-anchor="middle" font-size="12" fill="#888">Nguồn: IBM Rational Unified Process best practices</text>
+</svg>

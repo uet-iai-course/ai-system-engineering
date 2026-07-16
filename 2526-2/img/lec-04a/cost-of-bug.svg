@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="880" height="340" fill="#fafafa"/>
+  <text x="440" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Chi phí sửa lỗi tăng theo giai đoạn phát hiện</text>
+  <line x1="80" y1="280" x2="820" y2="280" stroke="#999" stroke-width="2"/>
+  <line x1="80" y1="60" x2="80" y2="280" stroke="#999" stroke-width="2"/>
+  <rect x="100" y="240" width="90" height="40" rx="4" fill="#81c784"/>
+  <text x="145" y="230" text-anchor="middle" font-size="13" font-weight="700" fill="#333">1×</text>
+  <text x="145" y="302" text-anchor="middle" font-size="12" fill="#555">Yêu cầu</text>
+  <rect x="240" y="210" width="90" height="70" rx="4" fill="#aed581"/>
+  <text x="285" y="200" text-anchor="middle" font-size="13" font-weight="700" fill="#333">5×</text>
+  <text x="285" y="302" text-anchor="middle" font-size="12" fill="#555">Thiết kế</text>
+  <rect x="380" y="170" width="90" height="110" rx="4" fill="#ffd54f"/>
+  <text x="425" y="160" text-anchor="middle" font-size="13" font-weight="700" fill="#333">10×</text>
+  <text x="425" y="302" text-anchor="middle" font-size="12" fill="#555">Coding</text>
+  <rect x="520" y="120" width="90" height="160" rx="4" fill="#ffb74d"/>
+  <text x="565" y="110" text-anchor="middle" font-size="13" font-weight="700" fill="#333">20×</text>
+  <text x="565" y="302" text-anchor="middle" font-size="12" fill="#555">Kiểm thử</text>
+  <rect x="660" y="60" width="90" height="220" rx="4" fill="#e57373"/>
+  <text x="705" y="50" text-anchor="middle" font-size="13" font-weight="700" fill="#333">50×+</text>
+  <text x="705" y="302" text-anchor="middle" font-size="12" fill="#555">Sản xuất</text>
+
+  <text x="440" y="330" text-anchor="middle" font-size="13" fill="#666">Phát hiện sớm thường rẻ hơn nhiều so với sửa khi đã lên production.</text>
+</svg>

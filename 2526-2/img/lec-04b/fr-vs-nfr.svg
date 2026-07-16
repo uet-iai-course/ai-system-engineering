@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="900" height="300" fill="#fafafa"/>
+  <rect x="40" y="50" width="390" height="200" rx="14" fill="#e3f2fd" stroke="#1565C0" stroke-width="3"/>
+  <text x="235" y="95" text-anchor="middle" font-size="22" font-weight="700" fill="#1565C0">Yêu cầu chức năng</text>
+  <text x="235" y="130" text-anchor="middle" font-size="15" fill="#333">Hệ thống phải <tspan font-weight="700">làm gì</tspan>?</text>
+  <text x="235" y="170" text-anchor="middle" font-size="13" fill="#555">"Người dùng đặt món và thanh toán"</text>
+  <text x="235" y="200" text-anchor="middle" font-size="13" fill="#555">"Model gợi ý 5 món mỗi lần mở app"</text>
+
+  <rect x="470" y="50" width="390" height="200" rx="14" fill="#fff3e0" stroke="#E65100" stroke-width="3"/>
+  <text x="665" y="95" text-anchor="middle" font-size="22" font-weight="700" fill="#E65100">Yêu cầu phi chức năng</text>
+  <text x="665" y="130" text-anchor="middle" font-size="15" fill="#333">Hệ thống phải <tspan font-weight="700">thế nào</tspan>?</text>
+  <text x="665" y="170" text-anchor="middle" font-size="13" fill="#555">"Phản hồi ≤ 200 ms với 1000 user"</text>
+  <text x="665" y="200" text-anchor="middle" font-size="13" fill="#555">"Sẵn sàng 99.9% trong giờ cao điểm"</text>
+</svg>

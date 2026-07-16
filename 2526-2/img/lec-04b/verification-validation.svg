@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 280" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="900" height="280" fill="#fafafa"/>
+  <rect x="40" y="50" width="390" height="180" rx="14" fill="#e3f2fd" stroke="#1565C0" stroke-width="3"/>
+  <text x="235" y="95" text-anchor="middle" font-size="22" font-weight="700" fill="#1565C0">Verification</text>
+  <text x="235" y="130" text-anchor="middle" font-size="16" fill="#333">Are we building it right?</text>
+  <text x="235" y="170" text-anchor="middle" font-size="14" fill="#555">Làm đúng theo đặc tả?</text>
+  <text x="235" y="195" text-anchor="middle" font-size="14" fill="#555">Kiểm tra so với yêu cầu đã ghi</text>
+  <rect x="470" y="50" width="390" height="180" rx="14" fill="#fff3e0" stroke="#E65100" stroke-width="3"/>
+  <text x="665" y="95" text-anchor="middle" font-size="22" font-weight="700" fill="#E65100">Validation</text>
+  <text x="665" y="130" text-anchor="middle" font-size="16" fill="#333">Are we building the right thing?</text>
+  <text x="665" y="170" text-anchor="middle" font-size="14" fill="#555">Làm đúng việc người dùng cần?</text>
+  <text x="665" y="195" text-anchor="middle" font-size="14" fill="#555">Đáp ứng nhu cầu thực tế?</text>
+</svg>

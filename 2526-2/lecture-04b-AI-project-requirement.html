@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bài 4b: Yêu cầu và Ước lượng trong dự án AI</title>
+
+  <link rel="stylesheet" href="revealjs/dist/reset.css" />
+  <link rel="stylesheet" href="revealjs/dist/reveal.css" />
+  <link rel="stylesheet" href="revealjs/dist/theme/white.css" />
+  <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="lecture-style.css" />
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ================================================================
+           COVER & AGENDA
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
+          <h3>Bài 4b: Yêu cầu và Ước lượng<br />trong dự án AI</h3>
+          <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Nội dung</h2>
+          <ol start="0">
+            <li>Yêu cầu và ước lượng là gì?</li>
+            <li>Yêu cầu chức năng</li>
+            <li>Yêu cầu phi chức năng (NFR)</li>
+            <li>Verification, Validation &amp; Traceability</li>
+            <li>Ước lượng: FPA và COCOMO</li>
+            <li>Cone of Uncertainty &amp; điểm chốt</li>
+          </ol>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Nối với bài 4a</h2>
+          <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:0.6em; align-items:center; margin-top:0.8em">
+            <div style="background:#e3f2fd; border-radius:10px; padding:0.8em">
+              <strong style="color:#1565C0">Bài 4a</strong>
+              <p style="margin:0.35em 0 0; font-size:0.92em">RUP / Agile — <em>cách tổ chức công việc</em></p>
+            </div>
+            <div style="font-size:1.6em; color:#90a4ae">→</div>
+            <div style="background:#fff3e0; border-radius:10px; padding:0.8em">
+              <strong style="color:#E65100">Bài 4b</strong>
+              <p style="margin:0.35em 0 0; font-size:0.92em">Yêu cầu + NFR + <em>ước lượng chi phí / thời gian</em></p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 0 – REQUIREMENTS & ESTIMATION INTRO
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">0.</span><br />
+            Yêu cầu và ước lượng<br />là gì?
+          </h1>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Hai câu hỏi trước khi viết code</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8em; margin-top:0.5em">
+            <div style="background:#e3f2fd; border-radius:10px; padding:0.85em">
+              <strong style="color:#1565C0">Yêu cầu (Requirements)</strong>
+              <p style="margin:0.4em 0 0">Hệ thống phải làm <em>gì</em> và vận hành <em>thế nào</em>?</p>
+            </div>
+            <div style="background:#fff3e0; border-radius:10px; padding:0.85em">
+              <strong style="color:#E65100">Ước lượng (Estimation)</strong>
+              <p style="margin:0.4em 0 0">Làm việc đó mất bao nhiêu <em>công</em>, <em>thời gian</em>, <em>tiền</em>?</p>
+            </div>
+          </div>
+          <p class="caption">Không rõ yêu cầu → ước lượng chỉ là đoán. Không ước lượng → kế hoạch không kiểm soát được.</p>
+        </section>
+
+        <section>
+          <h2>Chức năng vs phi chức năng</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04b/fr-vs-nfr.svg" style="width:92%; display:block; margin:0 auto" />
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Trong dự án AI, vì sao hai thứ này khó hơn?</h2>
+          <ul>
+            <li>Yêu cầu gắn với <strong>metric</strong> (accuracy, latency) và dữ liệu — dễ đổi sau thí nghiệm.</li>
+            <li>Ước lượng phải kể cả labeling, train, thử model — không chỉ coding.</li>
+            <li>Cam kết sớm một con số duy nhất thường <span class="keyword">sai</span> (xem Cone).</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 1 – FUNCTIONAL REQUIREMENTS
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">1.</span><br />
+            Yêu cầu chức năng
+          </h1>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Yêu cầu chức năng là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa làm việc</div>
+            <div class="question-content">
+              Mô tả hành vi hệ thống phải cung cấp cho người dùng —
+              <strong>ai</strong> làm <strong>việc gì</strong>, với kết quả gì.
+            </div>
+          </div>
+          <ul style="margin-top:0.5em">
+            <li>Thường gắn với use case / user story.</li>
+            <li>Có thể kiểm thử: “làm được / không làm được”.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Viết tốt: Who does What</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7em">
+            <div style="background:#ffebee; border-radius:10px; padding:0.7em">
+              <strong class="text-red">Mơ hồ</strong>
+              <ul>
+                <li>“Hệ thống hỗ trợ khách hàng.”</li>
+                <li>“Có AI gợi ý.”</li>
+                <li>“Xử lý đơn hàng.”</li>
+              </ul>
+            </div>
+            <div style="background:#e8f5e9; border-radius:10px; padding:0.7em">
+              <strong style="color:#2E7D32">Rõ hơn</strong>
+              <ul>
+                <li>“Nhân viên CSKH xem lịch sử 10 đơn gần nhất của khách.”</li>
+                <li>“Khi mở app, hệ thống gợi ý tối đa 5 món dựa trên đơn trước.”</li>
+                <li>“Khách hủy đơn trong 5 phút sau khi đặt; sau đó không hủy được.”</li>
+              </ul>
+            </div>
+          </div>
+          <p class="caption">Một câu yêu cầu tốt trả lời được: ai · hành động · đối tượng · điều kiện.</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Ví dụ: yêu cầu chức năng cho chatbot AI</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:0.9em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">ID</th>
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">Yêu cầu chức năng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>FR-01</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Khách gửi câu hỏi tiếng Việt; chatbot trả lời trong cùng phiên chat.</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>FR-02</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Nếu độ tin cậy &lt; ngưỡng, chatbot chuyển sang nhân viên CSKH.</td>
+              </tr>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>FR-03</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Nhân viên xem được toàn bộ lịch sử hội thoại của phiên đó.</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>FR-04</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Quản trị viên thêm / sửa FAQ để chatbot dùng lại.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Lỗi thường gặp khi viết yêu cầu</h2>
+          <ul>
+            <li>Không có từ điển thuật ngữ (hoặc viết tồi).</li>
+            <li>Trộn thảo luận / ý kiến vào yêu cầu.</li>
+            <li>Lẫn chức năng và phi chức năng.</li>
+            <li>Lẫn yêu cầu với hướng dẫn cài đặt / triển khai.</li>
+            <li>Thiếu góc nhìn người dùng; câu mơ hồ (“Who does What?”).</li>
+            <li>Nhiễu — ghi quá nhiều chi tiết không phải yêu cầu.</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 2 – NFR
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">2.</span><br />
+            Yêu cầu phi chức năng<br />(NFR)
+          </h1>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>NFR là gì?</h2>
+          <p>Yêu cầu về <strong>cách hệ thống vận hành</strong>, không chỉ “làm được chức năng gì”.</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.45em; margin-top:0.55em; font-size:0.88em">
+            <div style="background:#e3f2fd; border-radius:8px; padding:0.5em; text-align:center">Performance</div>
+            <div style="background:#e8f5e9; border-radius:8px; padding:0.5em; text-align:center">Availability</div>
+            <div style="background:#fff3e0; border-radius:8px; padding:0.5em; text-align:center">Security</div>
+            <div style="background:#fce4ec; border-radius:8px; padding:0.5em; text-align:center">Recoverability</div>
+            <div style="background:#ede7f6; border-radius:8px; padding:0.5em; text-align:center">Usability</div>
+            <div style="background:#e0f7fa; border-radius:8px; padding:0.5em; text-align:center">Maintainability</div>
+            <div style="background:#f3e5f5; border-radius:8px; padding:0.5em; text-align:center">Reliability</div>
+            <div style="background:#e8eaf6; border-radius:8px; padding:0.5em; text-align:center">Integration</div>
+            <div style="background:#efebe9; border-radius:8px; padding:0.5em; text-align:center">Mobile / …</div>
+          </div>
+          <p class="caption">Nguyên tắc chung: NFR phải <strong>đo được</strong>, có ngữ cảnh, có ngưỡng.</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Availability — tính sẵn sàng</h2>
+          <p>Tỷ lệ thời gian hệ thống sẵn sàng phục vụ:</p>
+          \[
+            A = \dfrac{E_{\text{up}}}{E_{\text{up}} + E_{\text{down}}}
+          \]
+          <ul>
+            <li>\(E_{\text{up}}\): thời gian hoạt động · \(E_{\text{down}}\): thời gian ngừng.</li>
+            <li><strong>Ví dụ:</strong> chatbot CSKH phải đạt \(A \ge 99.5\%\) trong khung 8h–22h mỗi ngày.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Performance / Capacity — hiệu suất</h2>
+          <ul>
+            <li>Khả năng xử lý trong một đơn vị thời gian.</li>
+            <li>Đơn vị thường dùng: <strong>CPS</strong> (clicks/requests per second), latency p95…</li>
+          </ul>
+          <div class="question-box" style="margin-top:0.5em">
+            <div class="question-title">Ví dụ đo được</div>
+            <div class="question-content">
+              Trên máy chủ kiểm thử (Phụ lục A), UC1–UC7 phản hồi ≤ 20 ms
+              với tải 100 yêu cầu đồng thời.
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Security — bảo mật</h2>
+          <ul>
+            <li>Ai được truy cập dữ liệu / model / API nào?</li>
+            <li>Dữ liệu nhạy cảm (PII) mã hoá khi lưu và khi truyền.</li>
+            <li>Ghi nhật ký truy cập; chặn brute-force đăng nhập.</li>
+          </ul>
+          <p class="caption">Ví dụ: “Chỉ CSKH được xem hội thoại khách; log giữ tối thiểu 90 ngày.”</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Recoverability — khả năng phục hồi</h2>
+          <div class="question-box">
+            <div class="question-title">RTO</div>
+            <div class="question-content">
+              <strong>Recovery Time Objective</strong> — thời gian tối đa chấp nhận được
+              để hệ thống phục hồi sau sự cố.
+            </div>
+          </div>
+          <ul style="margin-top:0.5em">
+            <li><strong>Ví dụ:</strong> sau sự cố mất máy chủ suy luận, RTO ≤ 30 phút.</li>
+            <li>Khác Availability: RTO nói về <em>tốc độ phục hồi</em>, không chỉ tỷ lệ uptime.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Usability — dễ sử dụng</h2>
+          <ul>
+            <li>Người dùng hoàn thành nhiệm vụ chính với ít lỗi / ít bước.</li>
+            <li>Phải đo được — không chỉ “giao diện đẹp”.</li>
+          </ul>
+          <div class="question-box" style="margin-top:0.5em">
+            <div class="question-title">Ví dụ</div>
+            <div class="question-content">
+              ≥ 80% người dùng beta xác nhận ẩn danh rằng họ tìm được nút
+              “chuyển nhân viên” trong ≤ 10 giây.
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Maintainability — khả năng bảo trì</h2>
+          <div class="question-box">
+            <div class="question-title">MTTR</div>
+            <div class="question-content">
+              <strong>Mean Time To Repair</strong> — thời gian trung bình để sửa một lỗi.
+            </div>
+          </div>
+          <ul style="margin-top:0.5em">
+            <li><strong>Ví dụ:</strong> lỗi nghiêm trọng (P1) phải được sửa trong ≤ 2 giờ.</li>
+            <li>Liên quan thiết kế: module rõ, log tốt, CI nhanh → MTTR thấp hơn.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Reliability — độ tin cậy</h2>
+          <ul>
+            <li>Hệ thống hoạt động đúng trong điều kiện đã định, trong thời gian dài.</li>
+            <li>Thường gắn MTBF (Mean Time Between Failures) hoặc tỷ lệ lỗi cho phép.</li>
+          </ul>
+          <p class="caption">Ví dụ AI: “Tỷ lệ trả lời sai nghiêm trọng (hallucination P1) &lt; 1% trên bộ kiểm thử vàng.”</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Integration — tích hợp</h2>
+          <ul>
+            <li>Hệ thống phải nối được với hệ thống khác như thế nào?</li>
+            <li>Giao thức, định dạng dữ liệu, SLA của bên thứ ba.</li>
+          </ul>
+          <p class="caption">Ví dụ: “Đồng bộ đơn hàng với CRM qua REST API; thất bại thì retry ≤ 3 lần trong 5 phút.”</p>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>NFR tốt và NFR xấu</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7em">
+            <div style="background:#ffebee; border-radius:10px; padding:0.7em">
+              <strong class="text-red">Không tốt</strong>
+              <ul>
+                <li>“Phần mềm phải nhanh.”</li>
+                <li>“Phải dễ bảo trì.”</li>
+                <li>“Giao diện người dùng phải hấp dẫn.”</li>
+              </ul>
+            </div>
+            <div style="background:#e8f5e9; border-radius:10px; padding:0.7em">
+              <strong style="color:#2E7D32">Tốt hơn</strong>
+              <ul>
+                <li>Trên máy chủ kiểm thử (Phụ lục A), UC1–UC7 phản hồi ≤ 20 ms.</li>
+                <li>Thời gian sửa một lỗi nghiêm trọng ≤ 2 giờ.</li>
+                <li>≥ 80% người dùng beta xác nhận UI đủ rõ / dễ dùng.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="caption">NFR phải <strong>đo được</strong>, có ngữ cảnh, và có ngưỡng.</p>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 3 – V&V + TRACEABILITY
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">3.</span><br />
+            Verification,<br />Validation &amp; Traceability
+          </h1>
+        </section>
+
+        <section>
+          <h2>Hai câu hỏi then chốt</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04b/verification-validation.svg" style="width:92%; display:block; margin:0 auto" />
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Verification — làm đúng theo đặc tả?</h2>
+          <ul>
+            <li>Đối chiếu sản phẩm với yêu cầu / thiết kế đã ghi.</li>
+            <li>Ví dụ: review, unit test, kiểm tra tuân thủ đặc tả.</li>
+            <li>Câu hỏi: <em>“Do it right?”</em></li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Validation — làm đúng việc cần làm?</h2>
+          <ul>
+            <li>Đối chiếu với nhu cầu và kỳ vọng người dùng thực.</li>
+            <li>Ví dụ: UAT, A/B test, đánh giá trên metric nghiệp vụ.</li>
+            <li>Câu hỏi: <em>“Do the right thing?”</em></li>
+          </ul>
+          <div class="question-box" style="margin-top:0.5em">
+            <div class="question-title">Với AI</div>
+            <div class="question-content" style="font-size:0.95em">
+              Accuracy trên test set cao vẫn có thể <strong>validation thất bại</strong>
+              nếu metric không khớp mục tiêu kinh doanh.
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Ma trận theo dõi (Traceability Matrix)</h2>
+          <ul>
+            <li>Công cụ nối <strong>yêu cầu</strong> với thiết kế, code, test, hạ tầng…</li>
+            <li>Giúp trả lời: yêu cầu này đã được hiện thực / kiểm thử chưa?</li>
+            <li>Đổi yêu cầu → biết phải sửa những đâu.</li>
+          </ul>
+          <div style="font-size:0; line-height:0; margin-top:0.4em">
+            <img src="img/lec-01b/matrix.png" style="width:48%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">Mỗi hàng/cột là một quan hệ “yêu cầu ↔ thành phần hệ thống”.</p>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 4 – ESTIMATION
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">4.</span><br />
+            Ước lượng:<br />FPA và COCOMO
+          </h1>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Vì sao ước lượng khó?</h2>
+          <div class="question-box">
+            <div class="question-title">Barry W. Boehm</div>
+            <div class="question-content">
+              Trong các quyết định thiết kế, yếu tố quan trọng và khó khăn nhất
+              là ước tính chi phí của một dự án phần mềm.
+              <br /><br />
+              <em>— Software Engineering Economics</em>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Function Point Analysis (FPA)</h2>
+          <ul>
+            <li>Allan Albrecht (IBM, cuối những năm 1970).</li>
+            <li>Duy trì bởi <strong>IFPUG</strong>; thuộc họ đo kích thước chức năng (ISO/IEC 14143).</li>
+            <li>Đo “lượng chức năng” độc lập ngôn ngữ lập trình.</li>
+            <li>Dùng để ước lượng khối lượng công việc (function points).</li>
+          </ul>
+          <p class="caption">IFPUG FSM được chuẩn hoá trong ISO/IEC 20926.</p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Đếm chức năng như thế nào?</h2>
+          <p>IFPUG gom yêu cầu thành các loại chức năng người dùng, ví dụ:</p>
+          <ul>
+            <li><strong>EI</strong> — External Input</li>
+            <li><strong>EO</strong> — External Output</li>
+            <li><strong>EQ</strong> — External Inquiry</li>
+            <li><strong>ILF</strong> — Internal Logical File</li>
+            <li><strong>EIF</strong> — External Interface File</li>
+          </ul>
+          <p class="caption">COSMIC (ISO/IEC 19761) dùng Entry / Exit / Read / Write — cùng ý tưởng: đo theo chức năng, không theo dòng code.</p>
+        </section>
+
+        <section>
+          <h2>Ví dụ FPA: app đặt đồ ăn</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04b/fpa-example.svg" style="width:94%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">Từ yêu cầu → đếm loại chức năng → ra kích thước (FP / KLOC), chưa phải lịch trình.</p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Từ FP sang effort: pipeline COCOMO</h2>
+          <ol>
+            <li>Ước kích thước: \(K = FP \times\) hệ số chuyển đổi (→ KLOC)</li>
+            <li>Tính hệ số điều chỉnh năng lực \(F\)</li>
+            <li>Lấy hệ số \(a,b,c,d\) theo mô hình COCOMO II</li>
+            <li>Effort (người-tháng): \(E = a \times K^{b} \times F\)</li>
+            <li>Thời gian (tháng): \(D = c \times E^{d}\)</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Ví dụ COCOMO: đọc thành người &amp; tháng</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04b/cocomo-example.svg" style="width:94%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">Cùng một kích thước: đổi \(F\) hoặc ngôn ngữ → effort và lịch trình đổi theo.</p>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Hệ số chuyển đổi FP → KLOC</h2>
+          <p>Tỷ lệ phụ thuộc ngôn ngữ — <em>ví dụ minh hoạ</em>:</p>
+          <table style="width:70%; border-collapse:collapse; margin:0.4em auto; font-size:0.95em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.3em 0.6em; text-align:left; border-bottom:2px solid #ccc">Ngôn ngữ</th>
+                <th style="padding:0.3em 0.6em; text-align:left; border-bottom:2px solid #ccc">KLOC / FP (ví dụ)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">Python</td><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">0.2</td></tr>
+              <tr style="background:#fafafa"><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">Java</td><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">0.4</td></tr>
+              <tr><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">C#</td><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">0.5</td></tr>
+              <tr style="background:#fafafa"><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">C</td><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">0.6</td></tr>
+              <tr><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">COBOL</td><td style="padding:0.25em 0.6em; border-bottom:1px solid #eee">0.8</td></tr>
+            </tbody>
+          </table>
+          <p class="caption">Thực tế dùng bảng backfiring đã hiệu chỉnh theo tổ chức / dữ liệu lịch sử.</p>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Hệ số điều chỉnh \(F\) và \(a,b,c,d\)</h2>
+          \[
+            F = \prod_{i=1}^{n} (\text{hệ số hiệu chỉnh}_i)
+          \]
+          <ul>
+            <li>COCOMO II Post-Architecture: khoảng <strong>17 effort multipliers</strong>.</li>
+            <li>\(a,b,c,d\) phụ thuộc pha mô hình (Early Design, Post-Architecture…).</li>
+            <li>Trên lớp: nhớ vai trò trong công thức — không cần thuộc bảng.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Ước lượng dự án AI: thêm gì?</h2>
+          <div class="slide-badge-row"><span class="self-study-badge">📖 Tự học</span></div>
+          <ul>
+            <li>Effort data labeling / cleaning thường lớn hơn coding model.</li>
+            <li>Nhiều vòng thí nghiệm — khó “chốt” kích thước sớm như phần mềm thuần.</li>
+            <li>Chi phí suy luận (inference) và GPU có thể chiếm phần lớn vận hành.</li>
+          </ul>
+          <p class="caption">COCOMO/FPA hữu ích cho phần nền tảng phần mềm; phần ML cần đệm rủi ro riêng.</p>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           SECTION 5 – CONE + CLOSING
+           ================================================================ -->
+      <section>
+        <section>
+          <h1>
+            <span class="text-light">5.</span><br />
+            Cone of Uncertainty<br />&amp; điểm chốt
+          </h1>
+        </section>
+
+        <section>
+          <h2>Nón không chắc chắn</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04b/cone.svg" style="width:90%; display:block; margin:0 auto" />
+          </div>
+        </section>
+
+        <section style="font-size:0.88em;">
+          <h2>Đọc Cone đúng cách</h2>
+          <ul>
+            <li>Đầu dự án: sai số tốt nhất có thể khoảng <strong>×4</strong> (McConnell).</li>
+            <li>Cone là <em>giới hạn tốt nhất</em> của ước lượng viên giỏi — dễ ước tệ hơn.</li>
+            <li>Thu hẹp cone bằng cách làm rõ yêu cầu, prototype, giảm rủi ro sớm.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ví dụ: “Chatbot — ước 4 tháng”</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04b/cone-example.svg" style="width:94%; display:block; margin:0 auto" />
+          </div>
+        </section>
+
+        <section style="font-size:0.9em;">
+          <h2>Câu hỏi kinh điển</h2>
+          <div class="question-box">
+            <div class="question-title">Khách hàng hỏi</div>
+            <div class="question-content">
+              “Phần mềm này sẽ mất bao nhiêu tiền?”
+              <br /><br />
+              Trả lời trung thực thường là <strong>khoảng</strong> — không phải một số duy nhất sớm quá.
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Nhớ gì sau bài 4b?</h2>
+          <ul>
+            <li><strong>Yêu cầu chức năng</strong>: Who does What — đo được bằng kiểm thử hành vi.</li>
+            <li><strong>NFR</strong>: phải đo được, có ngữ cảnh và ngưỡng.</li>
+            <li><strong>V&amp;V</strong>: đúng đặc tả ≠ đúng nhu cầu.</li>
+            <li><strong>FPA + COCOMO</strong>: từ kích thước chức năng → effort / lịch trình.</li>
+            <li><strong>Cone</strong>: ước lượng sớm luôn mang khoảng sai số lớn.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.8em;">
+          <h2>Tài liệu tham khảo</h2>
+          <ul>
+            <li>Karl Wiegers — <em>Software Requirements</em></li>
+            <li>Alistair Cockburn — <em>Writing Effective Use Cases</em></li>
+            <li>Barry Boehm — <em>Software Engineering Economics</em> / COCOMO II</li>
+            <li>Steve McConnell — <em>Software Estimation: Demystifying the Black Art</em></li>
+            <li>IFPUG — Function Point Counting Practices</li>
+          </ul>
+        </section>
+      </section>
+
+      <div class="footer">
+        Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §4b: Yêu cầu và Ước lượng trong dự án AI
+      </div>
+    </div>
+  </div>
+
+  <script src="revealjs/dist/reveal.js"></script>
+  <script src="plugin/notes/notes.js"></script>
+  <script src="plugin/markdown/markdown.js"></script>
+  <script src="plugin/highlight/highlight.js"></script>
+  <script src="plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX],
+    });
+  </script>
+</body>
+
+</html>

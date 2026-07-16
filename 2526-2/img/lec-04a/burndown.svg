@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 400" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="920" height="400" fill="#fafafa"/>
+  <text x="460" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Burndown chart — sprint 2 tuần (40 story points)</text>
+  <!-- axes -->
+  <line x1="90" y1="330" x2="860" y2="330" stroke="#999" stroke-width="2"/>
+  <line x1="90" y1="60" x2="90" y2="330" stroke="#999" stroke-width="2"/>
+  <!-- y labels -->
+  <text x="78" y="335" text-anchor="end" font-size="12" fill="#666">0</text>
+  <text x="78" y="268" text-anchor="end" font-size="12" fill="#666">10</text>
+  <text x="78" y="200" text-anchor="end" font-size="12" fill="#666">20</text>
+  <text x="78" y="133" text-anchor="end" font-size="12" fill="#666">30</text>
+  <text x="78" y="66" text-anchor="end" font-size="12" fill="#666">40</text>
+  <text x="40" y="200" text-anchor="middle" font-size="13" fill="#555" transform="rotate(-90 40 200)">Điểm còn lại</text>
+  <!-- gridlines -->
+  <line x1="90" y1="262.5" x2="860" y2="262.5" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="90" y1="195" x2="860" y2="195" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="90" y1="127.5" x2="860" y2="127.5" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="90" y1="60" x2="860" y2="60" stroke="#e0e0e0" stroke-width="1"/>
+  <!-- x labels: days 0..10 -->
+  <text x="90" y="352" text-anchor="middle" font-size="12" fill="#666">Ngày 0</text>
+  <text x="244" y="352" text-anchor="middle" font-size="12" fill="#666">Ngày 2</text>
+  <text x="398" y="352" text-anchor="middle" font-size="12" fill="#666">Ngày 4</text>
+  <text x="552" y="352" text-anchor="middle" font-size="12" fill="#666">Ngày 6</text>
+  <text x="706" y="352" text-anchor="middle" font-size="12" fill="#666">Ngày 8</text>
+  <text x="860" y="352" text-anchor="middle" font-size="12" fill="#666">Ngày 10</text>
+  <!-- ideal line: (90,60) -> (860,330) -->
+  <line x1="90" y1="60" x2="860" y2="330" stroke="#1565C0" stroke-width="3" stroke-dasharray="8 6"/>
+  <!-- actual line: day0 40 -> day1 40 -> day2 38 -> day3 33 -> day4 33 -> day5 36(scope up) -> day6 28 -> day7 20 -> day8 13 -> day9 6 -> day10 0 -->
+  <polyline points="90,60 167,60 244,73.5 321,107.25 398,107.25 475,87 552,141 629,195 706,242.25 783,289.5 860,330"
+    fill="none" stroke="#E62727" stroke-width="3.5"/>
+  <circle cx="90" cy="60" r="4" fill="#E62727"/>
+  <circle cx="244" cy="73.5" r="4" fill="#E62727"/>
+  <circle cx="398" cy="107.25" r="4" fill="#E62727"/>
+  <circle cx="475" cy="87" r="4" fill="#E62727"/>
+  <circle cx="552" cy="141" r="4" fill="#E62727"/>
+  <circle cx="706" cy="242.25" r="4" fill="#E62727"/>
+  <circle cx="860" cy="330" r="4" fill="#E62727"/>
+  <!-- annotations -->
+  <text x="250" y="55" font-size="12.5" fill="#E62727" font-weight="600">đầu sprint: chậm hơn kế hoạch</text>
+  <text x="487" y="70" font-size="12.5" fill="#E62727" font-weight="600">ngày 5: thêm yêu cầu (scope tăng)</text>
+  <line x1="475" y1="87" x2="475" y2="107" stroke="#E62727" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="700" y="290" font-size="12.5" fill="#2E7D32" font-weight="600">nửa sau: bắt kịp và về đích</text>
+  <!-- legend -->
+  <line x1="600" y1="45" x2="650" y2="45" stroke="#1565C0" stroke-width="3" stroke-dasharray="8 6"/>
+  <text x="658" y="49" font-size="12.5" fill="#1565C0">lý tưởng</text>
+  <line x1="740" y1="45" x2="790" y2="45" stroke="#E62727" stroke-width="3.5"/>
+  <text x="798" y="49" font-size="12.5" fill="#E62727">thực tế</text>
+  <text x="460" y="390" text-anchor="middle" font-size="13" fill="#555">Nhìn một lần biết ngay: team đang trước hay sau kế hoạch, và scope có bị phình không.</text>
+</svg>

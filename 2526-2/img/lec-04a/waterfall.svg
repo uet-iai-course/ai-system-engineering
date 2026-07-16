@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="900" height="320" fill="#fafafa"/>
+  <text x="450" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#333">Quy trình thác nước (Waterfall)</text>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1E93AB"/></marker>
+  </defs>
+  <rect x="40" y="70" width="150" height="52" rx="8" fill="#e3f2fd" stroke="#1565C0" stroke-width="2"/>
+  <text x="115" y="102" text-anchor="middle" font-size="15" font-weight="600" fill="#0d47a1">Yêu cầu</text>
+  <rect x="205" y="98" width="150" height="52" rx="8" fill="#bbdefb" stroke="#1565C0" stroke-width="2"/>
+  <text x="280" y="130" text-anchor="middle" font-size="15" font-weight="600" fill="#0d47a1">Thiết kế</text>
+  <rect x="370" y="126" width="150" height="52" rx="8" fill="#90caf9" stroke="#1565C0" stroke-width="2"/>
+  <text x="445" y="158" text-anchor="middle" font-size="15" font-weight="600" fill="#0d47a1">Hiện thực</text>
+  <rect x="535" y="154" width="150" height="52" rx="8" fill="#64b5f6" stroke="#1565C0" stroke-width="2"/>
+  <text x="610" y="186" text-anchor="middle" font-size="15" font-weight="600" fill="#0d47a1">Kiểm thử</text>
+  <rect x="700" y="182" width="150" height="52" rx="8" fill="#42a5f5" stroke="#1565C0" stroke-width="2"/>
+  <text x="775" y="214" text-anchor="middle" font-size="15" font-weight="600" fill="#0d47a1">Bảo trì</text>
+
+  <text x="450" y="300" text-anchor="middle" font-size="14" fill="#666">Mỗi giai đoạn gần như hoàn tất rồi mới sang giai đoạn sau.</text>
+</svg>

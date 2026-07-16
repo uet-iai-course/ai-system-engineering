@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="960" height="420" fill="#fafafa"/>
+  <text x="480" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Ví dụ FPA: app đặt đồ ăn (đếm sơ bộ)</text>
+  <text x="480" y="56" text-anchor="middle" font-size="13" fill="#666">Mỗi ô = một chức năng người dùng nhìn thấy — không đếm dòng code</text>
+  <!-- boxes -->
+  <rect x="40" y="80" width="170" height="90" rx="10" fill="#e3f2fd" stroke="#1565C0" stroke-width="2"/>
+  <text x="125" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#1565C0">EI × 4</text>
+  <text x="125" y="140" text-anchor="middle" font-size="12" fill="#444">Đăng ký, đặt món,</text>
+  <text x="125" y="158" text-anchor="middle" font-size="12" fill="#444">thanh toán, hủy đơn</text>
+
+  <rect x="230" y="80" width="170" height="90" rx="10" fill="#e8f5e9" stroke="#2E7D32" stroke-width="2"/>
+  <text x="315" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#2E7D32">EO × 3</text>
+  <text x="315" y="140" text-anchor="middle" font-size="12" fill="#444">Hoá đơn PDF,</text>
+  <text x="315" y="158" text-anchor="middle" font-size="12" fill="#444">báo cáo ngày, email</text>
+
+  <rect x="420" y="80" width="170" height="90" rx="10" fill="#fff3e0" stroke="#E65100" stroke-width="2"/>
+  <text x="505" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#E65100">EQ × 3</text>
+  <text x="505" y="140" text-anchor="middle" font-size="12" fill="#444">Xem menu, tra cứu</text>
+  <text x="505" y="158" text-anchor="middle" font-size="12" fill="#444">đơn, trạng thái ship</text>
+
+  <rect x="610" y="80" width="150" height="90" rx="10" fill="#fce4ec" stroke="#AD1457" stroke-width="2"/>
+  <text x="685" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#AD1457">ILF × 2</text>
+  <text x="685" y="140" text-anchor="middle" font-size="12" fill="#444">User, Order</text>
+  <text x="685" y="158" text-anchor="middle" font-size="12" fill="#444">(nội bộ hệ thống)</text>
+
+  <rect x="780" y="80" width="140" height="90" rx="10" fill="#ede7f6" stroke="#6A1B9A" stroke-width="2"/>
+  <text x="850" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#6A1B9A">EIF × 1</text>
+  <text x="850" y="140" text-anchor="middle" font-size="12" fill="#444">Cổng thanh toán</text>
+  <text x="850" y="158" text-anchor="middle" font-size="12" fill="#444">(hệ thống ngoài)</text>
+
+  <!-- calc -->
+  <rect x="120" y="210" width="720" height="160" rx="12" fill="#fff" stroke="#bbb" stroke-width="2"/>
+  <text x="480" y="245" text-anchor="middle" font-size="15" font-weight="700" fill="#333">Ước sơ bộ (giả sử mỗi loại trung bình 4 FP)</text>
+  <text x="480" y="280" text-anchor="middle" font-size="18" fill="#1565C0">UFP ≈ (4+3+3+2+1) × 4 = <tspan font-weight="700">52 function points</tspan></text>
+  <text x="480" y="315" text-anchor="middle" font-size="14" fill="#444">Python ≈ 0.2 KLOC/FP → K ≈ 52 × 0.2 = <tspan font-weight="700" fill="#E65100">10.4 KLOC</tspan></text>
+  <text x="480" y="345" text-anchor="middle" font-size="13" fill="#666">Số này chỉ là kích thước chức năng — chưa phải lịch trình hay tiền</text>
+</svg>

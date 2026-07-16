@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 400" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="940" height="400" fill="#fafafa"/>
+  <text x="470" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Ví dụ COCOMO: từ 10.4 KLOC → effort &amp; lịch trình</text>
+  <!-- steps -->
+  <rect x="40" y="70" width="200" height="120" rx="10" fill="#e3f2fd" stroke="#1565C0" stroke-width="2"/>
+  <text x="140" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#1565C0">1. Kích thước</text>
+  <text x="140" y="130" text-anchor="middle" font-size="16" font-weight="700" fill="#333">K = 10.4</text>
+  <text x="140" y="155" text-anchor="middle" font-size="12" fill="#555">KLOC (từ FPA)</text>
+
+  <text x="260" y="135" font-size="22" fill="#90a4ae">→</text>
+
+  <rect x="290" y="70" width="200" height="120" rx="10" fill="#e8f5e9" stroke="#2E7D32" stroke-width="2"/>
+  <text x="390" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#2E7D32">2. Hệ số F</text>
+  <text x="390" y="130" text-anchor="middle" font-size="16" font-weight="700" fill="#333">F ≈ 1.15</text>
+  <text x="390" y="155" text-anchor="middle" font-size="12" fill="#555">team mới + deadline gắt</text>
+
+  <text x="510" y="135" font-size="22" fill="#90a4ae">→</text>
+
+  <rect x="540" y="70" width="360" height="120" rx="10" fill="#fff3e0" stroke="#E65100" stroke-width="2"/>
+  <text x="720" y="95" text-anchor="middle" font-size="13" font-weight="700" fill="#E65100">3. Effort &amp; Duration</text>
+  <text x="720" y="125" text-anchor="middle" font-size="14" fill="#333">E = a·K^b·F ≈ <tspan font-weight="700">28 người-tháng</tspan></text>
+  <text x="720" y="155" text-anchor="middle" font-size="14" fill="#333">D = c·E^d ≈ <tspan font-weight="700">7 tháng</tspan></text>
+  <text x="720" y="175" text-anchor="middle" font-size="11" fill="#666">(a,b,c,d từ bảng COCOMO II minh hoạ)</text>
+
+  <rect x="80" y="230" width="780" height="130" rx="12" fill="#fff" stroke="#ccc" stroke-width="2"/>
+  <text x="470" y="265" text-anchor="middle" font-size="15" font-weight="700" fill="#333">Đọc kết quả thực dụng</text>
+  <text x="470" y="295" text-anchor="middle" font-size="14" fill="#444">~28 người-tháng / 7 tháng ≈ cần khoảng <tspan font-weight="700" fill="#E62727">4 người</tspan> full-time</text>
+  <text x="470" y="325" text-anchor="middle" font-size="13" fill="#666">Đây là ước lượng mô hình — chưa gồm đệm rủi ro AI (data, thí nghiệm model)</text>
+</svg>

@@ -192,3 +192,21 @@
 .reveal pre code.no-line-numbers .hljs-ln-numbers {
     display: none !important;
 }
+
+/* Self-study badge (📖 Tự học) */
+.reveal .slide-badge-row {
+    margin: 0 0 0.35em 0;
+}
+
+.reveal .self-study-badge {
+    display: inline-block;
+    font-size: 0.55em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: #5d4037;
+    background: #fff3e0;
+    border: 1px solid #ffcc80;
+    border-radius: 999px;
+    padding: 0.2em 0.75em;
+}

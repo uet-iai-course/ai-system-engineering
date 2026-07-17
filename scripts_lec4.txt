@@ -1,0 +1,569 @@
+================================================================================
+SCRIPT GIẢNG BÀI 4 — RUP / Agile + Yêu cầu & Ước lượng trong dự án AI
+Môn: Kỹ nghệ hệ thống Trí tuệ nhân tạo
+Thời lượng gợi ý: ~3 giờ (180 phút)
+File slide:
+  - 2526-2/lecture-04a-RUP-Agile.html          (~95–100 phút)
+  - 2526-2/lecture-04b-AI-project-requirement.html  (~75–80 phút)
+Nghỉ giữa giờ: ~10 phút (sau khi kết thúc 4a hoặc sau phần Scrum)
+================================================================================
+
+GỢI Ý NHỊP GIẢNG
+----------------
+- Không đọc slide từng chữ. Slide là điểm tựa; script này là lời giảng.
+- Mỗi phần lớn: động lực → ý chính → ví dụ → chốt 1 câu.
+- Chỗ có “HỎI LỚP”: dừng 20–40 giây, gọi 1–2 sinh viên.
+- Slide gắn “📖 Tự học”: lướt 30–60 giây, không đào sâu trên lớp.
+
+
+================================================================================
+PHẦN A — BÀI 4a: RUP VÀ AGILE  (~95–100 phút)
+================================================================================
+
+--------------------------------------------------------------------------------
+[0:00–0:05] MỞ BÀI — Cover + Nội dung + Lộ trình
+--------------------------------------------------------------------------------
+
+Chào lớp. Hôm nay chúng ta làm bài 4 — chia hai nửa.
+
+Nửa đầu (4a): các cách tổ chức công việc khi làm phần mềm — Waterfall, RUP, Agile,
+Scrum, XP. Nửa sau (4b): sau khi đã biết “làm theo nhịp nào”, ta hỏi hệ thống phải
+làm gì, vận hành thế nào, và mất bao nhiêu công / thời gian — tức yêu cầu và ước lượng.
+
+Nhìn lộ trình 4a: động lực → Waterfall → RUP → Agile/Scrum → Agile/XP → chất lượng
+thiết kế. Mục tiêu cuối buổi: các em chọn được quy trình phù hợp tình huống, và
+phân biệt được Scrum quản lý công việc với XP quản lý cách viết code.
+
+
+--------------------------------------------------------------------------------
+[0:05–0:15] PHẦN 0 — Vì sao cần quy trình phát triển?
+--------------------------------------------------------------------------------
+
+SLIDE: Câu hỏi mở đầu
+
+HỎI LỚP: Nếu không có quy trình, team sẽ “gãy” ở đâu trước — yêu cầu, thiết kế,
+hay tích hợp?
+
+(Gợi ý đáp án mở: thường yêu cầu mơ hồ → thiết kế lệch → tích hợp mới phát hiện
+sai; hoặc mỗi người code một hướng rồi không ghép được.)
+
+SLIDE: Quy trình giúp làm gì?
+
+Quy trình không thay kỹ năng kỹ thuật. Nó trả lời: ai làm gì, khi nào giao, khi nào
+dừng, và làm sao phát hiện sai sớm. Trong dự án AI điều này càng quan trọng vì data
+và metric hay đổi giữa chừng.
+
+SLIDE: Bản đồ các phương pháp
+
+Hôm nay gặp: Waterfall (tuần tự), RUP (vòng lặp + tăng trưởng), Agile (giá trị),
+rồi Scrum và XP là hai cách hiện thực Agile — một bên tổ chức công việc, một bên
+thực hành kỹ thuật.
+
+
+--------------------------------------------------------------------------------
+[0:15–0:30] PHẦN 1 — Waterfall
+--------------------------------------------------------------------------------
+
+SLIDE: Waterfall là gì?
+
+Ý tưởng cốt lõi: phát triển như thác nước — gần như xong một giai đoạn rồi mới
+sang giai đoạn sau, ít quay lại. Gắn với SDLC cổ điển. Winston Royce năm 1970 mô tả
+mô hình tuần tự này, và ông cũng cảnh báo rủi ro nếu áp dụng cứng nhắc — điểm này
+hay bị quên.
+
+SLIDE: Nhìn thác nước theo giai đoạn (sơ đồ tự vẽ)
+SLIDE: Sơ đồ Waterfall cổ điển (Wikimedia)
+
+Chỉ vào hình: Requirements → Design → Implementation → Verification → Maintenance.
+Feedback người dùng thường đến rất muộn — khi đã gần xong hoặc đã phát hành.
+
+SLIDE: Từng giai đoạn làm gì?
+
+Nói nhanh đầu ra: SRS đóng → kiến trúc/thiết kế → mã → kiểm thử theo đặc tả → bảo trì.
+Waterfall “sống” nhờ tài liệu và milestone rõ.
+
+SLIDE: Điểm mạnh và điểm yếu
+
+Mạnh: dễ lập kế hoạch, hợp đồng, báo cáo. Yếu: đổi yêu cầu đắt, rủi ro dồn cuối
+(integration/test), người dùng góp ý muộn.
+
+SLIDE: Waterfall hợp khi nào?
+
+Yêu cầu ổn định, pháp lý/hợp đồng đòi tài liệu sớm, công nghệ quen. Với dự án AI:
+thường KHÔNG ổn định yêu cầu sớm — data và metric đổi liên tục. Vì vậy Waterfall
+thuần ít khi là lựa chọn mặc định cho AI.
+
+SLIDE: Các mô hình khác (Spiral, V-Model, RAD) — lướt
+
+Spiral (Boehm): xoắn theo rủi ro. V-Model: mỗi bước phát triển gắn bước kiểm thử.
+RAD: prototype nhanh. Đây là họ hàng của tư duy “giảm rủi ro / tăng feedback” trước
+Agile hiện đại.
+
+
+--------------------------------------------------------------------------------
+[0:30–0:48] PHẦN 2 — RUP: vòng lặp và tăng trưởng
+--------------------------------------------------------------------------------
+
+SLIDE: RUP là gì?
+
+Rational Unified Process: tuần tự ở mức lớn (bốn pha), lặp ở mức nhỏ (vòng lặp —
+iteration — trong mỗi pha). Xuất phát Rational, sau thuộc IBM. Nhấn mạnh use case,
+kiến trúc, giảm rủi ro theo vòng.
+
+SLIDE: Bốn pha của RUP
+
+Inception → Elaboration → Construction → Transition. Mỗi pha có thể có nhiều vòng lặp;
+mỗi vòng lặp nên cho ra bản chạy được.
+
+SLIDE: Mỗi pha kết thúc bằng milestone
+
+Inception: có đáng làm không? Elaboration: kiến trúc ổn chưa, rủi ro chính giảm chưa?
+Construction: đã có bản đủ dùng để chuẩn bị phát hành? Transition: người dùng nhận
+và dùng được chưa?
+
+SLIDE: Vòng lặp khác tăng trưởng thế nào?
+
+Vòng lặp (iterative): làm lại / tinh chỉnh cùng một phần qua nhiều vòng feedback.
+Tăng trưởng (incremental): mỗi lần thêm một lát chức năng mới, hệ thống lớn dần.
+RUP dùng cả hai.
+
+SLIDE: Vòng lặp trong RUP
+
+Một vòng đủ: chọn yêu cầu → thiết kế → code → kiểm thử → tích hợp. Ưu tiên rủi ro
+cao trước. Khác Waterfall: không chờ “xong hết yêu cầu” mới code.
+
+SLIDE: Vai trò (Architect / Designer)
+
+Architect giữ kiến trúc và chặn rủi ro lớn; Developer hiện thực use case và giao
+bản tăng trưởng mỗi vòng. Trên lớp chỉ cần thấy: tách trách nhiệm kiến trúc và hiện thực.
+
+
+--------------------------------------------------------------------------------
+[0:48–1:25] PHẦN 3 — Agile / Scrum (+ Kanban & Burndown như công cụ)
+--------------------------------------------------------------------------------
+
+SLIDE: Agile theo Robert C. Martin
+
+Trích: bức tranh tổng thể phát triển cùng phần mềm; mỗi lần lặp thiết kế được cải
+thiện tốt nhất tại thời điểm đó — không cần nhìn trước mọi yêu cầu tương lai.
+Đây là tinh thần Agile: học bằng cách giao sản phẩm chạy được sớm.
+
+SLIDE: Agile ra đời thế nào?
+
+Thập niên 1990: các phương pháp gọn nhẹ (Scrum, XP, Crystal…) phản ứng quy trình nặng.
+Tháng 2/2001: 17 người họp Snowbird, Utah — Beck, Fowler, Martin, Schwaber, Sutherland…
+Ra Agile Manifesto: tên chung “Agile”, 4 giá trị, 12 nguyên tắc.
+
+SLIDE: Bốn giá trị Agile Manifesto — ĐỌC CHẬM, TỪNG CÂU
+
+1) Cá nhân và sự tương tác hơn là quy trình và công cụ.
+2) Phần mềm chạy được hơn là tài liệu đầy đủ.
+3) Cộng tác với khách hàng hơn là đàm phán hợp đồng.
+4) Phản hồi với thay đổi hơn là bám theo kế hoạch.
+
+Nhấn: vế phải VẪN có giá trị — khi phải chọn thì ưu tiên vế trái. Không phải “bỏ tài liệu”.
+
+SLIDE: 12 nguyên tắc Agile
+
+Không đọc hết 12 câu như sách giáo khoa. Chọn 4–5 nguyên tắc chốt trên lớp:
+- Giao phần mềm có giá trị sớm và liên tục.
+- Chào đón thay đổi yêu cầu.
+- Phần mềm chạy được là thước đo tiến độ.
+- Nhịp bền vững.
+- Team tự tổ chức + nhìn lại cách làm việc (retrospective).
+
+Các nguyên tắc còn lại: sinh viên đọc lại trên slide / tự học.
+
+SLIDE: Agile là gì — và không phải gì?
+
+Là tập giá trị/nguyên tắc, ưu tiên feedback, chấp nhận đổi. Không phải một tool,
+không phải “không cần tài liệu”, không phải làm tùy hứng không kế hoạch.
+
+SLIDE: Scrum nằm đâu trong Agile?
+
+Scrum là khung tổ chức công việc theo sprint — giúp áp dụng Agile, nhưng không quy
+định cách viết code. Nhịp 1–4 tuần; mỗi sprint kết thúc bằng Increment chạy được.
+Ba trụ Scrum Guide: transparency, inspection, adaptation.
+
+SLIDE: Khung Scrum (tóm tắt) + Sơ đồ quy trình Scrum
+
+Chỉ luồng: Product Backlog → Sprint Backlog → Sprint (Daily Scrum) → Increment →
+Review / Retrospective. Product Owner ưu tiên giá trị; Scrum Master phục vụ quy trình;
+Developers hiện thực.
+
+SLIDE: Ba thành phần cốt lõi
+
+Roles / Events / Artifacts — nhắc lại nhanh, không đào sâu checklist.
+
+--- Công cụ trong Scrum ---
+
+SLIDE: Hai công cụ trực quan
+
+Kanban trả lời “việc đang ở đâu?”. Burndown trả lời “còn bao nhiêu, có kịp không?”.
+Dùng cùng nhau trong sprint.
+
+SLIDE: Bảng Kanban + Ví dụ sprint app đặt đồ ăn
+
+Tình huống: team 5 người, sprint 2 tuần, bảng trên Jira/Trello.
+- WIP limit cột In Progress = 3 → không được kéo thẻ mới khi đã đầy.
+- Thẻ “Tích hợp cổng thanh toán” đứng 3 ngày → cả team xúm gỡ thay vì nhận việc mới.
+- Cột Done cuối sprint = danh sách demo Review.
+
+CHỐT: WIP limit chống “ai cũng bận mà chẳng gì xong”.
+
+SLIDE: Burndown chart + Ví dụ đọc chart
+
+Trục dọc: điểm còn lại; trục ngang: ngày sprint.
+- Ngày 1–4: đường thực tế trên đường lý tưởng → chậm → hỏi ngay ở daily.
+- Ngày 5: đường nhảy lên → scope tăng (khách thêm yêu cầu) → PO phải đánh đổi.
+- Ngày 6–10: dốc xuống về 0 → bắt kịp.
+
+CHỐT: burndown biến “cảm giác tiến độ” thành dữ liệu nhìn được mỗi ngày.
+
+SLIDE: Kanban đứng riêng (📖 Tự học) — lướt 30 giây
+
+Trong Scrum Kanban là công cụ; Kanban độc lập là phương pháp luồng liên tục (ops/hỗ trợ).
+
+
+--------------------------------------------------------------------------------
+[1:25–1:45] PHẦN 4 — Agile / XP
+--------------------------------------------------------------------------------
+
+SLIDE: XP là gì trong Agile?
+
+Extreme Programming nhấn mạnh thực hành kỹ thuật để phần mềm vẫn đổi được khi yêu cầu
+đổi. Kent Beck, cuối những năm 1990; góp phần định hình Agile Manifesto. Khác Scrum:
+XP nói rõ cách viết và kiểm thử code.
+
+SLIDE: Trích Kent Beck + Năm giá trị
+
+Communication, Simplicity, Feedback, Courage, Respect (Respect thêm 2004).
+
+SLIDE: Feedback nhiều tầng (hình Don Wells)
+
+XP không chỉ “có sprint”: feedback theo năm/quý/tuần/ngày/giờ — test, pair, CI.
+
+SLIDE: Thực hành XP + bảng then chốt
+
+Nhấn 6 thực hành: Pair, TDD, CI, Refactoring, Simple Design, Small Releases.
+TDD: test trước → code vừa đủ → refactor. CI: tích hợp thường xuyên, tránh big bang.
+
+SLIDE: Tình huống thanh toán QR
+
+Team 6 người, 3 tuần, thêm thanh toán QR; API ngân hàng có thể đổi. Waterfall đóng
+băng đặc tả rồi mới code → rủi ro cao. XP hợp vì đón thay đổi bằng kỷ luật kỹ thuật.
+
+SLIDE: Một vòng lặp XP 1 tuần
+
+1) Planning game thứ Hai: chốt story “quét QR thấy xác nhận trong 5 giây”.
+2) Pair + TDD: test “QR hết hạn sau 15 phút” viết trước.
+3) CI: thứ Tư ngân hàng đổi format API → test đỏ trong phút → sửa trong ngày.
+4) Small release thứ Sáu cho 5% user → feedback nút quét khó thấy → story tuần sau.
+
+CHỐT câu chuyện: API đổi không phá dự án vì test bắt sớm, thiết kế đơn giản nên sửa nhanh.
+
+SLIDE: Scrum quản lý — XP kỹ thuật
+
+Scrum: ai làm gì, khi nào review, backlog. XP: pair/TDD/CI — làm sao code vẫn đổi được.
+Thực tế nhiều team: Scrum + một phần XP.
+
+SLIDE: Chi phí sửa lỗi
+
+Càng phát hiện muộn càng đắt. XP/Agile đẩy kiểm thử và feedback sớm.
+
+SLIDE: Khi nào XP hữu ích?
+
+Yêu cầu đổi nhanh; team nhỏ–vừa; cần kỷ luật test/CI/thiết kế đơn giản.
+Chốt slide: Agile/Scrum tổ chức công việc; Agile/XP tổ chức cách viết phần mềm.
+
+
+--------------------------------------------------------------------------------
+[1:45–1:55] PHẦN 5 — Chất lượng thiết kế trong Agile + Tổng kết 4a
+--------------------------------------------------------------------------------
+
+SLIDE: Tính đơn giản (Beck, Martin, Booch)
+
+Đầu tư thiết kế vừa đủ; tránh phức tạp vì đoán trước thay đổi; không làm chủ độ phức tạp
+→ trễ, vượt ngân sách, thiếu yêu cầu.
+
+SLIDE: Bugayenko — kiến trúc sư giảm phức tạp
+
+Tự hào về bản vẽ đơn giản đúng hệ thống, không phải sơ đồ rối.
+
+SLIDE: DRY + Rigidity / Immobility
+
+Mã dư thừa → sửa nhiều chỗ không đồng nhất. Cứng: một thay đổi kéo chuỗi sửa.
+Bất động: đáng tái dùng nhưng tách ra quá rủi ro. Nối với SOLID đã học.
+
+SLIDE: Tổng kết 4a + Khi nào dùng gì?
+
+Waterfall: yêu cầu ổn, hợp đồng cứng.
+RUP: dự án lớn, cần kiến trúc sớm (Elaboration mạnh).
+Scrum + XP: sản phẩm đổi nhanh, team nhỏ–vừa.
+Kanban (độc lập): luồng việc liên tục / hỗ trợ.
+
+SLIDE: Bài sau → 4b
+
+Sang yêu cầu chức năng / phi chức năng, V&V, ước lượng.
+
+
+================================================================================
+NGHỈ GIỮA GIỜ  (~10 phút)   [khoảng mốc 1:55–2:05]
+================================================================================
+
+Nhắc: nửa sau thiên về “viết yêu cầu đo được” và “ước lượng có khoảng sai số”.
+
+
+================================================================================
+PHẦN B — BÀI 4b: YÊU CẦU VÀ ƯỚC LƯỢNG  (~75–80 phút)
+================================================================================
+
+--------------------------------------------------------------------------------
+[2:05–2:15] PHẦN 0 — Yêu cầu và ước lượng là gì?
+--------------------------------------------------------------------------------
+
+Nối 4a: đã biết tổ chức công việc thế nào. Giờ hỏi hai câu trước khi viết code.
+
+SLIDE: Hai câu hỏi
+
+Yêu cầu: hệ thống phải làm gì và vận hành thế nào?
+Ước lượng: mất bao nhiêu công, thời gian, tiền?
+Không rõ yêu cầu → ước lượng chỉ là đoán.
+
+SLIDE: Chức năng vs phi chức năng (hình)
+
+Chức năng = làm gì. Phi chức năng = thế nào (nhanh? sẵn sàng? an toàn?).
+
+SLIDE: Trong dự án AI vì sao khó hơn?
+
+Yêu cầu gắn metric và data — dễ đổi sau thí nghiệm. Ước lượng phải kể labeling/train.
+Cam kết sớm một số duy nhất thường sai — sẽ gặp Cone.
+
+
+--------------------------------------------------------------------------------
+[2:15–2:28] PHẦN 1 — Yêu cầu chức năng
+--------------------------------------------------------------------------------
+
+SLIDE: Định nghĩa
+
+Ai làm việc gì, với kết quả gì. Gắn use case / user story. Kiểm thử được: làm được
+hay không.
+
+SLIDE: Who does What — mơ hồ vs rõ
+
+Đọc vài cặp đối chiếu. Chốt: một câu tốt có ai · hành động · đối tượng · điều kiện.
+
+SLIDE: Ví dụ chatbot AI (FR-01 … FR-04)
+
+Đi nhanh từng dòng. Nhấn FR-02: độ tin cậy thấp → chuyển người — đây là yêu cầu chức
+năng gắn AI, không phải “có chatbot” chung chung.
+
+SLIDE: Lỗi thường gặp
+
+Từ điển thuật ngữ kém; lẫn ý kiến vào yêu cầu; lẫn FR/NFR; nhét hướng dẫn cài đặt;
+thiếu góc nhìn người dùng; nhiễu.
+
+
+--------------------------------------------------------------------------------
+[2:28–2:50] PHẦN 2 — Yêu cầu phi chức năng (mỗi NFR một slide)
+--------------------------------------------------------------------------------
+
+SLIDE: NFR là gì?
+
+Cách hệ thống vận hành. Nguyên tắc: đo được, có ngữ cảnh, có ngưỡng.
+
+Với mỗi slide dưới đây: (1) định nghĩa ngắn, (2) đọc ví dụ đo được, (3) hỏi “câu
+mơ hồ tương ứng là gì?” nếu còn thời gian.
+
+SLIDE: Availability
+A = Eup / (Eup + Edown). Ví dụ chatbot ≥ 99.5% trong khung 8h–22h.
+
+SLIDE: Performance / Capacity
+CPS, latency. Ví dụ: UC1–UC7 ≤ 20 ms trên máy kiểm thử, 100 request đồng thời.
+Nhấn: thiếu ngữ cảnh đo thì “nhanh” vô nghĩa.
+
+SLIDE: Security
+Ai được truy cập gì; PII mã hoá; log. Ví dụ chỉ CSKH xem hội thoại.
+
+SLIDE: Recoverability — RTO
+Thời gian tối đa phục hồi sau sự cố. Ví dụ RTO ≤ 30 phút mất máy suy luận.
+Khác Availability: RTO = tốc độ phục hồi.
+
+SLIDE: Usability
+Không phải “đẹp”. Ví dụ ≥ 80% beta tìm nút chuyển nhân viên ≤ 10 giây.
+
+SLIDE: Maintainability — MTTR
+Thời gian trung bình sửa lỗi. Ví dụ P1 ≤ 2 giờ. Liên quan thiết kế + CI.
+
+SLIDE: Reliability
+Đúng trong thời gian dài; có thể gắn MTBF hoặc tỷ lệ lỗi. Ví dụ AI: hallucination
+P1 < 1% trên bộ kiểm thử vàng.
+
+SLIDE: Integration
+Nối hệ thống khác thế nào. Ví dụ đồng bộ CRM, retry ≤ 3 lần / 5 phút.
+
+SLIDE: NFR tốt vs xấu
+
+Đọc ba cặp đỏ/xanh trên slide. CHỐT cả phần 2: NFR phải đo được, có ngữ cảnh, có ngưỡng.
+
+
+--------------------------------------------------------------------------------
+[2:50–3:00] PHẦN 3 — Verification, Validation & Traceability
+--------------------------------------------------------------------------------
+
+SLIDE: Hai câu hỏi (hình V&V)
+
+Verification: Are we building it right? — đúng đặc tả đã ghi.
+Validation: Are we building the right thing? — đúng nhu cầu người dùng.
+
+SLIDE: Verification
+Review, unit test, đối chiếu đặc tả.
+
+SLIDE: Validation
+UAT, A/B, metric nghiệp vụ. Với AI: accuracy test set cao vẫn có thể validation
+thất bại nếu metric không khớp mục tiêu kinh doanh.
+
+HỎI LỚP: Cho một ví dụ model “đúng kỹ thuật” nhưng “sai việc cần làm”.
+(Gợi ý: tối ưu accuracy chung nhưng bỏ sót lớp lỗi hiếm đắt tiền; hoặc chatbot trả
+lời hay nhưng không giảm được số ticket thật.)
+
+SLIDE: Traceability Matrix
+
+Nối yêu cầu ↔ thiết kế/code/test. Đổi yêu cầu → biết sửa đâu. Chỉ hình matrix.
+
+
+--------------------------------------------------------------------------------
+[3:00–3:20] PHẦN 4 — Ước lượng: FPA và COCOMO
+--------------------------------------------------------------------------------
+
+SLIDE: Boehm — vì sao ước lượng khó
+
+Đây là quyết định thiết kế khó và quan trọng: chi phí dự án.
+
+SLIDE: FPA là gì?
+
+Albrecht/IBM cuối 1970s; IFPUG; đo kích thước chức năng độc lập ngôn ngữ; ISO/IEC
+14143 / 20926. Đầu ra: function points — chưa phải lịch trình.
+
+SLIDE: Đếm chức năng — EI, EO, EQ, ILF, EIF
+
+Giải thích nhanh bằng ngôn ngữ đời thường:
+- EI: nhập vào (đặt món, thanh toán)
+- EO: báo cáo/hoá đơn đẩy ra
+- EQ: tra cứu/xem
+- ILF: dữ liệu nội bộ (User, Order)
+- EIF: hệ thống ngoài (cổng thanh toán)
+
+Nhắc COSMIC Entry/Exit/Read/Write cùng ý tưởng đo theo chức năng.
+
+SLIDE: Ví dụ FPA app đặt đồ ăn (HÌNH — giảng chậm)
+
+Đếm sơ bộ → UFP ≈ 52 FP → Python 0.2 KLOC/FP → K ≈ 10.4 KLOC.
+Nhấn: đây mới là kích thước, chưa phải tiền hay tháng.
+
+SLIDE: Pipeline COCOMO
+
+K → F → a,b,c,d → E (người-tháng) → D (tháng).
+
+SLIDE: Ví dụ COCOMO (HÌNH)
+
+K=10.4, F≈1.15 → E≈28 người-tháng, D≈7 tháng → khoảng 4 người full-time.
+Nhấn: số minh hoạ mô hình; dự án AI còn cần đệm data/thí nghiệm.
+
+SLIDE: Bảng hệ số ngôn ngữ + F, a,b,c,d — gọn
+
+Không thuộc lòng bảng. Nhớ vai trò: ngôn ngữ đổi K; F phản ánh độ khó dự án;
+a,b,c,d theo pha mô hình COCOMO II.
+
+SLIDE: Ước lượng AI thêm gì (📖 Tự học) — 40 giây
+
+Labeling/cleaning lớn; nhiều vòng thí nghiệm; inference/GPU tốn vận hành.
+
+
+--------------------------------------------------------------------------------
+[3:20–3:30] PHẦN 5 — Cone of Uncertainty + Tổng kết 4b
+--------------------------------------------------------------------------------
+
+SLIDE: Nón không chắc chắn (hình)
+
+Đầu dự án khoảng sai số lớn; càng làm rõ yêu cầu/prototype càng thu hẹp.
+
+SLIDE: Đọc Cone đúng cách
+
+Đầu dự án ×4 (McConnell) là giới hạn tốt nhất của người ước lượng giỏi — dễ tệ hơn,
+không phải “đoán một số rồi may ra đúng”.
+
+SLIDE: Ví dụ chatbot ước 4 tháng (HÌNH — giảng chậm)
+
+Ý tưởng: 1–16 tháng. Sau chốt yêu cầu: 2–8. Sau prototype: 3.2–5. Gần xong: ~4.
+CHỐT: cam kết “đúng 4 tháng” ngày 1 là không trung thực theo Cone. Nên nói khoảng
++ điều kiện thu hẹp.
+
+SLIDE: Câu hỏi kinh điển
+
+“Mất bao nhiêu tiền?” → trả lời khoảng, kèm giả định.
+
+SLIDE: Nhớ gì sau 4b?
+
+FR: Who does What. NFR: đo được. V&V: đúng đặc tả ≠ đúng nhu cầu.
+FPA+COCOMO: kích thước → effort/lịch trình. Cone: ước sớm có khoảng sai số lớn.
+
+SLIDE: Tài liệu — chỉ đường đọc thêm (Wiegers, Cockburn, Boehm, McConnell, IFPUG).
+
+
+================================================================================
+CHỐT CẢ BUỔI (~2 phút cuối)
+================================================================================
+
+Hôm nay có hai tầng:
+
+1) Quy trình: Waterfall tuần tự; RUP vòng lặp + tăng trưởng; Agile là giá trị;
+   Scrum tổ chức sprint; XP giữ code đổi được; Kanban/Burndown giúp nhìn trạng thái
+   và tiến độ.
+
+2) Yêu cầu & ước lượng: viết FR/NFR đo được; phân biệt verification/validation;
+   ước lượng bằng kích thước chức năng rồi mới ra công/thời gian; luôn nhớ Cone —
+   càng sớm càng phải nói bằng khoảng.
+
+Về nhà: chọn một ý tưởng mini dự án AI của nhóm; viết 3 FR + 3 NFR đo được; phác
+một khoảng ước lượng đầu dự án (optimistic / likely / pessimistic) theo tinh thần Cone.
+
+
+================================================================================
+PHÂN BỔ THỜI GIAN TÓM TẮT (điều chỉnh theo nhịp lớp)
+================================================================================
+
+4a mở + phần 0 ............... 10'
+Waterfall .................... 15'
+RUP .......................... 18'
+Agile Manifesto + Scrum ...... 25'
+Kanban + Burndown + ví dụ .... 12'
+XP + tình huống QR ........... 20'
+Thiết kế + tổng kết 4a ....... 10'
+Nghỉ ......................... 10'
+4b mở + FR ................... 20'
+NFR (từng slide) ............. 22'
+V&V + Traceability ........... 10'
+FPA/COCOMO + ví dụ ........... 20'
+Cone + tổng kết .............. 10'
+                                 ----
+Tổng ~180'
+
+Nếu thiếu giờ: cắt bớt “12 nguyên tắc” (chỉ lấy 4–5 ý), cắt Reliability/Integration
+ở NFR, và slide tự học. Không cắt: ví dụ Kanban/Burndown, tình huống XP QR, ví dụ
+FPA/COCOMO, ví dụ Cone chatbot.
+
+
+================================================================================
+GỢI Ý CÂU HỎI KIỂM TRA NHANH (cuối giờ hoặc lab)
+================================================================================
+
+1) Waterfall khác RUP ở điểm nào về thời điểm nhận feedback?
+2) Scrum và XP khác nhau chỗ nào? Team có dùng cả hai được không?
+3) Viết lại câu “Hệ thống phải nhanh” thành một NFR đo được.
+4) Cho ví dụ verification đúng nhưng validation sai trong dự án AI.
+5) Vì sao cam kết một số tháng duy nhất ngay ngày đầu dự án thường sai?
+
+================================================================================
+HẾT SCRIPT
+================================================================================

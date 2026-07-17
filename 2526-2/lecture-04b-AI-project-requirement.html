@@ -30,7 +30,7 @@
         <section style="font-size:0.85em;">
           <h2>Nội dung</h2>
           <ol start="0">
-            <li>Yêu cầu và ước lượng là gì?</li>
+            <li>Yêu cầu, ước lượng và SDLC</li>
             <li>Yêu cầu chức năng</li>
             <li>Yêu cầu phi chức năng (NFR)</li>
             <li>Verification, Validation &amp; Traceability</li>
@@ -56,13 +56,13 @@
       </section>
 
       <!-- ================================================================
-           SECTION 0 – REQUIREMENTS & ESTIMATION INTRO
+           SECTION 0 – REQUIREMENTS & ESTIMATION INTRO (+ SDLC)
            ================================================================ -->
       <section>
         <section>
           <h1>
             <span class="text-light">0.</span><br />
-            Yêu cầu và ước lượng<br />là gì?
+            Yêu cầu, ước lượng<br />và SDLC
           </h1>
         </section>
 
@@ -81,22 +81,81 @@
           <p class="caption">Không rõ yêu cầu → ước lượng chỉ là đoán. Không ước lượng → kế hoạch không kiểm soát được.</p>
         </section>
 
+        <section style="font-size:0.88em;">
+          <h2>SDLC là gì?</h2>
+          <div class="question-box">
+            <div class="question-title">Software Development Life Cycle</div>
+            <div class="question-content">
+              <strong>Vòng đời phát triển phần mềm / hệ thống</strong> —
+              chuỗi giai đoạn từ lập kế hoạch đến triển khai (và thường lặp lại).
+              Waterfall, RUP, Agile đều “đi qua” các hoạt động này, khác nhau ở cách tổ chức và mức độ lặp.
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Sáu giai đoạn SDLC</h2>
+          <div style="font-size:0; line-height:0;">
+            <img src="img/lec-04b/sdlc-cycle.png" style="width:58%; display:block; margin:0 auto" />
+          </div>
+          <p class="caption">Planning → Defining → Designing → Building → Testing → Deployment (vòng lặp).</p>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Mỗi giai đoạn làm gì?</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:0.88em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.28em 0.5em; text-align:left; border-bottom:2px solid #ccc">Giai đoạn</th>
+                <th style="padding:0.28em 0.5em; text-align:left; border-bottom:2px solid #ccc">Trọng tâm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee"><strong>Planning</strong></td>
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee">Mục tiêu, phạm vi thô, nguồn lực, lịch trình sơ bộ</td>
+              </tr>
+              <tr style="background:#e3f2fd">
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee"><strong>Defining</strong></td>
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee">
+                  <strong>Định nghĩa yêu cầu chi tiết</strong> — FR, NFR, SRS, use case
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee"><strong>Designing</strong></td>
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee">Kiến trúc, thiết kế chi tiết theo yêu cầu đã định nghĩa</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee"><strong>Building</strong></td>
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee">Hiện thực (code), tích hợp thành phần</td>
+              </tr>
+              <tr>
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee"><strong>Testing</strong></td>
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee">Verification / Validation so với yêu cầu</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee"><strong>Deployment</strong></td>
+                <td style="padding:0.25em 0.5em; border-bottom:1px solid #eee">Đưa vào môi trường dùng thật; vận hành / phản hồi → vòng mới</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>SRS chứa gì?</h2>
+          <ul>
+            <li><strong>Yêu cầu chức năng (FR)</strong> — Who does What.</li>
+            <li><strong>Yêu cầu phi chức năng (NFR)</strong> — performance, availability, security…</li>
+            <li>Use case / user story, ràng buộc, giả định, từ điển thuật ngữ.</li>
+          </ul>
+        </section>
+
         <section>
           <h2>Chức năng vs phi chức năng</h2>
           <div style="font-size:0; line-height:0;">
             <img src="img/lec-04b/fr-vs-nfr.svg" style="width:92%; display:block; margin:0 auto" />
           </div>
         </section>
-
-        <section style="font-size:0.88em;">
-          <h2>Trong dự án AI, vì sao hai thứ này khó hơn?</h2>
-          <ul>
-            <li>Yêu cầu gắn với <strong>metric</strong> (accuracy, latency) và dữ liệu — dễ đổi sau thí nghiệm.</li>
-            <li>Ước lượng phải kể cả labeling, train, thử model — không chỉ coding.</li>
-            <li>Cam kết sớm một con số duy nhất thường <span class="keyword">sai</span> (xem Cone).</li>
-          </ul>
-        </section>
-      </section>
 
       <!-- ================================================================
            SECTION 1 – FUNCTIONAL REQUIREMENTS
@@ -567,6 +626,7 @@
         <section style="font-size:0.85em;">
           <h2>Nhớ gì sau bài 4b?</h2>
           <ul>
+            <li><strong>SDLC</strong>: FR chi tiết được viết ở giai đoạn <em>Defining</em> (SRS).</li>
             <li><strong>Yêu cầu chức năng</strong>: Who does What — đo được bằng kiểm thử hành vi.</li>
             <li><strong>NFR</strong>: phải đo được, có ngữ cảnh và ngưỡng.</li>
             <li><strong>V&amp;V</strong>: đúng đặc tả ≠ đúng nhu cầu.</li>

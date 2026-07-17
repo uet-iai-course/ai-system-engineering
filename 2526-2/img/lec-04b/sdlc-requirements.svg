@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 380" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="980" height="380" fill="#fafafa"/>
+  <text x="490" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#333">SDLC: tài liệu yêu cầu chức năng được viết chi tiết ở đâu?</text>
+  <!-- phases -->
+  <rect x="30" y="70" width="160" height="70" rx="8" fill="#eceff1" stroke="#78909c" stroke-width="2"/>
+  <text x="110" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#546e7a">1. Feasibility</text>
+  <text x="110" y="120" text-anchor="middle" font-size="11" fill="#666">ý tưởng / khả thi</text>
+
+  <text x="200" y="110" font-size="20" fill="#90a4ae">→</text>
+
+  <rect x="230" y="55" width="200" height="100" rx="10" fill="#e3f2fd" stroke="#1565C0" stroke-width="3"/>
+  <text x="330" y="90" text-anchor="middle" font-size="14" font-weight="700" fill="#1565C0">2. Requirements</text>
+  <text x="330" y="112" text-anchor="middle" font-size="14" font-weight="700" fill="#1565C0">Analysis</text>
+  <text x="330" y="138" text-anchor="middle" font-size="12" fill="#0d47a1">★ SRS / FR chi tiết</text>
+
+  <text x="440" y="110" font-size="20" fill="#90a4ae">→</text>
+
+  <rect x="470" y="70" width="140" height="70" rx="8" fill="#e8f5e9" stroke="#2E7D32" stroke-width="2"/>
+  <text x="540" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#2E7D32">3. Design</text>
+  <text x="540" y="120" text-anchor="middle" font-size="11" fill="#555">thiết kế theo SRS</text>
+
+  <text x="620" y="110" font-size="20" fill="#90a4ae">→</text>
+
+  <rect x="650" y="70" width="130" height="70" rx="8" fill="#fff3e0" stroke="#E65100" stroke-width="2"/>
+  <text x="715" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#E65100">4. Implementation</text>
+  <text x="715" y="120" text-anchor="middle" font-size="11" fill="#555">code + unit test</text>
+
+  <text x="790" y="110" font-size="20" fill="#90a4ae">→</text>
+
+  <rect x="820" y="70" width="130" height="70" rx="8" fill="#fce4ec" stroke="#AD1457" stroke-width="2"/>
+  <text x="885" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#AD1457">5. Test</text>
+  <text x="885" y="115" text-anchor="middle" font-size="11" fill="#555">verify / validate</text>
+  <text x="885" y="132" text-anchor="middle" font-size="11" fill="#555">→ Maintenance</text>
+
+  <!-- callout -->
+  <rect x="80" y="200" width="820" height="140" rx="12" fill="#fff" stroke="#1565C0" stroke-width="2"/>
+  <text x="490" y="235" text-anchor="middle" font-size="15" font-weight="700" fill="#1565C0">Giai đoạn Requirements Analysis = nơi tài liệu yêu cầu chức năng được viết chi tiết</text>
+  <text x="490" y="265" text-anchor="middle" font-size="13" fill="#444">Đầu ra điển hình: SRS (Software Requirements Specification) gồm FR + NFR, use case, từ điển thuật ngữ</text>
+  <text x="490" y="295" text-anchor="middle" font-size="13" fill="#444">Trước đó (Feasibility): chỉ yêu cầu mức cao. Sau đó (Design): thiết kế bám theo SRS đã chốt</text>
+  <text x="490" y="320" text-anchor="middle" font-size="12" fill="#888">Trong Waterfall, SRS thường “đóng” trước khi sang Design — đổi muộn rất đắt</text>
+</svg>

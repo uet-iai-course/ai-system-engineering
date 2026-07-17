@@ -115,6 +115,8 @@
           <ul>
             <li><strong>Waterfall / SDLC</strong> — tuần tự theo giai đoạn</li>
             <li><strong>RUP</strong> — vòng lặp + tăng trưởng, có pha rõ</li>
+            <li><strong>MSF, ITIL</strong> — khung dự án Microsoft / vận hành dịch vụ IT</li>
+            <li><strong>RAD, Spiral, V-Model</strong> — các biến thể linh hoạt hơn thác nước</li>
             <li><strong>Agile</strong> — giá trị linh hoạt</li>
             <li><strong>Agile / Scrum · Kanban</strong> — tổ chức công việc</li>
             <li><strong>Agile / XP</strong> — thực hành kỹ thuật (pair, TDD, CI…)</li>
@@ -240,7 +242,7 @@
 
         <section style="font-size:0.82em;">
           <h2>Các mô hình khác (nhìn nhanh)</h2>
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.7em; margin-top:0.5em">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7em; margin-top:0.5em">
             <div style="background:#e3f2fd; border-top:4px solid #1565C0; border-radius:8px; padding:0.7em">
               <strong>Spiral</strong>
               <p style="margin:0.4em 0 0; font-size:0.9em">Boehm: xoắn ốc theo vòng rủi ro + nguyên mẫu.</p>
@@ -249,12 +251,148 @@
               <strong>V-Model</strong>
               <p style="margin:0.4em 0 0; font-size:0.9em">Mỗi bước phát triển gắn với một bước kiểm thử tương ứng.</p>
             </div>
-            <div style="background:#fff3e0; border-top:4px solid #E65100; border-radius:8px; padding:0.7em">
-              <strong>RAD</strong>
-              <p style="margin:0.4em 0 0; font-size:0.9em">Phát triển nhanh bằng prototype và vòng feedback ngắn.</p>
+          </div>
+          <p class="caption">Hai mô hình này vẫn gần “có giai đoạn”, nhưng đã tăng kiểm soát rủi ro / kiểm thử.</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>RAD — tiếp cận linh hoạt hơn thác nước</h2>
+          <div class="question-box">
+            <div class="question-title">Rapid Application Development</div>
+            <div class="question-content">
+              Phương pháp phát triển nhanh: dùng <strong>prototype</strong>, tham gia người dùng sớm,
+              và các vòng phản hồi ngắn thay vì chờ đặc tả hoàn chỉnh rồi mới code.
             </div>
           </div>
-          <p class="caption">Đây là họ hàng của tư duy “giảm rủi ro / tăng feedback” trước Agile hiện đại.</p>
+          <ul style="margin-top:0.5em">
+            <li>Phổ biến hoá bởi James Martin (những năm 1990) trên nền ý tưởng prototype / JAD.</li>
+            <li>Mục tiêu: rút ngắn thời gian từ ý tưởng → sản phẩm dùng được.</li>
+            <li>Là cầu nối tư duy giữa Waterfall cứng và Agile sau này.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.8em;">
+          <h2>RAD làm việc thế nào?</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.5em; font-size:0.88em; margin-top:0.4em">
+            <div style="background:#e3f2fd; border-radius:8px; padding:0.55em; text-align:center">
+              <strong style="color:#1565C0">Requirements<br />planning</strong>
+              <p style="margin:0.35em 0 0; font-size:0.92em">Phạm vi &amp; ưu tiên nghiệp vụ</p>
+            </div>
+            <div style="background:#e8f5e9; border-radius:8px; padding:0.55em; text-align:center">
+              <strong style="color:#2E7D32">User design</strong>
+              <p style="margin:0.35em 0 0; font-size:0.92em">Workshop + prototype với người dùng</p>
+            </div>
+            <div style="background:#fff3e0; border-radius:8px; padding:0.55em; text-align:center">
+              <strong style="color:#E65100">Construction</strong>
+              <p style="margin:0.35em 0 0; font-size:0.92em">Xây nhanh theo prototype đã chốt</p>
+            </div>
+            <div style="background:#fce4ec; border-radius:8px; padding:0.55em; text-align:center">
+              <strong style="color:#AD1457">Cutover</strong>
+              <p style="margin:0.35em 0 0; font-size:0.92em">Kiểm thử, đào tạo, đưa vào dùng</p>
+            </div>
+          </div>
+          <ul style="margin-top:0.6em">
+            <li><strong>Hợp khi:</strong> cần ra mắt nhanh, người dùng sẵn sàng tham gia, phạm vi vừa phải.</li>
+            <li><strong>Hạn chế:</strong> dễ “phình scope”; kém phù hợp hệ thống lớn, ràng buộc pháp lý nặng.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>MSF — Microsoft Solutions Framework</h2>
+          <div class="question-box">
+            <div class="question-title">Định nghĩa làm việc</div>
+            <div class="question-content">
+              Khung của Microsoft để lập kế hoạch, xây dựng và triển khai giải pháp IT —
+              kết hợp <em>milestone kiểu thác nước</em> với <em>vòng lặp / tăng trưởng</em>.
+            </div>
+          </div>
+          <ul style="margin-top:0.5em">
+            <li><strong>Process model:</strong> Envisioning → Planning → Developing → Stabilizing → Deploying.</li>
+            <li><strong>Team model:</strong> các vai trò (Product, Program, Development, Test, User Experience, Release…).</li>
+            <li>Trong <em>Planning</em>: chốt functional specification + kế hoạch / lịch trình tổng.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.8em;">
+          <h2>Năm pha MSF — nhớ gì?</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:0.88em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">Pha</th>
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">Trọng tâm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Envisioning</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Tầm nhìn / phạm vi, rủi ro ban đầu, cấu trúc team</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Planning</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Yêu cầu chi tiết, functional spec, kế hoạch &amp; lịch trình</td>
+              </tr>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Developing</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Xây dựng giải pháp theo vòng lặp</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Stabilizing</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Kiểm thử, sửa lỗi, sẵn sàng phát hành</td>
+              </tr>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Deploying</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Đưa vào môi trường vận hành thực</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="caption">MSF nghiêng về <strong>dự án giải pháp</strong> — khác ITIL nghiêng về vận hành dịch vụ lâu dài.</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>ITIL — thư viện vận hành dịch vụ IT</h2>
+          <div class="question-box">
+            <div class="question-title">IT Infrastructure Library</div>
+            <div class="question-content">
+              Bộ thực hành tốt nhất cho <strong>quản lý dịch vụ IT</strong> (IT Service Management) —
+              không phải quy trình coding như Waterfall / RUP / Scrum.
+            </div>
+          </div>
+          <ul style="margin-top:0.5em">
+            <li>Quan tâm: sự cố (incident), thay đổi (change), cấu hình, mức dịch vụ (SLA)…</li>
+            <li>Vòng đời dịch vụ (ITIL v3): Strategy → Design → Transition → Operation → Continual Improvement.</li>
+            <li>Dùng khi hệ thống đã / sắp vận hành: giữ ổn định, đo chất lượng dịch vụ.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>MSF và ITIL — đặt cạnh nhau</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:0.9em">
+            <thead>
+              <tr style="background:#f0f0f0">
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc"></th>
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">MSF</th>
+                <th style="padding:0.3em 0.5em; text-align:left; border-bottom:2px solid #ccc">ITIL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Câu hỏi</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Làm sao giao một giải pháp đúng hạn?</td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Làm sao vận hành dịch vụ ổn định?</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Trọng tâm</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Dự án: envision → deploy</td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Dịch vụ: SLA, incident, change</td>
+              </tr>
+              <tr>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee"><strong>Trong AI</strong></td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Đóng gói và triển khai model/app</td>
+                <td style="padding:0.28em 0.5em; border-bottom:1px solid #eee">Monitor, rollback, hỗ trợ sau deploy</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="caption">Trên lớp nhớ: MSF = dự án; ITIL = vận hành dịch vụ; RAD = prototype nhanh, phản hồi sớm.</p>
         </section>
 
       </section>
@@ -889,6 +1027,43 @@
         </section>
 
         <section style="font-size:0.85em;">
+          <h2>Giản lược tính năng (YAGNI)</h2>
+          <div class="question-box">
+            <div class="question-title">You Aren't Gonna Need It</div>
+            <div class="question-content">
+              Đừng thêm chức năng / lớp trừu tượng / cấu hình “cho tương lai”
+              nếu <strong>chưa có yêu cầu hiện tại</strong> đòi hỏi chúng.
+            </div>
+          </div>
+          <ul style="margin-top:0.5em">
+            <li>Xuất phát từ Extreme Programming (Ron Jeffries / cộng đồng XP).</li>
+            <li><strong>DRY</strong> tránh lặp lại những gì đã cần; <strong>YAGNI</strong> tránh làm những gì chưa cần.</li>
+            <li>Đoán trước thay đổi → code phức tạp hơn, chậm hơn, khó bảo trì hơn.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>YAGNI — ví dụ nhanh</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7em">
+            <div style="background:#ffebee; border-radius:10px; padding:0.7em">
+              <strong class="text-red">Vi phạm YAGNI</strong>
+              <ul>
+                <li>“Mai sau có thể đa ngôn ngữ” → nhét i18n khung sẵn dù mới hỗ trợ tiếng Việt.</li>
+                <li>Plugin system cho 1 tính năng duy nhất hiện tại.</li>
+              </ul>
+            </div>
+            <div style="background:#e8f5e9; border-radius:10px; padding:0.7em">
+              <strong style="color:#2E7D32">Theo YAGNI</strong>
+              <ul>
+                <li>Chỉ làm i18n khi có story/yêu cầu đa ngôn ngữ thật.</li>
+                <li>Viết thẳng tính năng; tách plugin khi nhu cầu thứ hai xuất hiện.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="caption">YAGNI không cấm thiết kế tốt — cấm đầu tư cho giả thuyết chưa được xác nhận.</p>
+        </section>
+
+        <section style="font-size:0.85em;">
           <h2>Tính mô-đun: cứng và bất động</h2>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7em">
             <div style="background:#ffebee; border-radius:10px; padding:0.75em">
@@ -920,10 +1095,11 @@
           <h2>Nhớ gì sau bài 4a?</h2>
           <ul>
             <li><strong>Waterfall</strong>: rõ giai đoạn, yếu khi yêu cầu đổi nhiều.</li>
+            <li><strong>RAD</strong>: prototype nhanh, phản hồi sớm — cầu nối tới Agile.</li>
+            <li><strong>MSF</strong>: khung dự án Microsoft (envision → deploy); <strong>ITIL</strong>: vận hành dịch vụ.</li>
             <li><strong>RUP</strong>: bốn pha + vòng lặp; giảm rủi ro sớm.</li>
             <li><strong>Agile / Scrum</strong>: khung quản lý sprint, backlog, increment — theo dõi bằng Kanban và burndown.</li>
             <li><strong>Agile / XP</strong>: thực hành kỹ thuật (TDD, pair, CI…) để đổi code an toàn.</li>
-            <li>Thiết kế tốt trong Agile = <span class="keyword">đơn giản</span>, ít trùng, dễ tách module.</li>
           </ul>
         </section>
 
@@ -942,16 +1118,20 @@
                 <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Waterfall / V-Model (có kiểm soát)</td>
               </tr>
               <tr style="background:#fafafa">
-                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Dự án lớn, cần kiến trúc sớm</td>
-                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">RUP (Elaboration mạnh)</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Cần ra mắt nhanh, user sẵn sàng tham gia</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">RAD (prototype ngắn)</td>
               </tr>
               <tr>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Dự án lớn / giải pháp Microsoft-style</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">MSF hoặc RUP (Elaboration / Planning mạnh)</td>
+              </tr>
+              <tr style="background:#fafafa">
                 <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Sản phẩm đổi nhanh, team nhỏ–vừa</td>
                 <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Scrum + thực hành XP</td>
               </tr>
-              <tr style="background:#fafafa">
-                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Luồng việc liên tục / hỗ trợ</td>
-                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Kanban</td>
+              <tr>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">Vận hành dịch vụ / SLA sau deploy</td>
+                <td style="padding:0.3em 0.5em; border-bottom:1px solid #eee">ITIL (+ Kanban cho luồng hỗ trợ)</td>
               </tr>
             </tbody>
           </table>

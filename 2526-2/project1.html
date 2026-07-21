@@ -1,0 +1,1001 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Bài tập lớn — Xây dựng và tích hợp ứng dụng AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="Bài tập lớn môn Thực hành phát triển hệ thống trí tuệ nhân tạo, học kỳ 2, 2025–2026" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+    crossorigin="anonymous" />
+
+  <style>
+    :root {
+      --accent: #0d6efd;
+      --soft-blue: #eef5ff;
+      --soft-green: #eefaf3;
+      --soft-orange: #fff7e8;
+    }
+
+    body {
+      color: #212529;
+    }
+
+    .container {
+      max-width: 980px;
+    }
+
+    .section-anchor {
+      scroll-margin-top: 6rem;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9f2ff 100%);
+    }
+
+    .task-block {
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.15rem;
+      margin-bottom: 1rem;
+      background: #f8f9fa;
+      border-radius: 0 .5rem .5rem 0;
+    }
+
+    .scenario-card {
+      height: 100%;
+      border-top: 4px solid var(--accent);
+    }
+
+    .scenario-card h3 {
+      min-height: 3.2rem;
+    }
+
+    .fixed-file {
+      border: 1px solid #ced4da;
+      border-radius: .6rem;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+
+    .fixed-file-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .65rem .9rem;
+      background: #212529;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    pre {
+      margin: 0;
+      padding: 1rem;
+      overflow-x: auto;
+      background: #f8f9fa;
+      font-size: .86rem;
+      line-height: 1.45;
+    }
+
+    code.cmd {
+      padding: .12rem .4rem;
+      border-radius: .25rem;
+      background: #edf0f2;
+      color: #b42318;
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: .6rem;
+      align-items: center;
+    }
+
+    .architecture .node {
+      padding: .8rem .5rem;
+      border: 1px solid #9ec5fe;
+      border-radius: .55rem;
+      background: var(--soft-blue);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .architecture .node.external {
+      border-color: #a3cfbb;
+      background: var(--soft-green);
+    }
+
+    .architecture .arrow {
+      text-align: center;
+      color: #6c757d;
+      font-size: 1.35rem;
+    }
+
+    .do-box {
+      border: 1px solid #a3cfbb;
+      background: var(--soft-green);
+    }
+
+    .dont-box {
+      border: 1px solid #ffda6a;
+      background: var(--soft-orange);
+    }
+
+    @media (max-width: 768px) {
+      .architecture {
+        grid-template-columns: 1fr;
+      }
+
+      .architecture .arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-semibold" href="index.html">BTL — Ứng dụng &amp; tích hợp AI</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
+        aria-controls="nav" aria-expanded="false" aria-label="Mở menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="nav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#thong-tin">Thông tin chung</a></li>
+          <li class="nav-item"><a class="nav-link" href="#kich-ban">Ba kịch bản</a></li>
+          <li class="nav-item"><a class="nav-link" href="#yeu-cau">Yêu cầu</a></li>
+          <li class="nav-item"><a class="nav-link" href="#bo-mau">Bộ mẫu Docker</a></li>
+          <li class="nav-item"><a class="nav-link" href="#nop-bai">Nộp bài</a></li>
+          <li class="nav-item"><a class="nav-link" href="#rubric">Rubric</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero border-bottom">
+    <div class="container py-5">
+      <span class="badge text-bg-primary mb-3">Mức độ: Vận dụng</span>
+      <h1 class="display-6 fw-bold">Bài tập lớn: Xây dựng và tích hợp ứng dụng AI</h1>
+      <p class="lead mb-2">
+        Viết mã ứng dụng, gọi AI API, tích hợp với hệ thống có sẵn và đóng gói thành Docker image.
+      </p>
+      <p class="mb-0">Môn học: <strong>Thực hành phát triển hệ thống trí tuệ nhân tạo</strong></p>
+      <p class="mb-0">Học kỳ: <strong>2, 2025–2026</strong></p>
+      <p class="mb-0">Trường Đại học Công nghệ, ĐHQG Hà Nội</p>
+    </div>
+  </header>
+
+  <main class="container my-5">
+    <section id="thong-tin" class="section-anchor mb-5">
+      <h2>I) Thông tin chung</h2>
+
+      <div class="alert alert-primary">
+        <strong>Mục tiêu:</strong> mỗi nhóm chọn <strong>một trong ba kịch bản</strong>, xây dựng tối thiểu một giao
+        diện dùng được, hoàn thiện ứng dụng trong khung mã nguồn được cấp, đọc cấu hình từ biến môi trường, gọi AI API,
+        kết nối các service và tích hợp với một REST API có sẵn. Kết quả cuối cùng phải chạy bằng một lệnh:
+        <code class="cmd">docker compose up -d --build</code>.
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <div class="do-box rounded p-3 h-100">
+            <h3 class="h5">Sinh viên thực hiện</h3>
+            <ul class="mb-0">
+              <li>Hoàn thiện logic và tối thiểu một giao diện dùng được trong thư mục <code>src/</code>.</li>
+              <li>Dùng biến môi trường trong mã nguồn.</li>
+              <li>Gọi AI API và API hệ thống có sẵn.</li>
+              <li>Lưu trạng thái/kết quả vào PostgreSQL.</li>
+              <li>Build, chạy, kiểm thử và đẩy image.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="dont-box rounded p-3 h-100">
+            <h3 class="h5">Sinh viên không phải thiết kế lại</h3>
+            <ul class="mb-0">
+              <li><code>.env</code> và <code>.env.example</code>.</li>
+              <li><code>Dockerfile</code>.</li>
+              <li><code>docker-compose.yaml</code>.</li>
+              <li>Cấu trúc dịch vụ và cơ sở dữ liệu nền.</li>
+              <li>Quy ước cổng, health check và lệnh khởi động.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <strong>Nhóm và đăng ký:</strong> tối đa <strong>4 thành viên</strong>. Hạn đăng ký đề tài:
+        <strong>31/7/2026</strong>. Mỗi nhóm đăng ký một kịch bản và mô tả ngắn dữ liệu/use case cụ thể.
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>Hạn nộp bài:</strong> hết ngày <strong>15/08/2026</strong>.
+      </div>
+
+      <div class="alert alert-danger mb-0">
+        <strong>Bảo mật:</strong> không commit API key, token hoặc mật khẩu thật. File <code>.env</code> do giảng viên
+        cấp/dùng khi chấm và phải nằm trong <code>.gitignore</code>. Repo chỉ lưu <code>.env.example</code>.
+      </div>
+    </section>
+
+    <hr class="my-5" />
+
+    <section id="kich-ban" class="section-anchor mb-5">
+      <h2>II) Chọn một trong ba kịch bản</h2>
+      <p>
+        Cả ba kịch bản dùng chung kiến trúc và bộ Docker mẫu. Khác biệt nằm ở dữ liệu đầu vào, lời gọi AI và API hệ
+        thống được tích hợp.
+      </p>
+
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <article class="card scenario-card">
+            <div class="card-body">
+              <span class="badge text-bg-primary mb-2">Kịch bản 1</span>
+              <h3 class="h5">Trợ lý phân loại yêu cầu hỗ trợ</h3>
+              <p>
+                Nhận nội dung ticket, dùng AI để phân loại phòng ban, mức ưu tiên, tóm tắt và đề xuất câu trả lời.
+              </p>
+              <h4 class="h6">Tích hợp bắt buộc</h4>
+              <ul>
+                <li>Đọc ticket từ Helpdesk REST API.</li>
+                <li>Gọi text/LLM API để phân tích.</li>
+                <li>Ghi nhãn và bản nháp trả lời trở lại Helpdesk API.</li>
+                <li>Lưu lịch sử xử lý vào PostgreSQL.</li>
+              </ul>
+              <h4 class="h6">Đầu ra tối thiểu</h4>
+              <p class="mb-0">
+                <code>category</code>, <code>priority</code>, <code>summary</code>,
+                <code>suggested_reply</code> và trạng thái đồng bộ.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div class="col-lg-4">
+          <article class="card scenario-card">
+            <div class="card-body">
+              <span class="badge text-bg-primary mb-2">Kịch bản 2</span>
+              <h3 class="h5">Làm giàu danh mục sản phẩm bằng AI</h3>
+              <p>
+                Nhận ảnh sản phẩm, dùng Vision API để gợi ý nhãn, danh mục, mô tả ngắn và cảnh báo ảnh không phù hợp.
+              </p>
+              <h4 class="h6">Tích hợp bắt buộc</h4>
+              <ul>
+                <li>Đọc sản phẩm/URL ảnh từ Catalog REST API.</li>
+                <li>Tải ảnh và gọi Vision AI API.</li>
+                <li>Cập nhật metadata trở lại Catalog API.</li>
+                <li>Lưu kết quả và lỗi vào PostgreSQL.</li>
+              </ul>
+              <h4 class="h6">Đầu ra tối thiểu</h4>
+              <p class="mb-0">
+                <code>labels</code>, <code>category</code>, <code>description</code>,
+                <code>image_warning</code> và trạng thái đồng bộ.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div class="col-lg-4">
+          <article class="card scenario-card">
+            <div class="card-body">
+              <span class="badge text-bg-primary mb-2">Kịch bản 3</span>
+              <h3 class="h5">Trợ lý xử lý biên bản cuộc họp</h3>
+              <p>
+                Nhận transcript, dùng AI để tóm tắt, trích xuất quyết định và danh sách công việc cần thực hiện.
+              </p>
+              <h4 class="h6">Tích hợp bắt buộc</h4>
+              <ul>
+                <li>Đọc transcript từ Meeting REST API.</li>
+                <li>Gọi text/LLM API để phân tích.</li>
+                <li>Tạo action item qua Task REST API.</li>
+                <li>Lưu biên bản và trạng thái đồng bộ vào PostgreSQL.</li>
+              </ul>
+              <h4 class="h6">Đầu ra tối thiểu</h4>
+              <p class="mb-0">
+                <code>summary</code>, <code>decisions</code>, <code>action_items</code>,
+                người phụ trách và trạng thái đồng bộ.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="alert alert-secondary mt-4 mb-0">
+        <strong>Giới hạn phạm vi:</strong> không yêu cầu huấn luyện mô hình, Kubernetes, monitoring stack hoặc hệ thống
+        phân quyền phức tạp. Redis, MinIO, Milvus, Nginx và RabbitMQ Management đã có sẵn trong bộ Compose; mỗi nhóm
+        chỉ bắt buộc dùng các service cốt lõi được nêu ở phần yêu cầu. Nhóm tích hợp đúng toàn bộ service mở rộng được
+        cộng điểm.
+      </div>
+    </section>
+
+    <hr class="my-5" />
+
+    <section id="yeu-cau" class="section-anchor mb-5">
+      <h2>III) Công việc và yêu cầu kỹ thuật</h2>
+
+      <div class="task-block">
+        <h3 class="h5">1. Hoàn thiện ứng dụng</h3>
+        <ul class="mb-0">
+          <li>
+            <strong>Bắt buộc có tối thiểu một giao diện web dùng được</strong>; chỉ có REST API, Swagger hoặc CLI
+            không được tính là đã có giao diện.
+          </li>
+          <li>Giao diện phải cho phép nhập/chọn dữ liệu, gửi xử lý, hiển thị trạng thái chờ, kết quả và lỗi dễ hiểu.</li>
+          <li>Luồng chính phải thao tác được hoàn toàn trên giao diện, không yêu cầu người chấm gọi API thủ công.</li>
+          <li>Có REST API rõ ràng; tối thiểu gồm <code>GET /health</code> và một endpoint xử lý chính.</li>
+          <li>Kiểm tra dữ liệu đầu vào; trả HTTP status code và thông báo lỗi phù hợp.</li>
+          <li>Không đặt API key, URL dịch vụ, mật khẩu, cổng hoặc timeout trực tiếp trong mã nguồn.</li>
+          <li>Kết quả AI phải được kiểm tra/chuẩn hóa trước khi gửi sang hệ thống đích.</li>
+        </ul>
+      </div>
+
+      <div class="task-block">
+        <h3 class="h5">2. Tích hợp AI API</h3>
+        <ul class="mb-0">
+          <li>Gửi đúng input theo kịch bản và đọc đúng cấu trúc response.</li>
+          <li>Cấu hình model, URL, token và timeout bằng biến môi trường.</li>
+          <li>Xử lý tối thiểu: timeout, lỗi xác thực, lỗi 4xx/5xx và response không hợp lệ.</li>
+          <li>Không ghi token hoặc toàn bộ dữ liệu nhạy cảm vào log.</li>
+        </ul>
+      </div>
+
+      <div class="task-block">
+        <h3 class="h5">3. Tích hợp hệ thống có sẵn</h3>
+        <ul class="mb-0">
+          <li>Gọi API nguồn để lấy ticket, sản phẩm hoặc transcript.</li>
+          <li>Gọi API đích để cập nhật kết quả AI hoặc tạo action item.</li>
+          <li>Dùng token và base URL từ biến môi trường.</li>
+          <li>Không gửi lại trùng dữ liệu khi người dùng bấm xử lý nhiều lần; dùng khóa nghiệp vụ/idempotency hợp lý.</li>
+        </ul>
+      </div>
+
+      <div class="task-block">
+        <h3 class="h5">4. Kết nối PostgreSQL</h3>
+        <ul class="mb-0">
+          <li>Kết nối bằng <code>DATABASE_URL</code>; trong container, hostname phải là <code>db</code>.</li>
+          <li>Lưu tối thiểu: ID bản ghi nguồn, input rút gọn, output AI, trạng thái đồng bộ, lỗi và thời gian xử lý.</li>
+          <li>Ứng dụng phải tự tạo bảng hoặc chạy migration khi khởi động.</li>
+          <li>Không lưu API key/token vào database.</li>
+        </ul>
+      </div>
+
+      <div class="task-block">
+        <h3 class="h5">5. Build và chạy bằng Docker Compose</h3>
+        <ul class="mb-0">
+          <li>Không sửa <code>Dockerfile</code> và <code>docker-compose.yaml</code> nếu chưa được giảng viên cho phép.</li>
+          <li><code>docker compose build app</code> phải build thành công từ máy sạch.</li>
+          <li><code>docker compose up -d</code> phải khởi động được toàn bộ stack mẫu; các service có health check phải
+            đạt trạng thái healthy.</li>
+          <li>Dữ liệu PostgreSQL, MinIO, Milvus và RabbitMQ phải dùng named volume.</li>
+          <li>Image ứng dụng phải được đẩy lên registry theo tên trong biến <code>IMAGE_NAME</code>.</li>
+        </ul>
+      </div>
+
+      <div class="task-block">
+        <h3 class="h5">6. Service cốt lõi và service mở rộng</h3>
+        <p class="mb-2">
+          <strong>Cốt lõi bắt buộc:</strong> <code>app</code>, <code>db</code>, <code>nginx</code> và các AI/API bên
+          ngoài. Giao diện phải được truy cập qua Nginx.
+        </p>
+        <p class="mb-2">
+          <strong>Mở rộng:</strong> <code>redis</code>, <code>minio</code>, <code>milvus</code> và
+          <code>rabbitmq</code>. Nhóm có thể chọn service phù hợp với kịch bản.
+        </p>
+        <ul class="mb-0">
+          <li>Redis: cache kết quả, trạng thái tạm hoặc chống xử lý trùng.</li>
+          <li>MinIO: lưu ảnh, transcript hoặc file đầu vào/đầu ra.</li>
+          <li>Milvus: lưu và tìm kiếm vector embedding.</li>
+          <li>RabbitMQ: đưa tác vụ AI/tích hợp API vào hàng đợi và xử lý nền.</li>
+          <li>RabbitMQ Management chỉ dùng để quan sát queue; không thay thế giao diện ứng dụng.</li>
+        </ul>
+      </div>
+
+      <h3 class="h4 mt-4">Kiến trúc cố định</h3>
+      <div class="architecture border rounded p-3 bg-light" aria-label="Sơ đồ kiến trúc cố định">
+        <div class="node">Trình duyệt<br /><small>giao diện bắt buộc</small></div>
+        <div class="arrow">→</div>
+        <div class="node">Nginx<br /><small>cổng :8080</small></div>
+        <div class="arrow">→</div>
+        <div class="node">Container app<br /><small>FastAPI :8000</small></div>
+      </div>
+      <div class="architecture border rounded p-3 bg-light mt-2" aria-label="Các API bên ngoài">
+        <div class="node">Container app</div>
+        <div class="arrow">→</div>
+        <div class="node external">AI API</div>
+        <div class="arrow">→</div>
+        <div class="node external">API hệ thống có sẵn</div>
+      </div>
+      <div class="alert alert-light border mt-2 mb-0">
+        App luôn kết nối PostgreSQL; có thể tích hợp thêm Redis, MinIO, Milvus và RabbitMQ qua hostname service trong
+        Compose, không dùng <code>localhost</code>.
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-sm table-striped align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Service</th>
+              <th>Hostname nội bộ</th>
+              <th>Địa chỉ dùng khi demo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Ứng dụng qua Nginx</td><td><code>nginx:80</code></td><td><code>http://localhost:8080</code></td></tr>
+            <tr><td>PostgreSQL</td><td><code>db:5432</code></td><td>Không bắt buộc mở cổng host</td></tr>
+            <tr><td>Redis</td><td><code>redis:6379</code></td><td>Không bắt buộc mở cổng host</td></tr>
+            <tr><td>MinIO API / Console</td><td><code>minio:9000</code></td><td><code>http://localhost:9001</code></td></tr>
+            <tr><td>Milvus</td><td><code>milvus:19530</code></td><td><code>localhost:19530</code></td></tr>
+            <tr><td>RabbitMQ / Management</td><td><code>rabbitmq:5672</code></td><td><code>http://localhost:15672</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="my-5" />
+
+    <section id="bo-mau" class="section-anchor mb-5">
+      <h2>IV) Bộ file mẫu bắt buộc</h2>
+      <p>
+        Giảng viên cung cấp sẵn các file dưới đây trong starter repository. Sinh viên dùng nguyên mẫu, chỉ viết mã
+        tương thích với cấu hình và contract đã cho.
+      </p>
+
+      <h3 class="h4">1. Cấu trúc thư mục</h3>
+      <div class="fixed-file">
+        <div class="fixed-file-header"><span>project-root/</span><span>Không đổi tên</span></div>
+        <pre><code>project-root/
+├── src/
+│   ├── main.py
+│   ├── config.py
+│   ├── database.py
+│   ├── ai_client.py
+│   ├── integration_client.py
+│   ├── models.py
+│   └── templates/
+├── nginx/
+│   └── default.conf      # giảng viên cấp, không sửa
+├── tests/
+├── .env                 # giảng viên cấp cục bộ, không commit
+├── .env.example         # mẫu cấu hình, được commit
+├── .gitignore
+├── requirements.txt     # giảng viên cấp
+├── Dockerfile           # không sửa
+├── docker-compose.yaml  # không sửa
+└── README.md</code></pre>
+      </div>
+
+      <h3 class="h4">2. File <code>.env.example</code></h3>
+      <div class="fixed-file">
+        <div class="fixed-file-header"><span>.env.example</span><span>Mẫu do giảng viên cấp</span></div>
+        <pre><code># Application
+APP_ENV=development
+APP_PORT=8000
+LOG_LEVEL=INFO
+REQUEST_TIMEOUT_SECONDS=30
+IMAGE_NAME=docker.io/your-team/ai-integration-project:latest
+
+# PostgreSQL
+POSTGRES_DB=ai_project
+POSTGRES_USER=ai_user
+POSTGRES_PASSWORD=change_me
+DATABASE_URL=postgresql+psycopg://ai_user:change_me@db:5432/ai_project
+
+# AI service
+AI_API_URL=https://ai-api.example.edu/v1
+AI_API_KEY=replace_by_lecturer
+AI_MODEL=course-default-model
+
+# Existing system API
+INTEGRATION_API_URL=https://integration-api.example.edu/v1
+INTEGRATION_API_TOKEN=replace_by_lecturer
+
+# Redis
+REDIS_URL=redis://redis:6379/0
+
+# MinIO
+MINIO_ENDPOINT=minio:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin_change_me
+MINIO_BUCKET=ai-project
+
+# Milvus vector database
+MILVUS_URI=http://milvus:19530
+MILVUS_COLLECTION=ai_project_vectors
+
+# RabbitMQ Management
+RABBITMQ_USER=ai_user
+RABBITMQ_PASSWORD=rabbit_change_me
+RABBITMQ_URL=amqp://ai_user:rabbit_change_me@rabbitmq:5672/
+
+# Nginx
+NGINX_PORT=8080</code></pre>
+      </div>
+      <div class="alert alert-warning">
+        <strong>Cách dùng:</strong> sinh viên không tự thiết kế lại danh sách biến. Giảng viên cung cấp file
+        <code>.env</code> có giá trị phù hợp với môi trường thực hành/chấm. Mã nguồn phải chạy khi chỉ thay giá trị
+        biến, không cần sửa code.
+      </div>
+
+      <h3 class="h4">3. File <code>Dockerfile</code></h3>
+      <div class="fixed-file">
+        <div class="fixed-file-header"><span>Dockerfile</span><span>Không sửa</span></div>
+        <pre><code>FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+RUN addgroup --system appgroup \
+    &amp;&amp; adduser --system --ingroup appgroup appuser
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/ ./src/
+RUN chown -R appuser:appgroup /app
+
+USER appuser
+EXPOSE 8000
+
+HEALTHCHECK --interval=10s --timeout=3s --start-period=20s --retries=5 \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre>
+      </div>
+
+      <h3 class="h4">4. File <code>docker-compose.yaml</code></h3>
+      <div class="fixed-file">
+        <div class="fixed-file-header"><span>docker-compose.yaml</span><span>Không sửa</span></div>
+        <pre><code>services:
+  app:
+    image: ${IMAGE_NAME}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "${NGINX_PORT:-8080}:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.18
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+      ETCD_SNAPSHOT_COUNT: "50000"
+    command: >
+      etcd --advertise-client-urls=http://127.0.0.1:2379
+      --listen-client-urls=http://0.0.0.0:2379
+      --data-dir=/etcd
+    volumes:
+      - etcd_data:/etcd
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  milvus:
+    image: milvusdb/milvus:v2.6.19
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+      MINIO_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY}
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    volumes:
+      - milvus_data:/var/lib/milvus
+    depends_on:
+      etcd:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  etcd_data:
+  milvus_data:
+  rabbitmq_data:</code></pre>
+      </div>
+
+      <h3 class="h4">5. File <code>nginx/default.conf</code></h3>
+      <div class="fixed-file">
+        <div class="fixed-file-header"><span>nginx/default.conf</span><span>Không sửa</span></div>
+        <pre><code>server {
+    listen 80;
+    server_name _;
+
+    client_max_body_size 20M;
+
+    location / {
+        proxy_pass http://app:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 120s;
+    }
+}</code></pre>
+      </div>
+
+      <h3 class="h4">6. File <code>requirements.txt</code></h3>
+      <div class="fixed-file">
+        <div class="fixed-file-header"><span>requirements.txt</span><span>Không tự ý bỏ dependency</span></div>
+        <pre><code>fastapi
+uvicorn[standard]
+httpx
+sqlalchemy
+psycopg[binary]
+pydantic-settings
+python-multipart
+jinja2
+redis
+minio
+pymilvus
+aio-pika</code></pre>
+      </div>
+
+      <h3 class="h4">7. Mẫu đọc biến môi trường trong code</h3>
+      <div class="fixed-file">
+        <div class="fixed-file-header"><span>src/config.py</span><span>Sinh viên hoàn thiện khi cần</span></div>
+        <pre><code>from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    app_env: str
+    log_level: str = "INFO"
+    request_timeout_seconds: float = 30
+    database_url: str
+    ai_api_url: str
+    ai_api_key: str
+    ai_model: str
+    integration_api_url: str
+    integration_api_token: str
+    redis_url: str
+    minio_endpoint: str
+    minio_access_key: str
+    minio_secret_key: str
+    minio_bucket: str
+    milvus_uri: str
+    milvus_collection: str
+    rabbitmq_url: str
+
+    model_config = SettingsConfigDict(case_sensitive=False)
+
+
+settings = Settings()</code></pre>
+      </div>
+
+      <h3 class="h4">8. Contract tối thiểu của ứng dụng</h3>
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Endpoint</th>
+              <th>Mục đích</th>
+              <th>Kết quả tối thiểu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>GET /health</code></td>
+              <td>Docker health check</td>
+              <td><code>{"status": "ok"}</code>, HTTP 200</td>
+            </tr>
+            <tr>
+              <td><code>GET /</code></td>
+              <td>Giao diện bắt buộc</td>
+              <td>Thực hiện trọn luồng chính; có trạng thái chờ, kết quả và thông báo lỗi</td>
+            </tr>
+            <tr>
+              <td><code>POST /api/process</code></td>
+              <td>Luồng xử lý chính</td>
+              <td>Lấy dữ liệu → AI → lưu DB → đồng bộ API đích</td>
+            </tr>
+            <tr>
+              <td><code>GET /api/results/{source_id}</code></td>
+              <td>Xem kết quả đã lưu</td>
+              <td>Output AI, trạng thái đồng bộ và lỗi (nếu có)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="my-5" />
+
+    <section id="quy-trinh" class="section-anchor mb-5">
+      <h2>V) Quy trình build, chạy và kiểm tra</h2>
+      <ol>
+        <li class="mb-2">
+          Nhận starter repository và file <code>.env</code> từ giảng viên. Không đổi tên hoặc cấu trúc các biến.
+        </li>
+        <li class="mb-2">
+          Chỉ hoàn thiện mã trong <code>src/</code> và kiểm thử trong <code>tests/</code>.
+        </li>
+        <li class="mb-2">
+          Kiểm tra cấu hình Compose:
+          <code class="cmd">docker compose config</code>.
+        </li>
+        <li class="mb-2">
+          Build image từ Dockerfile mẫu:
+          <code class="cmd">docker compose build --no-cache app</code>.
+        </li>
+        <li class="mb-2">
+          Khởi động toàn bộ hệ thống:
+          <code class="cmd">docker compose up -d</code>.
+        </li>
+        <li class="mb-2">
+          Kiểm tra container và log:
+          <code class="cmd">docker compose ps</code>,
+          <code class="cmd">docker compose logs app</code>.
+        </li>
+        <li class="mb-2">
+          Mở giao diện và kiểm tra health endpoint qua Nginx:
+          <code class="cmd">http://localhost:8080</code>,
+          <code class="cmd">curl http://localhost:8080/health</code>.
+        </li>
+        <li class="mb-2">
+          Chạy ít nhất ba test case: thành công, dữ liệu sai và một dịch vụ bên ngoài lỗi/timeout.
+        </li>
+        <li class="mb-2">
+          Đẩy image:
+          <code class="cmd">docker compose push app</code>.
+        </li>
+        <li>
+          Kiểm tra lại từ image đã đẩy bằng cách pull/chạy trên máy khác hoặc theo hướng dẫn của giảng viên.
+        </li>
+      </ol>
+
+      <div class="alert alert-success mb-0">
+        <strong>Điều kiện hoàn thành:</strong> trên máy chấm đã có Docker và file <code>.env</code>, giảng viên clone
+        repo rồi chạy <code class="cmd">docker compose up -d --build</code>; hệ thống phải tự build và khởi động,
+        không cần sửa file hạ tầng.
+      </div>
+    </section>
+
+    <hr class="my-5" />
+
+    <section id="nop-bai" class="section-anchor mb-5">
+      <h2>VI) Sản phẩm nộp và trình diễn</h2>
+
+      <h3 class="h4">1. GitHub repository</h3>
+      <ul>
+        <li>Repo của nhóm để ở chế độ <strong>private</strong>; tất cả thành viên là collaborators.</li>
+        <li>
+          Cấp quyền đọc cho các tài khoản giảng viên:
+          <code>daovietanh190499</code>, <code>Toan-Nguyen26</code>, <code>anhsuplo-87</code>,
+          <code>20020054-spm</code>, <code>hphungg</code>.
+        </li>
+        <li>Đẩy đầy đủ source code, test, README và các file mẫu; không đẩy <code>.env</code>.</li>
+        <li>Lịch sử commit phải thể hiện đóng góp của các thành viên.</li>
+      </ul>
+
+      <h3 class="h4">2. Docker image</h3>
+      <ul>
+        <li>Image tồn tại tại địa chỉ khai báo bởi <code>IMAGE_NAME</code>.</li>
+        <li>Tag nộp bài phải cố định, ví dụ <code>v1.0</code>; không chỉ dùng <code>latest</code>.</li>
+        <li>Image chạy được mà không mount source code từ máy host.</li>
+      </ul>
+
+      <h3 class="h4">3. README.md</h3>
+      <ul>
+        <li>Tên kịch bản, bài toán, input/output và giới hạn.</li>
+        <li>Sơ đồ luồng: API nguồn → ứng dụng → AI → DB → API đích.</li>
+        <li>Danh sách biến môi trường và ý nghĩa; không ghi secret thật.</li>
+        <li>Lệnh build, chạy, xem log, dừng hệ thống và chạy test.</li>
+        <li>Ba test case minh họa và kết quả mong đợi.</li>
+        <li>Phân công thành viên và phần mã mỗi người phụ trách.</li>
+      </ul>
+
+      <h3 class="h4">4. Demo</h3>
+      <ul class="mb-0">
+        <li>Build image trực tiếp bằng mẫu được cấp.</li>
+        <li>Khởi động hệ thống bằng Docker Compose.</li>
+        <li>Thao tác trọn luồng chính trên giao diện web tại <code>http://localhost:8080</code>.</li>
+        <li>Trình diễn một luồng thành công và một luồng lỗi.</li>
+        <li>Chỉ ra biến môi trường được đọc ở đâu và container app kết nối container DB như thế nào.</li>
+        <li>Chứng minh kết quả đã được gửi sang API hệ thống có sẵn và lưu trong PostgreSQL.</li>
+      </ul>
+    </section>
+
+    <hr class="my-5" />
+
+    <section id="rubric" class="section-anchor mb-5">
+      <h2>VII) Thang điểm đánh giá (10 điểm)</h2>
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead class="table-light">
+            <tr>
+              <th style="width: 22%">Tiêu chí</th>
+              <th>Mô tả</th>
+              <th class="text-end" style="width: 10%">Điểm</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Chức năng AI</strong></td>
+              <td>
+                Luồng chính đúng kịch bản; chuẩn hóa output AI; có xử lý response lỗi/không hợp lệ.
+                <ul class="small mb-0">
+                  <li><strong>2,5:</strong> đầy đủ, ổn định, kết quả phù hợp.</li>
+                  <li><strong>1,5–2:</strong> chạy được nhưng còn lỗi nhỏ hoặc thiếu một trường đầu ra.</li>
+                  <li><strong>0,5–1:</strong> chỉ chạy được trường hợp đơn giản.</li>
+                  <li><strong>0:</strong> không có luồng AI hoạt động.</li>
+                </ul>
+              </td>
+              <td class="text-end"><strong>2.5</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Tích hợp API &amp; DB</strong></td>
+              <td>
+                Lấy dữ liệu nguồn, gọi AI, lưu PostgreSQL và đồng bộ API đích; có timeout, lỗi và chống xử lý trùng.
+              </td>
+              <td class="text-end"><strong>2.0</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Docker image &amp; Compose</strong></td>
+              <td>
+                Build được bằng Dockerfile mẫu; stack Compose khởi động đúng; Nginx chuyển tiếp tới app; image đã push
+                chạy độc lập và dữ liệu dùng named volume.
+              </td>
+              <td class="text-end"><strong>2.0</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Giao diện người dùng</strong></td>
+              <td>
+                Có tối thiểu một giao diện web dùng được; thực hiện trọn luồng chính; có trạng thái chờ, kết quả và lỗi
+                rõ ràng; truy cập qua Nginx. Swagger/CLI không được tính thay thế.
+              </td>
+              <td class="text-end"><strong>1.5</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Cấu hình &amp; chất lượng code</strong></td>
+              <td>
+                Dùng đúng biến môi trường; không hard-code secret/URL; mã được chia module hợp lý, log và lỗi rõ ràng.
+              </td>
+              <td class="text-end"><strong>1.0</strong></td>
+            </tr>
+            <tr>
+              <td><strong>README, test &amp; demo</strong></td>
+              <td>
+                README tái hiện được hệ thống; có tối thiểu ba test case; demo đúng quy trình và giải thích được kết nối
+                giữa các cấu phần.
+              </td>
+              <td class="text-end"><strong>1.0</strong></td>
+            </tr>
+          </tbody>
+          <tfoot class="table-light">
+            <tr>
+              <th colspan="2">Tổng</th>
+              <th class="text-end">10.0</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="alert alert-danger">
+        <strong>Điểm liệt kỹ thuật:</strong> nếu hệ thống không build được hoặc không khởi động bằng
+        <code class="cmd">docker compose up -d --build</code>, hạng mục “Docker image &amp; Compose” nhận 0 điểm.
+        Nếu commit secret thật, bài bị trừ điểm và nhóm phải thu hồi secret ngay.
+      </div>
+
+      <h3 class="h4">Điểm cộng service (+1 điểm)</h3>
+      <div class="alert alert-success mb-2">
+        Nhóm được cộng <strong>1 điểm</strong> nếu ứng dụng tận dụng đúng và chứng minh được toàn bộ:
+        <code>PostgreSQL</code>, <code>Redis</code>, <code>MinIO</code>, <code>Milvus</code>,
+        <code>Nginx</code> và <code>RabbitMQ</code>. Etcd là dependency vận hành của Milvus, không cần gọi trực tiếp.
+      </div>
+      <ul class="mb-0">
+        <li>Mỗi service phải có vai trò nghiệp vụ hợp lý, không chỉ kết nối thử hoặc ghi một bản ghi minh họa.</li>
+        <li>README phải mô tả dữ liệu đi qua service nào và lý do sử dụng.</li>
+        <li>Demo phải cho thấy dữ liệu/cache/object/vector/message thực sự được tạo và được ứng dụng sử dụng.</li>
+        <li>Điểm tổng kết sau điểm cộng không vượt quá 10.</li>
+      </ul>
+    </section>
+
+    <div class="text-center mt-5">
+      <span class="text-muted">— Kết thúc đề bài —</span>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

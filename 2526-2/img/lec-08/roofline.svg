@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 460" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="980" height="460" fill="#fafafa"/>
+  <text x="490" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Roofline model — hiệu năng GPU đạt được theo cường độ tính toán</text>
+
+  <!-- axes -->
+  <line x1="90" y1="380" x2="900" y2="380" stroke="#666" stroke-width="2"/>
+  <line x1="90" y1="380" x2="90" y2="60" stroke="#666" stroke-width="2"/>
+  <text x="495" y="430" text-anchor="middle" font-size="14" fill="#444">Operational intensity I (FLOP / byte) — trục log</text>
+  <text x="28" y="230" text-anchor="middle" font-size="14" fill="#444" transform="rotate(-90 28 230)">Attainable performance P (TFLOP/s) — trục log</text>
+
+  <!-- grid labels x: 0.1, 1, 10, 100, 1000 -->
+  <!-- map log10(I) from -1..3 onto x 90..860 -->
+  <!-- map log10(P) from -1..3 onto y 380..80  (0.1 .. 1000 TFLOP/s for teaching scale; we'll use 0.1-100) -->
+  <!-- Use concrete GPU: β=2 TB/s = 2000 GB/s, π=312 TFLOPS FP16 -->
+  <!-- ridge I* = π/β = 312e12 / 2e12 = 156 FLOP/byte -->
+
+  <!-- For drawing simplicity use linear-ish log positions:
+       I: 0.1,1,10,100,1000 at x=120,260,420,600,800
+       P: 0.1,1,10,100,1000 at y=360,280,190,110,70
+  -->
+
+  <!-- tick labels X -->
+  <text x="120" y="400" text-anchor="middle" font-size="12" fill="#666">0.1</text>
+  <text x="260" y="400" text-anchor="middle" font-size="12" fill="#666">1</text>
+  <text x="420" y="400" text-anchor="middle" font-size="12" fill="#666">10</text>
+  <text x="600" y="400" text-anchor="middle" font-size="12" fill="#666">100</text>
+  <text x="780" y="400" text-anchor="middle" font-size="12" fill="#666">1000</text>
+
+  <!-- tick labels Y -->
+  <text x="78" y="364" text-anchor="end" font-size="12" fill="#666">0.1</text>
+  <text x="78" y="284" text-anchor="end" font-size="12" fill="#666">1</text>
+  <text x="78" y="194" text-anchor="end" font-size="12" fill="#666">10</text>
+  <text x="78" y="114" text-anchor="end" font-size="12" fill="#666">100</text>
+  <text x="78" y="74" text-anchor="end" font-size="12" fill="#666">1000</text>
+
+  <!-- Memory roof: P = β·I with β=2 TB/s = 2 FLOP/s per (byte/s) wait:
+       P [TFLOP/s] = β[TB/s] * I[FLOP/byte]
+       At I=1: P=2; I=10: P=20; I=100: P=200; I=0.1: P=0.2
+       Positions: I=0.1→x120, I=1→260, I=10→420, I=100→600, I=156→~650, I=1000→780
+       P=0.2 ≈ between 0.1 and 1 → y≈340
+       P=2 ≈ above 1 → y≈250
+       P=20 ≈ above 10 → y≈160
+       P=200 ≈ between 100 and 1000 → y≈90
+  -->
+  <!-- Diagonal memory-bound roof -->
+  <polyline points="120,340 260,250 420,160 640,95"
+    fill="none" stroke="#E65100" stroke-width="4"/>
+  <!-- Horizontal compute roof π=312 ≈ ~300, between 100 and 1000 → y≈85 -->
+  <line x1="640" y1="88" x2="860" y2="88" stroke="#1565C0" stroke-width="4"/>
+
+  <!-- ridge point -->
+  <circle cx="640" cy="88" r="7" fill="#E62727"/>
+  <text x="655" y="78" font-size="13" font-weight="700" fill="#E62727">Ridge I* ≈ 156</text>
+  <text x="655" y="96" font-size="12" fill="#E62727">FLOP/byte</text>
+
+  <!-- region labels -->
+  <text x="280" y="300" font-size="14" font-weight="700" fill="#E65100">Memory-bound</text>
+  <text x="280" y="320" font-size="12" fill="#E65100">P ≈ β · I</text>
+  <text x="720" y="130" font-size="14" font-weight="700" fill="#1565C0">Compute-bound</text>
+  <text x="720" y="150" font-size="12" fill="#1565C0">P ≈ π_peak</text>
+
+  <!-- example kernels -->
+  <!-- Elementwise / embedding gather: low I ~0.25 → memory -->
+  <circle cx="160" cy="325" r="8" fill="#2E7D32"/>
+  <text x="175" y="318" font-size="12" font-weight="600" fill="#2E7D32">A. Embedding / elementwise</text>
+  <text x="175" y="335" font-size="11" fill="#555">I thấp · nghẽn băng thông</text>
+
+  <!-- Attention / Softmax-ish mid -->
+  <circle cx="380" cy="185" r="8" fill="#6A1B9A"/>
+  <text x="395" y="178" font-size="12" font-weight="600" fill="#6A1B9A">B. Attention (một phần)</text>
+  <text x="395" y="195" font-size="11" fill="#555">I trung bình</text>
+
+  <!-- Large GEMM: high I -->
+  <circle cx="760" cy="105" r="8" fill="#00695C"/>
+  <text x="700" y="70" font-size="12" font-weight="600" fill="#00695C">C. GEMM lớn (FP16)</text>
+  <text x="700" y="55" font-size="11" fill="#555">I cao · gần trần compute</text>
+
+  <!-- legend box -->
+  <rect x="90" y="55" width="280" height="70" rx="8" fill="#fff" stroke="#ccc"/>
+  <text x="105" y="78" font-size="13" font-weight="700" fill="#333">GPU minh họa (FP16)</text>
+  <text x="105" y="98" font-size="12" fill="#E65100">β ≈ 2.0 TB/s (HBM)</text>
+  <text x="105" y="116" font-size="12" fill="#1565C0">π ≈ 312 TFLOP/s</text>
+
+  <text x="490" y="455" text-anchor="middle" font-size="13" fill="#444">Trần thực tế = min(β·I, π). Kernel nằm dưới mái — tối ưu = đẩy điểm lên sát mái và/hoặc sang phải (tăng I).</text>
+</svg>

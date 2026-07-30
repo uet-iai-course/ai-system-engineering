@@ -285,6 +285,84 @@
         </section>
 
         <section>
+          <h2>Roofline: nhìn một hình biết nghẽn đâu</h2>
+          <div class="fig-wrap">
+            <img src="img/lec-08/roofline.svg" style="width:96%" alt="Mô hình Roofline cho GPU" />
+          </div>
+          <p class="caption">Trục \(X\): cường độ tính toán \(I\). Trục \(Y\): hiệu năng đạt được \(P\). Mái nhà = giới hạn phần cứng.</p>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Roofline: định nghĩa &amp; công thức</h2>
+          <ul>
+            <li><strong>Operational intensity</strong> \(I\): số phép FLOP thực hiện trên mỗi byte chuyển qua bộ nhớ (HBM/DRAM).</li>
+            <li><strong>Peak bandwidth</strong> \(\beta\): băng thông đỉnh (byte/s), ví dụ HBM ~2 TB/s.</li>
+            <li><strong>Peak compute</strong> \(\pi\): FLOP/s đỉnh theo precision (FP32/FP16/INT8).</li>
+          </ul>
+          \[
+            I = \frac{\#\mathrm{FLOP}}{\#\mathrm{byte\ chuyển}}
+            \qquad
+            P(I) = \min\bigl(\pi,\; \beta \cdot I\bigr)
+          \]
+          <ul>
+            <li><strong>Ridge point</strong> (gãy mái): \(I^{\star} = \pi / \beta\).</li>
+            <li>Ví dụ số trên hình: \(\pi = 312\times 10^{12}\) FLOP/s, \(\beta = 2\times 10^{12}\) byte/s → \(I^{\star} = 156\) FLOP/byte.</li>
+          </ul>
+          <p class="caption">\(I &lt; I^{\star}\): memory-bound (\(P=\beta I\)). \(I &gt; I^{\star}\): compute-bound (\(P=\pi\)).</p>
+        </section>
+
+        <section style="font-size:0.76em;">
+          <h2>Đọc kernel trên Roofline (ví dụ AI)</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Kernel</th>
+                <th>\(I\) (điển hình)</th>
+                <th>Vùng</th>
+                <th>Tối ưu ưu tiên</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>A.</strong> Embedding lookup, elementwise, LayerNorm</td>
+                <td>thấp (\(\ll I^{\star}\))</td>
+                <td>Memory-bound</td>
+                <td>Giảm lần đọc HBM; fuse kernel; tăng reuse cache</td>
+              </tr>
+              <tr>
+                <td><strong>B.</strong> Attention (QKV + Softmax) chưa tối ưu</td>
+                <td>trung bình</td>
+                <td>Gần ridge / hỗn hợp</td>
+                <td>FlashAttention-style: ít ghi tạm, tăng arithmetic intensity</td>
+              </tr>
+              <tr>
+                <td><strong>C.</strong> GEMM lớn (matmul \(M,N,K\) lớn)</td>
+                <td>cao (\(&gt; I^{\star}\))</td>
+                <td>Compute-bound</td>
+                <td>Tensor Core / đúng precision; tile tốt; tăng batch nếu VRAM đủ</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="caption">Cùng một GPU: đổi kernel / batch / precision có thể kéo điểm từ trái (đói băng thông) sang phải (ăn FLOPS).</p>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Ví dụ số: GEMM vs elementwise</h2>
+          <ul>
+            <li><strong>Elementwise</strong> trên vector \(n\) phần tử FP16: ~1 FLOP/phần tử, đọc+ghi \(\approx 4\) byte → \(I \approx 0.25\) FLOP/byte.</li>
+            <li>Trần memory: \(P \approx \beta I = 2\,\mathrm{TB/s} \times 0.25 = 0.5\) TFLOP/s — xa \(\pi=312\).</li>
+            <li><strong>GEMM</strong> \(C=AB\) với \(A,B\) dày: số FLOP \(= 2MNK\), byte \(\propto MN+NK+MK\). Khi \(M,N,K\) lớn, \(I\) tăng → tiến tới \(\pi\).</li>
+          </ul>
+          \[
+            I_{\text{elem}} \approx \frac{1}{4}\ \mathrm{FLOP/byte}
+            \quad\Rightarrow\quad
+            P_{\max} \approx 0.5\ \mathrm{TFLOP/s}
+            \ll \pi
+          \]
+          <p class="caption">Kết luận vận hành: “GPU 312 TFLOPS” chỉ gần đúng với kernel compute-bound; nhiều lớp DNN thực tế nằm memory-bound.</p>
+        </section>
+
+        <section>
           <h2>GPU utilization</h2>
           <div class="fig-wrap">
             <img src="img/lec-08/gpu-utilization.svg" style="width:94%" alt="GPU utilization" />
@@ -641,7 +719,7 @@
             <li>3–5 chỉ tiêu đo được (p95, QPS, cost/req, availability, time-to-deploy) là gì?</li>
             <li>Model chạy device / edge / on-prem / cloud / hybrid — vì sao?</li>
             <li>Training và serving có tách path/quota không?</li>
-            <li>VRAM / precision / batch có khớp SKU GPU không?</li>
+            <li>VRAM / precision / batch có khớp SKU GPU không? Kernel chính memory-bound hay compute-bound (Roofline)?</li>
             <li>Utilization đo được bao nhiêu? Nghẽn ở compute, memory hay I/O?</li>
             <li>Đóng gói bằng image chưa? Secret có nằm ngoài image không?</li>
             <li>Cần scheduler đa node chưa, hay Compose vẫn đủ?</li>
@@ -654,7 +732,7 @@
           <ul>
             <li>Chọn hạ tầng theo <span class="keyword">chỉ tiêu đo được</span>, không theo danh sách tool.</li>
             <li>Vị trí chạy model = trade-off latency, privacy, cost, offline, cập nhật.</li>
-            <li>FLOPS đỉnh ≠ tốc độ thực; theo dõi utilization và cost/req.</li>
+            <li>FLOPS đỉnh ≠ tốc độ thực; dùng Roofline (\(P=\min(\pi,\beta I)\)) và utilization để xem nghẽn compute hay memory.</li>
             <li>Container chuẩn hóa môi trường; K8s thêm lập lịch, quota, replica trên nhiều máy.</li>
             <li>Compose của project là bản thu nhỏ — production thêm SLO, scale, quan sát.</li>
           </ul>

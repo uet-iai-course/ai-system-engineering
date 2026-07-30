@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="900" height="380" fill="#fafafa"/>
+  <text x="450" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Bốn lớp hạ tầng cho hệ thống AI</text>
+  <rect x="80" y="60" width="740" height="65" rx="10" fill="#f3e5f5" stroke="#6A1B9A" stroke-width="2"/>
+  <text x="450" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="#6A1B9A">4. Môi trường phát triển</text>
+  <text x="450" y="112" text-anchor="middle" font-size="13" fill="#444">IDE, notebook, git, test, env chuẩn hóa</text>
+  <rect x="80" y="140" width="740" height="65" rx="10" fill="#fff3e0" stroke="#E65100" stroke-width="2"/>
+  <text x="450" y="168" text-anchor="middle" font-size="16" font-weight="700" fill="#E65100">3. Nền tảng ML</text>
+  <text x="450" y="192" text-anchor="middle" font-size="13" fill="#444">tracking, registry, feature store, serving — xem Bài 6</text>
+  <rect x="80" y="220" width="740" height="65" rx="10" fill="#e8f5e9" stroke="#2E7D32" stroke-width="2"/>
+  <text x="450" y="248" text-anchor="middle" font-size="16" font-weight="700" fill="#2E7D32">2. Quản lý tài nguyên</text>
+  <text x="450" y="272" text-anchor="middle" font-size="13" fill="#444">lập lịch job, orchestration, quota GPU/CPU — trọng tâm Bài 8 + Lab 8</text>
+  <rect x="80" y="300" width="740" height="65" rx="10" fill="#e3f2fd" stroke="#1565C0" stroke-width="2"/>
+  <text x="450" y="328" text-anchor="middle" font-size="16" font-weight="700" fill="#1565C0">1. Lưu trữ &amp; Tính toán</text>
+  <text x="450" y="352" text-anchor="middle" font-size="13" fill="#444">disk/object store + CPU/GPU — nền móng; storage sâu ở Bài 5/7</text>
+</svg>

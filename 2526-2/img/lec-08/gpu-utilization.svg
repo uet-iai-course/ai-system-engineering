@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 400" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="920" height="400" fill="#fafafa"/>
+  <text x="460" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#333">GPU utilization: FLOPS đỉnh ≠ tốc độ thực</text>
+  <text x="460" y="78" text-anchor="middle" font-size="18" fill="#1565C0">Utilization = (thời gian SM/core bận) / (thời gian wall-clock)</text>
+  <!-- timeline -->
+  <text x="80" y="140" font-size="14" font-weight="700" fill="#333">1 giây wall-clock trên 1 GPU</text>
+  <rect x="80" y="160" width="760" height="40" rx="6" fill="#eceff1" stroke="#90a4ae"/>
+  <rect x="80" y="160" width="280" height="40" fill="#2E7D32"/>
+  <rect x="360" y="160" width="120" height="40" fill="#E65100"/>
+  <rect x="480" y="160" width="200" height="40" fill="#2E7D32"/>
+  <rect x="680" y="160" width="160" height="40" fill="#c62828"/>
+  <text x="220" y="186" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">compute 0.28s</text>
+  <text x="420" y="186" text-anchor="middle" font-size="12" fill="#fff">I/O 0.12s</text>
+  <text x="580" y="186" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">compute 0.20s</text>
+  <text x="760" y="186" text-anchor="middle" font-size="12" fill="#fff">chờ CPU 0.16s</text>
+  <text x="460" y="240" text-anchor="middle" font-size="16" fill="#333">Busy compute ≈ 0.48s → Utilization ≈ 48%</text>
+  <text x="460" y="280" text-anchor="middle" font-size="14" fill="#555">Nguyên nhân utilization thấp thường gặp:</text>
+  <text x="460" y="315" text-anchor="middle" font-size="14" fill="#444">batch size nhỏ · đọc disk chậm · preprocess CPU nghẽn · sync đa GPU · model quá nhỏ so với GPU</text>
+  <text x="460" y="360" text-anchor="middle" font-size="14" fill="#E62727" font-weight="600">Thuê GPU 100% thời gian nhưng chỉ “làm việc” một nửa → hóa đơn vẫn full.</text>
+</svg>

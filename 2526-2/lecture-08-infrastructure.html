@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Bài 8a: Infrastructure và Tooling cho AI</title>
+  <title>Bài 8: Cơ sở hạ tầng hệ thống TTNT</title>
 
   <link rel="stylesheet" href="revealjs/dist/reset.css" />
   <link rel="stylesheet" href="revealjs/dist/reveal.css" />
@@ -12,100 +12,16 @@
   <link rel="stylesheet" href="plugin/highlight/monokai.css" />
   <link rel="stylesheet" href="lecture-style.css" />
   <style>
-    .reveal {
-      font-size: 34px;
-    }
-
-    .reveal h1 {
-      font-size: 1.85em;
-      line-height: 1.08;
-    }
-
-    .reveal h2 {
-      font-size: 1.35em;
-      line-height: 1.12;
-      margin-bottom: 0.35em;
-    }
-
-    .reveal h3 {
-      font-size: 1.1em;
-      line-height: 1.15;
-      margin-bottom: 0.35em;
-    }
-
-    .reveal p,
-    .reveal li,
-    .reveal table {
-      line-height: 1.35;
-    }
-
-    .reveal ul,
-    .reveal ol {
-      margin-top: 0.25em;
-      margin-bottom: 0.25em;
-    }
-
-    .reveal .question-box {
-      padding: 0.6em;
-    }
-
-    .reveal .footer {
-      font-size: 0.9rem;
-    }
-
-    .sec1-compact {
-      font-size: 0.82em;
-    }
-
-    .sec1-compact h2 {
-      margin-bottom: 0.3em;
-    }
-
-    .sec1-two-col {
-      display: grid;
-      grid-template-columns: 0.95fr 1.05fr;
-      gap: 0.75em;
-      align-items: start;
-      margin-top: 0.25em;
-    }
-
-    .sec1-figure-placeholder {
-      border: 2px dashed #1E93AB;
-      border-radius: 12px;
-      min-height: 360px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0.6em;
-      background: #f8f9fa;
-      color: #555;
-      text-align: center;
-      line-height: 1.35;
-      font-size: 0.92em;
-    }
-
-    .sec1-figure-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 10px;
-    }
-
-    .sec1-figure-placeholder .fig-cap {
-      margin-top: 0.35em;
-      font-size: 0.9em;
-      color: #666;
-    }
-
-    .four-layers-detail {
-      margin: 0.25em 0 0;
-      padding-left: 1.05em;
-    }
-
-    .four-layers-detail li {
-      margin-bottom: 0.35em;
-    }
+    .reveal { font-size: 34px; }
+    .reveal h1 { font-size: 1.85em; line-height: 1.08; }
+    .reveal h2 { font-size: 1.35em; line-height: 1.12; margin-bottom: 0.35em; }
+    .reveal p, .reveal li, .reveal table { line-height: 1.35; }
+    .reveal table { font-size: 0.78em; width: 100%; border-collapse: collapse; margin-top: 0.3em; }
+    .reveal th, .reveal td { padding: 0.28em 0.45em; border-bottom: 1px solid #ddd; text-align: left; vertical-align: top; }
+    .reveal th { background: #f0f0f0; }
+    .reveal pre code { max-height: 320px; }
+    .fig-wrap { font-size: 0; line-height: 0; }
+    .fig-wrap img { display: block; margin: 0 auto; }
   </style>
 </head>
 
@@ -113,711 +29,660 @@
   <div class="reveal">
     <div class="slides">
 
-      <!-- Cover -->
+      <!-- ================================================================
+           0. MỞ BÀI
+           ================================================================ -->
       <section>
         <section>
           <h1>Kỹ nghệ hệ thống Trí tuệ nhân tạo</h1>
-          <h3>Bài 8: Infrastructure &amp; Tooling</h3>
-          <p>Cơ sở hạ tầng và công cụ trong dự án phần mềm AI</p>
+          <h3>Bài 8: Cơ sở hạ tầng hệ thống TTNT</h3>
           <p>Trường ĐH Công nghệ – Đại học Quốc gia Hà Nội</p>
         </section>
 
-        <section>
+        <section style="font-size:0.88em;">
           <h2>Nội dung</h2>
           <ol>
-            <li>Tổng quan CSHT cho AI</li>
-            <li>Lưu trữ &amp; Tính toán</li>
-            <li>Quản lý tài nguyên</li>
-            <li>Môi trường phát triển</li>
-            <li>Nền tảng ML</li>
+            <li>Bản đồ bốn lớp hạ tầng</li>
+            <li>Chất lượng hệ thống &amp; vị trí chạy model</li>
+            <li>Hardware &amp; compute path</li>
+            <li>Dữ liệu &amp; scale tối thiểu</li>
+            <li>Đóng gói &amp; điều phối tài nguyên</li>
+            <li>Map project Compose → production</li>
           </ol>
+          <p class="caption">Storage sâu → Bài 5/7; ML platform/serving → Bài 6; Docker/K8s hands-on → Lab 7/8.</p>
         </section>
 
-        <section>
+        <section style="font-size:0.88em;">
           <h2>Mục tiêu buổi học</h2>
           <ul>
-            <li>Hiểu các lớp hạ tầng cốt lõi của hệ thống AI production.</li>
-            <li>Biết khi nào chọn công nghệ nào theo trade-off kỹ thuật và chi phí.</li>
-            <li>Phác thảo được bản thiết kế hạ tầng khả thi cho dự án AI ở quy mô vừa.</li>
+            <li>Viết được 3–5 <span class="keyword">chỉ tiêu đo được</span> (latency, cost, availability…) trước khi chọn công nghệ.</li>
+            <li>Quyết định <span class="keyword">model chạy ở đâu</span> (device / edge / on-prem / cloud / hybrid) và <span class="keyword">hardware nào</span>, có lý do.</li>
+            <li>Giải thích đường đi <span class="keyword">container → lập lịch/điều phối</span> và map stack Compose của project sang production.</li>
           </ul>
         </section>
       </section>
 
-      <!-- 1 -->
+      <!-- ================================================================
+           1. BẢN ĐỒ BỐN LỚP
+           ================================================================ -->
       <section>
         <section>
-          <h1><span class="text-light">1.</span><br />Tổng quan CSHT cho AI</h1>
+          <h1><span class="text-light">1.</span><br />Bản đồ bốn lớp<br />hạ tầng</h1>
         </section>
 
-        <section class="sec1-compact">
-          <h2>Vì sao phải nói về CSHT?</h2>
+        <section style="font-size:0.82em;">
+          <h2>Hạ tầng AI là gì?</h2>
           <ul>
-            <li>Tới đây ta thường giả định “đã có đủ công cụ và hạ tầng”; thực tế <strong>xa như vậy</strong>: nhiều người biết cần làm gì cho hệ ML nhưng <span class="keyword">không làm được</span> vì hạ tầng không hỗ trợ.</li>
-            <li>Hệ ML càng phức tạp càng hưởng lợi từ hạ tầng đúng: tự động hóa, giảm thời gian kỹ sư chuyên sâu, rút ngắn phát triển, giảm diện tích lỗi, mở thêm use case.</li>
-            <li>Hạ tầng sai: khó dùng, đắt để thay thế.</li>
+            <li><strong>Định nghĩa làm việc:</strong> tập cơ sở (máy, lưu trữ, lập lịch, công cụ) để <em>phát triển, huấn luyện, triển khai và vận hành</em> hệ thống có model.</li>
+            <li>Không phải “cài được Docker” = đã có hạ tầng; hạ tầng phải phục vụ <span class="keyword">workload cụ thể</span> và <span class="keyword">chỉ tiêu đo được</span>.</li>
+            <li>Mỗi tổ chức cần mức khác nhau: notebook một máy ≠ cluster GPU + serving 24/7.</li>
           </ul>
         </section>
 
-        <section class="sec1-compact">
-          <h2>Nhu cầu CSHT phụ thuộc điều gì?</h2>
-          <ul>
-            <li><strong>Số lượng</strong> ứng dụng ML bạn phát triển.</li>
-            <li><strong>Mức đặc thù</strong> của từng bài toán (phân tích ad hoc vs hệ production khắt khe).</li>
-            <li>“Cơ sở nền tảng” cần có <strong>khác nhau rất lớn</strong> giữa các công ty — không có một blueprint duy nhất.</li>
-          </ul>
+        <section>
+          <h2>Bốn lớp (từ dưới lên)</h2>
+          <div class="fig-wrap">
+            <img src="img/lec-08/four-layers.svg" style="width:92%" alt="Bốn lớp hạ tầng AI" />
+          </div>
+          <p class="caption">Bài 8 tập trung lớp 1 (compute) và lớp 2 (điều phối); lớp 3 đã học ở Bài 6.</p>
         </section>
 
-        <section class="sec1-compact" style="font-size:0.78em;">
-          <h2>CSHT ở công ty lớn &amp; bài toán cực đặc thù</h2>
-          <ul>
-            <li><strong>Xe tự lái:</strong> độ trễ tính bằng mili-giây, độ chính xác gần như tuyệt đối — dự đoán sai có hậu quả nghiêm trọng.</li>
-            <li><strong>Tìm kiếm quy mô toàn cầu:</strong> ví dụ khoảng <strong>63.000</strong> truy vấn/giây (hàng trăm triệu truy vấn/giờ) — đa số công ty không ở mức đó.</li>
-            <li>Thường phải <strong>tự phát triển hạ tầng nội bộ rất chuyên biệt</strong> (Google cho search; Tesla, Waymo cho tự lái).</li>
-            <li>Một phần hạ tầng chuyên biệt sau đó có thể <strong>đưa ra ngoài</strong> và được công ty khác dùng — ví dụ mở rộng cloud nội bộ thành <strong>Google Cloud Platform</strong>.</li>
-          </ul>
+        <section style="font-size:0.78em;">
+          <h2>Nhu cầu theo quy mô</h2>
+          <div style="display:grid; grid-template-columns:1fr 1.1fr; gap:0.6em; align-items:start;">
+            <ul>
+              <li><strong>Ad hoc:</strong> phân tích / POC → laptop + Python đủ.</li>
+              <li><strong>Vừa (phổ biến):</strong> vài model production, GB–TB/ngày → cần container, DB, queue, GPU thuê.</li>
+              <li><strong>Rất đặc thù:</strong> latency ms + độ tin cậy cực cao / PB dữ liệu → thường tự xây hạ tầng.</li>
+            </ul>
+            <div class="fig-wrap">
+              <img src="img/lec-08/infra-scale.png" style="width:100%" alt="Nhu cầu hạ tầng theo quy mô" />
+            </div>
+          </div>
+          <p class="caption">Đa số dự án môn học / startup nằm vùng “vừa” — dùng stack chuẩn hóa, không tự dựng cluster từ đầu.</p>
         </section>
 
-        <section class="sec1-compact" style="font-size:0.80em;">
-          <h2>CSHT theo quy mô (nhìn toàn cảnh)</h2>
-          <div class="sec1-two-col">
-            <div>
-              <ul>
-                <li><strong>Đầu “nhẹ”</strong>: analytics ad hoc → Jupyter/Python/Pandas là đủ.</li>
-                <li><strong>Đầu “đặc thù”</strong>: yêu cầu rất khắt khe (latency/accuracy/scale) → thường phải tự phát triển CSHT chuyên biệt.</li>
-                <li><strong>Đa số ở giữa</strong>: nhiều ứng dụng ML phổ biến, quy mô hợp lý → hưởng lợi từ CSHT tổng quát đang dần chuẩn hóa.</li>
+        <section style="font-size:0.82em;">
+          <h2>Tự xây vs thuê / mua</h2>
+          <table>
+            <thead>
+              <tr><th>Lựa chọn</th><th>Khi nào hợp lý</th><th>Cái giá phải trả</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tự xây</strong> (on-prem / code nội bộ)</td>
+                <td>Yêu cầu riêng (privacy, latency, IP); usage GPU ổn định cao</td>
+                <td>Capex, đội vận hành, thời gian dựng</td>
+              </tr>
+              <tr>
+                <td><strong>Thuê cloud / SaaS</strong></td>
+                <td>Nhu cầu biến thiên; muốn lên nhanh; team nhỏ</td>
+                <td>Opex; vendor lock; data rời máy</td>
+              </tr>
+              <tr>
+                <td><strong>Hybrid</strong></td>
+                <td>Data nhạy cảm on-prem + burst train trên cloud</td>
+                <td>Phức tạp kết nối, hai bộ quy trình</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <div class="question-box">
+            <div class="question-title">Tình huống</div>
+            <div class="question-content">
+              Nhóm làm RAG nội bộ: PDF &lt; 5 GB, &lt; 50 user, deadline 4 tuần.
+              <br /><strong>Cần lớp nào trước?</strong> Có cần tự dựng vector DB cluster không?
+            </div>
+          </div>
+          <p class="caption">Gợi ý: lớp 1 (Postgres/MinIO/1 vector DB Compose) + đóng gói app; chưa cần nền tảng ML đầy đủ.</p>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           2. CHẤT LƯỢNG & VỊ TRÍ CHẠY
+           ================================================================ -->
+      <section>
+        <section>
+          <h1><span class="text-light">2.</span><br />Chất lượng hệ thống<br />&amp; vị trí chạy model</h1>
+        </section>
+
+        <section>
+          <h2>Chỉ tiêu trước, công nghệ sau</h2>
+          <div class="fig-wrap">
+            <img src="img/lec-08/quality-attrs.svg" style="width:94%" alt="Chỉ tiêu chất lượng hạ tầng" />
+          </div>
+        </section>
+
+        <section style="font-size:0.80em;">
+          <h2>Định nghĩa chỉ tiêu (đo được)</h2>
+          <ul>
+            <li><strong>Latency:</strong> thời gian từ nhận request đến trả đủ response. Báo cáo <span class="keyword">p50, p95, p99</span> (ms), không chỉ trung bình.</li>
+            <li><strong>Throughput:</strong> số request (hoặc token) xử lý được mỗi giây ở tải ổn định.</li>
+            <li><strong>Availability:</strong> tỉ lệ thời gian hệ thống trả đúng theo SLO, ví dụ \(99.9\%\) ≈ downtime tối đa ~43 phút/tháng.</li>
+            <li><strong>Cost:</strong> chi phí vận hành quy về đơn vị nghiệp vụ: \$/1k request, \$/GPU-hour, \$/GB lưu/tháng.</li>
+            <li><strong>Time-to-deploy:</strong> từ merge PR đến model/version mới nhận traffic.</li>
+          </ul>
+          \[
+            \text{Availability} = 1 - \frac{T_{\text{downtime}}}{T_{\text{total}}}
+          \]
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Inference chỉ là một thành phần</h2>
+          <ul>
+            <li>Hệ thống thật còn: API gateway, auth, DB, queue, storage file, UI, logging.</li>
+            <li>Model chậm 50 ms nhưng DB chậm 400 ms → user vẫn thấy “AI chậm”.</li>
+            <li>Đo latency <span class="keyword">end-to-end</span> và tách từng hop (gateway → app → model → DB).</li>
+          </ul>
+          <p class="caption">Thiết kế hạ tầng cho cả đường đi request, không chỉ cho file <span class="inline-code">.pt</span>.</p>
+        </section>
+
+        <section>
+          <h2>Model sống ở đâu?</h2>
+          <div class="fig-wrap">
+            <img src="img/lec-08/where-model-lives.svg" style="width:96%" alt="Vị trí chạy model" />
+          </div>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Checklist trước khi chọn vị trí</h2>
+          <table>
+            <thead>
+              <tr><th>Câu hỏi</th><th>Nếu trả lời…</th><th>Hướng nghiêng</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Cần offline / mạng kém?</td><td>Có</td><td>On-device / edge</td></tr>
+              <tr><td>p95 latency &lt; 100 ms?</td><td>Có</td><td>Edge hoặc on-prem gần user</td></tr>
+              <tr><td>Model &gt; vài GB, cập nhật tuần?</td><td>Có</td><td>Server / cloud (OTA edge khó)</td></tr>
+              <tr><td>Data không được rời tổ chức?</td><td>Có</td><td>Private DC / VPC riêng</td></tr>
+              <tr><td>Tải đột biến, team nhỏ?</td><td>Có</td><td>Public cloud + autoscaling</td></tr>
+              <tr><td>Cần bảo vệ IP model?</td><td>Có</td><td>Server-side; hạn chế on-device</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Hai case khác profile</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7em;">
+            <div style="border:2px solid #1565C0; border-radius:10px; padding:0.55em; background:#e3f2fd;">
+              <div style="font-weight:700; color:#1565C0;">Bàn phím gợi ý từ</div>
+              <ul style="font-size:0.92em; margin:0.3em 0 0;">
+                <li>Latency: &lt; 30 ms trên máy</li>
+                <li>Offline bắt buộc</li>
+                <li>Model: quantized, &lt; 50 MB</li>
+                <li>→ <strong>On-device</strong></li>
               </ul>
-              <p style="margin:0.35em 0 0; font-size:0.95em;"><em>(Minh họa theo Figure 10-1)</em></p>
             </div>
-            <div>
-              <div class="sec1-figure-placeholder" aria-label="Khung chèn ảnh Figure 10-1">
-                <img src="img/lec-08/infra-scale.png" alt="Figure 10-1 — Nhu cầu CSHT theo quy mô production">
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="sec1-compact">
-          <h2>CSHT trong thế giới ML là gì?</h2>
-          <ul>
-            <li>Trong đời thực, “infrastructure” (CSHT) là các cơ sở nền tảng giúp tổ chức vận hành bền vững.</li>
-            <li>Trong ML, <strong>CSHT</strong> là tập các cơ sở nền tảng để phát triển và duy trì hệ ML. Vì khác nhau theo công ty, ta dùng mô hình <strong>4 lớp</strong> (Figure 10-2).</li>
-          </ul>
-        </section>
-
-        <section class="sec1-compact" style="font-size:0.86em;">
-          <h2>Bốn lớp CSHT</h2>
-          <div class="sec1-two-col">
-            <div>
-              <ol>
-                <li><strong>Lưu trữ &amp; Tính toán</strong></li>
-                <li><strong>Quản lý tài nguyên</strong> (lập lịch/điều phối)</li>
-                <li><strong>Nền tảng ML</strong> (lưu trữ model/feature/giám sát)</li>
-                <li><strong>Môi trường phát triển</strong> (code/thử nghiệm)</li>
-              </ol>
-            </div>
-            <div>
-              <div class="sec1-figure-placeholder" aria-label="Khung chèn ảnh Figure 10-2">
-                <img src="img/lec-08/infra-layers.png" alt="Figure 10-2 — Các lớp CSHT cho ML">
-              </div>
+            <div style="border:2px solid #2E7D32; border-radius:10px; padding:0.55em; background:#e8f5e9;">
+              <div style="font-weight:700; color:#2E7D32;">Dịch vụ transcription API</div>
+              <ul style="font-size:0.92em; margin:0.3em 0 0;">
+                <li>File 5–60 phút; batch OK</li>
+                <li>GPU lớn; cập nhật model tuần</li>
+                <li>Cost theo phút audio</li>
+                <li>→ <strong>Cloud GPU + queue</strong></li>
+              </ul>
             </div>
           </div>
+          <p class="caption">Cùng “AI speech/text” nhưng vị trí chạy và hóa đơn hoàn toàn khác.</p>
         </section>
 
-        <section class="sec1-compact" style="font-size:0.82em;">
-          <h2>4 lớp CSHT (1/2): Lưu trữ &amp; Tính toán, Quản lý tài nguyên</h2>
-          <ul>
-            <li><strong>Lưu trữ &amp; Tính toán</strong>: nơi thu thập/lưu dữ liệu và tài nguyên chạy workload ML (huấn luyện, tính feature, …). Đây là <strong>nền móng</strong> của mọi dự án ML.</li>
-            <li><strong>Quản lý tài nguyên</strong>: lập lịch + điều phối workload để tận dụng tài nguyên tính toán (vd. Airflow, Kubeflow, Metaflow).</li>
-          </ul>
-        </section>
-
-        <section class="sec1-compact" style="font-size:0.82em;">
-          <h2>4 lớp CSHT (2/2): Nền tảng ML, Môi trường phát triển</h2>
-          <ul>
-            <li><strong>Môi trường phát triển</strong>: nơi viết code/chạy thí nghiệm; code cần version &amp; test; thử nghiệm cần được theo dõi. Đây là lớp DS tương tác <strong>hàng ngày</strong>.</li>
-            <li><strong>Nền tảng ML</strong>: model store, feature store, monitoring… (vd. SageMaker, MLflow). Thường cần đầu tư ban đầu nhưng giúp nhiều use case dùng chung nền tảng.</li>
-          </ul>
-          <p style="margin-top:0.25em; font-size:0.95em;"><em>Gợi ý mạch trình bày (theo sách):</em> Lưu trữ/Tính toán → Môi trường phát triển → Quản lý tài nguyên → Nền tảng ML.</p>
-        </section>
-
-        <section class="sec1-compact" style="font-size:0.84em;">
-          <h2>Tự xây vs mua/thuê &amp; sơ đồ gợi nhớ</h2>
-          <ul>
-            <li>Hai công ty có cùng nhu cầu vẫn có thể ra kiến trúc khác nhau tùy quyết định <strong>tự xây vs mua/thuê</strong> từ bên ngoài.</li>
-            <li>Phần sau của chương (học liệu) còn bàn thêm chuẩn hóa abstraction — ta sẽ đi sâu từng lớp trong các mục tiếp theo.</li>
-          </ul>
-          <div class="pipeline">
-            <div class="stage"><div class="stage-title">Dev</div><div class="stage-desc">code / thử nghiệm</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Quản lý</div><div class="stage-desc">lập lịch / điều phối</div></div>
-            <div class="arrow">→</div>
-            <div class="stage"><div class="stage-title">Tính toán</div><div class="stage-desc">huấn luyện / suy luận</div></div>
-            <div class="arrow">↔</div>
-            <div class="stage"><div class="stage-title">Lưu trữ</div><div class="stage-desc">dữ liệu / artifacts</div></div>
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <div class="question-box">
+            <div class="question-title">OCR hóa đơn tại siêu thị</div>
+            <div class="question-content">
+              Camera tại quầy; mạng WAN không ổn định; cần báo lỗi trong &lt; 200 ms.
+              <br />Chọn <strong>edge gateway</strong> hay <strong>gửi ảnh lên cloud</strong>? Nêu 2 rủi ro của lựa chọn kia.
+            </div>
           </div>
-          <p style="margin-top:0.4em; font-size:0.92em;">Vận hành production còn cần theo dõi hiệu năng, độ tin cậy, mở rộng, bảo mật, năng suất đội — sẽ lồng ghép khi đi vào từng lớp.</p>
         </section>
       </section>
 
-      <!-- 2 Storage & Compute -->
+      <!-- ================================================================
+           3. HARDWARE & COMPUTE
+           ================================================================ -->
       <section>
         <section>
-          <h1><span class="text-light">2.</span><br />Lưu trữ &amp; Tính toán</h1>
-        </section>
-
-        <!-- Phần 1: Định nghĩa -->
-        <section>
-          <h2>Định nghĩa: lớp lưu trữ (storage layer)</h2>
-          <ul>
-            <li>Lớp lưu trữ là nơi dữ liệu được <strong>thu thập</strong> và <strong>lưu</strong> để phục vụ huấn luyện, suy luận và phân tích.</li>
-            <li>Dạng đơn giản nhất: HDD/SSD; ở quy mô lớn có thể là object storage / data warehouse / lakehouse.</li>
-            <li>Storage có thể tập trung một nơi hoặc phân tán nhiều nơi tùy kiến trúc.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>Lưu trữ trong doanh nghiệp: NAS và SAN</h2>
-          <ul>
-            <li><strong>NAS (Network Attached Storage)</strong>: lưu trữ theo kiểu “file” qua mạng (SMB/NFS). Thường dùng để chia sẻ thư mục/dataset như một file server.</li>
-            <li><strong>SAN (Storage Area Network)</strong>: lưu trữ theo kiểu “block” qua mạng chuyên dụng (FC/iSCSI). Máy chủ thấy như gắn “ổ đĩa” từ xa, phù hợp workload cần IOPS/độ trễ tốt.</li>
-            <li>Trong ML: NAS hay gặp ở chia sẻ dữ liệu và home directory; SAN hay gặp cho hệ thống cần truy cập block storage hiệu năng cao (VD: DB, VM storage).</li>
-          </ul>
+          <h1><span class="text-light">3.</span><br />Hardware<br />&amp; compute path</h1>
         </section>
 
         <section>
-          <h2>Định nghĩa: lớp tính toán (compute layer)</h2>
-          <ul>
-            <li>Lớp tính toán là toàn bộ <strong>tài nguyên tính toán</strong> mà tổ chức có thể dùng và <strong>cơ chế</strong> quyết định cách dùng chúng.</li>
-            <li>Compute là “động cơ” để thực thi job: feature jobs, huấn luyện, suy luận.</li>
-            <li>Lượng compute sẵn có quyết định khả năng mở rộng của workload.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Định nghĩa: đơn vị tính toán (compute unit)</h2>
-          <ul>
-            <li>Compute layer thường được “cắt” thành các <strong>đơn vị tính toán</strong> để dùng đồng thời.</li>
-            <li>Ví dụ đơn vị: thread/core, instance/VM, hoặc đơn vị trừu tượng như job (Spark/Ray) hay pod (Kubernetes).</li>
-            <li>Đơn vị tính toán có thể ngắn hạn theo job hoặc “permanent” như instance.</li>
-          </ul>
-        </section>
-
-        <!-- Phần 2: So sánh on-prem và cloud -->
-        <section style="font-size:0.86em;">
-          <h2>So sánh: on-prem vs cloud (lưu trữ &amp; tính toán)</h2>
-          <ul>
-            <li><strong>On-prem</strong>: kiểm soát cao, phù hợp ràng buộc dữ liệu/pháp lý; nhưng cần đầu tư ban đầu và vận hành (capex + ops).</li>
-            <li><strong>Cloud</strong>: triển khai nhanh, mở rộng linh hoạt, trả theo mức dùng; đổi lại phụ thuộc nhà cung cấp và tối ưu chi phí đòi hỏi kỷ luật vận hành.</li>
-            <li>Hai lựa chọn này áp dụng cho cả storage và compute.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Ảnh: on-prem vs cloud</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh on-prem vs cloud">
-            <img src="img/lec-08/infra-on-prem-vs-cloud.png" alt="Ảnh on-prem vs cloud" style="max-width:100%; height:auto;">
+          <h2>Tách training path và serving path</h2>
+          <div class="fig-wrap">
+            <img src="img/lec-08/train-vs-serve.svg" style="width:96%" alt="Training vs serving" />
           </div>
         </section>
 
-        <!-- Phần 3: Xu hướng chuyển từ on-prem lên cloud -->
-        <section style="font-size:0.86em;">
-          <h2>Xu hướng: chuyển từ on-prem lên cloud</h2>
+        <section style="font-size:0.80em;">
+          <h2>Đơn vị tính toán (compute unit)</h2>
           <ul>
-            <li>Trong thập kỷ gần đây, lưu trữ và tính toán ngày càng được “commoditized”.</li>
-            <li>Nhiều tổ chức chọn cloud để bắt đầu nhanh, giảm gánh nặng vận hành hạ tầng.</li>
-            <li>Cloud đặc biệt hợp workload ML vì tải thường “bursty” theo giai đoạn thử nghiệm và huấn luyện.</li>
+            <li><strong>CPU:</strong> ít nhân mạnh, tốt cho preprocess, I/O, model nhỏ / tree models.</li>
+            <li><strong>GPU:</strong> hàng nghìn core song song; mạnh khi tensor lớn, batch lớn (DNN, embedding).</li>
+            <li><strong>Accelerator khác</strong> (TPU, NPU): tối ưu cho framework/workload hẹp.</li>
+          </ul>
+          <p>Thông số cần đọc trên datasheet / cloud SKU:</p>
+          <ul>
+            <li><span class="inline-code">VRAM</span> (GB) — model + KV cache + batch có vừa không?</li>
+            <li><span class="inline-code">Memory bandwidth</span> (GB/s) — thường nghẽn hơn FLOPS.</li>
+            <li><span class="inline-code">FP16/BF16/INT8</span> throughput — phụ thuộc precision.</li>
+            <li>PCIe / NVLink — tốc độ trao đổi đa GPU.</li>
           </ul>
         </section>
 
-        <section>
-          <h2>Ảnh: xu hướng chuyển dịch lên cloud</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh xu hướng chuyển dịch lên cloud">
-            <img src="img/lec-08/infra-cost-trend.png" alt="Ảnh xu hướng chuyển dịch lên cloud" style="max-width:100%; height:auto;">
-          </div>
-        </section>
-
-        <!-- Phần 4: FLOPS, utilization và tham số đánh giá compute unit -->
-        <section>
-          <h2>Đánh giá một compute unit: các tham số chính</h2>
+        <section style="font-size:0.82em;">
+          <h2>FLOPS đỉnh không dự đoán được tốc độ thực</h2>
           <ul>
-            <li><strong>Memory</strong> (RAM/VRAM): nạp được bao nhiêu dữ liệu vào bộ nhớ để tính toán.</li>
-            <li><strong>Băng thông I/O của bộ nhớ</strong>: tốc độ nạp/xuất dữ liệu ảnh hưởng trực tiếp throughput.</li>
-            <li><strong>Tốc độ thực thi phép toán</strong>: thường được quảng cáo bằng FLOPS.</li>
+            <li>\(\mathrm{FLOPS}_{\text{peak}}\) = số phép toán dấu phẩy động lý thuyết mỗi giây.</li>
+            <li>Thời gian bước thực tế còn phụ thuộc: đọc weight từ VRAM, kernel launch, sync, CPU prep.</li>
           </ul>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>FLOPS: vì sao không đủ để dự đoán tốc độ?</h2>
-          <ul>
-            <li>FLOPS là chỉ số lý thuyết và cách “đếm phép toán” có thể khác nhau.</li>
-            <li>Hiệu năng thực phụ thuộc vào việc <strong>cấp dữ liệu</strong> đủ nhanh cho compute (I/O) và cách workload tận dụng phần cứng.</li>
-            <li>Vì vậy cần nhìn thêm utilization.</li>
-          </ul>
+          \[
+            T_{\text{step}} \approx T_{\text{compute}} + T_{\text{memory}} + T_{\text{overhead}}
+          \]
+          <p class="caption">Model nhỏ / batch nhỏ: \(T_{\text{memory}}\) và overhead chiếm tỉ lệ lớn → GPU “xịn” vẫn chậm.</p>
         </section>
 
         <section>
           <h2>GPU utilization</h2>
-          <ul>
-            <li>Utilization = mức độ workload “điền đầy” khả năng tính toán của GPU (so với khả năng tối đa).</li>
-            <li>Utilization thấp thường do nghẽn I/O, data loader, kích thước batch, hoặc kernel chưa tối ưu.</li>
-            <li>Đánh giá compute cần đi kèm đo utilization và throughput thực tế.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>Thực tế: cores + RAM vẫn rất hữu dụng</h2>
-          <ul>
-            <li>Trong nhiều tình huống, so sánh “số core + RAM” giúp chọn nhanh compute unit.</li>
-            <li>Với cloud, cần hiểu đơn vị như vCPU và các giới hạn/quota theo tài khoản.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Ảnh: ví dụ cores &amp; memory (Figure 10-3)</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Figure 10-3">
-            <img src="img/lec-08/infra-cores-memory.png" alt="Figure 10-3: Cores &amp; memory" style="max-width:100%; height:auto;">
+          <div class="fig-wrap">
+            <img src="img/lec-08/gpu-utilization.svg" style="width:94%" alt="GPU utilization" />
           </div>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>IaaS / PaaS / SaaS (tóm tắt)</h2>
-          <ul>
-            <li><strong>IaaS (Hạ tầng như dịch vụ)</strong>: thuê máy ảo/mạng/lưu trữ; bạn tự quản hệ điều hành và runtime. Ví dụ: AWS EC2, GCE, Azure VM.</li>
-            <li><strong>PaaS (Nền tảng như dịch vụ)</strong>: vendor quản nhiều phần runtime/triển khai; bạn tập trung vào code. Ví dụ: Cloud Run, Azure App Service, Heroku.</li>
-            <li><strong>SaaS (Phần mềm như dịch vụ)</strong>: dùng dịch vụ hoàn chỉnh qua web/API; ít vận hành nhất nhưng ít tùy biến hơn.</li>
-            <li>Trong dev environment trên cloud, lựa chọn thường là IaaS (instance + SSH) hoặc môi trường managed kiểu PaaS/Studio tuỳ nhu cầu và quyền truy cập dữ liệu.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Ảnh: IaaS / PaaS / SaaS</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh IaaS/PaaS/SaaS">
-            <img src="img/lec-08/iaas-paas-saas.jpg" >
-          </div>
-        </section>
-
-      </section>
-
-      <section>
-        <section>
-          <h1><span class="text-light">3.</span><br />Quản lý tài nguyên</h1>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>Quản lý tài nguyên để làm gì?</h2>
-          <ul>
-            <li>Trong “thế giới trước cloud” (và cả các công ty tự vận hành data center), <strong>lưu trữ &amp; tính toán là hữu hạn</strong>.</li>
-            <li>Quản lý tài nguyên tập trung vào việc <strong>tận dụng tối đa tài nguyên giới hạn</strong>.</li>
-            <li>Tăng tài nguyên cho một ứng dụng có thể đồng nghĩa giảm tài nguyên cho ứng dụng khác → cần logic phức tạp để tối ưu utilization.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Hai đặc trưng của workflow ML</h2>
-          <ul>
-            <li>Hai đặc trưng ảnh hưởng tới quản lý tài nguyên của workflow ML: <strong>tính lặp lại</strong> và <strong>phụ thuộc giữa các bước</strong>.</li>
-            <li>Từ đó kéo theo nhu cầu về các công cụ để <strong>lập lịch</strong> và <strong>điều phối</strong> workload.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>Lập lịch vs điều phối (và có thể tách rời)</h2>
-          <ul>
-            <li>Một số hệ (HashiCorp Nomad, Kubernetes) có sẵn một phần năng lực lập lịch.</li>
-            <li>Có thể tách scheduler và orchestrator: ví dụ chạy <strong>job scheduler của Spark</strong> trên Kubernetes, hoặc <strong>AWS Batch scheduler</strong> trên EKS.</li>
-            <li>Các orchestrator như Nomad và các orchestrator “hướng data science” như Airflow, Argo, Prefect, Dagster… cũng có scheduler riêng.</li>
-          </ul>
-        </section>
-
-        <!-- (1) Kubernetes và cơ chế lập lịch -->
-        <section>
-          <h2>Kubernetes: pod và cơ chế lập lịch</h2>
-          <div class="question-box">
-            <div class="question-title">Ý chính</div>
-            <ul>
-              <li><strong>Pod</strong> là đơn vị triển khai nhỏ nhất, bọc một hoặc nhiều container.</li>
-              <li>Pod khai báo <strong>requests/limits</strong> (CPU/RAM/GPU). Scheduler chọn node phù hợp dựa trên tài nguyên và ràng buộc.</li>
-              <li>Mỗi bước pipeline (training/feature/validation) thường chạy trong <strong>pod riêng</strong> với <strong>image riêng</strong>.</li>
-            </ul>
-          </div>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>Kubernetes scheduler hoạt động như thế nào?</h2>
-          <ul>
-            <li><strong>Filter</strong>: loại các node không đủ tài nguyên hoặc vi phạm ràng buộc (CPU/RAM/GPU, node selectors, affinity/anti-affinity, taints/tolerations…).</li>
-            <li><strong>Score</strong>: chấm điểm các node còn lại để chọn node “tốt nhất” (cân bằng tải, phân bổ tài nguyên, ưu tiên policy…).</li>
-            <li><strong>Bind</strong>: “gắn” pod vào node đã chọn; sau đó kubelet trên node sẽ kéo image và chạy container.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.84em;">
-          <h2>Requests/limits và QoS (vì sao ảnh hưởng lập lịch?)</h2>
-          <ul>
-            <li><strong>Requests</strong> = tài nguyên tối thiểu để scheduler đặt pod lên node.</li>
-            <li><strong>Limits</strong> = trần tài nguyên pod được phép dùng (CPU throttling / OOM kill nếu vượt).</li>
-            <li>Kubernetes gán <strong>QoS class</strong> (Guaranteed/Burstable/BestEffort) → ảnh hưởng thứ tự “bị hy sinh” khi node thiếu tài nguyên.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.82em;">
-          <h2>Ví dụ: khai báo tài nguyên cho pod (CPU/RAM/GPU)</h2>
-          <pre><code class="language-yaml" data-trim>
-resources:
-  requests:
-    cpu: "4"
-    memory: "16Gi"
-    nvidia.com/gpu: "1"
-  limits:
-    cpu: "8"
-    memory: "24Gi"
-    nvidia.com/gpu: "1"
-          </code></pre>
-        </section>
-
-        <section>
-          <h2>Ảnh: kiến trúc Kubernetes (control plane → scheduler → nodes)</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh kiến trúc Kubernetes">
-            <img src="img/lec-08/kubernetes.jpg" alt="Ảnh kiến trúc Kubernetes" style="max-width:100%; height:auto;">
-          </div>
-        </section>
-
-        <!-- (2) SLURM và cơ chế lập lịch -->
-        <section style="font-size:0.86em;">
-          <h2>SLURM là gì?</h2>
-          <ul>
-            <li><strong>SLURM</strong> (Simple Linux Utility for Resource Management) là job scheduler phổ biến trong HPC/cluster on-prem (đặc biệt môi trường GPU).</li>
-            <li>Người dùng gửi <strong>job</strong> vào hàng đợi; scheduler cấp phát node/CPU/RAM/GPU theo policy (fairshare, ưu tiên, backfill…).</li>
-            <li>Khái niệm thường gặp: <strong>partition</strong> (nhóm node), <strong>job queue</strong>, <strong>time limit</strong>, <strong>account/QoS</strong>.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>SLURM scheduling (tóm tắt cơ chế)</h2>
-          <ul>
-            <li><strong>squeue</strong> xem hàng đợi; <strong>sbatch</strong> nộp job; <strong>srun</strong> chạy interactive; <strong>scancel</strong> hủy job.</li>
-            <li>Scheduler chọn job theo <strong>priority</strong> (fairshare, age, size, QoS, partition…) và cấp phát tài nguyên khi node rảnh.</li>
-            <li><strong>Backfill</strong>: tận dụng “khe trống” thời gian để chạy job nhỏ mà không làm trễ job ưu tiên cao.</li>
-          </ul>
         </section>
 
         <section style="font-size:0.80em;">
-          <h2>Ví dụ: SLURM job script cho training GPU</h2>
-          <pre><code class="language-bash" data-trim>
-#!/bin/bash
-#SBATCH --job-name=train-bert
-#SBATCH --partition=gpu
-#SBATCH --nodes=1
-#SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=32G
-#SBATCH --time=02:00:00
-#SBATCH --output=logs/%x-%j.out
-
-module load cuda
-srun python train.py --config configs/bert.yaml
-          </code></pre>
-        </section>
-
-        <section>
-          <h2>Ảnh: SLURM scheduler (queue → allocate → run)</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh SLURM">
-            <img src="img/lec-08/slurm.gif" alt="Ảnh SLURM scheduler" style="max-width:100%; height:auto;">
-          </div>
-        </section>
-
-        <!-- (3) Kubeflow: điều phối + lập lịch pipeline -->
-        <section style="font-size:0.86em;">
-          <h2>Kubeflow Pipelines: điều phối workflow ML</h2>
+          <h2>Công thức utilization &amp; đo</h2>
+          \[
+            U = \frac{t_{\text{busy}}}{t_{\text{wall}}} \in [0,1]
+          \]
           <ul>
-            <li>Kubeflow Pipelines định nghĩa workflow dưới dạng <strong>DAG</strong> gồm nhiều bước (component).</li>
-            <li>Mỗi bước chạy như một <strong>containerized step</strong>: bạn đóng gói code + deps thành <strong>Docker image</strong>.</li>
-            <li>Khi chạy, mỗi step thường tương ứng một <strong>pod</strong> trên Kubernetes → scheduler của K8s sẽ quyết định đặt pod lên node nào.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>Vì sao “mỗi bước là một Docker image” quan trọng?</h2>
-          <ul>
-            <li><strong>Tái lập</strong>: mỗi step có môi trường bất biến (image tag).</li>
-            <li><strong>Tách tài nguyên</strong>: bước feature engineering dùng CPU/RAM; bước training dùng GPU; bước evaluation dùng CPU.</li>
-            <li><strong>Giảm xung đột dependency</strong>: mỗi step có deps riêng, không ép toàn pipeline chung một environment.</li>
+            <li>Trên NVIDIA: xem <span class="inline-code">nvidia-smi</span> (SM util %, memory util %).</li>
+            <li><strong>SM util thấp + memory util cao:</strong> có thể đang bị nghẽn băng thông / batch quá lớn so với compute.</li>
+            <li><strong>SM util thấp + memory util thấp:</strong> thường thiếu việc (batch nhỏ, chờ data loader).</li>
+            <li>Mục tiêu training thường \(U \ge 0.7\); serving có thể thấp hơn nếu tối ưu latency (batch=1).</li>
           </ul>
         </section>
 
         <section>
-          <h2>Ảnh: Kubeflow pipeline (DAG → pods/images)</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh Kubeflow pipeline">
-            <img src="img/lec-08/kubeflow.webp" alt="Ảnh Kubeflow pipeline" style="max-width:100%; height:auto;">
+          <h2>Ba đòn bẩy scale</h2>
+          <div class="fig-wrap">
+            <img src="img/lec-08/scale-levers.svg" style="width:96%" alt="Ba đòn bẩy scale" />
           </div>
         </section>
 
-      </section>
-
-      <!-- 4 Development environment -->
-      <section>
-        <section>
-          <h1><span class="text-light">4.</span><br />Môi trường phát triển</h1>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>Tổng quan</h2>
-          <ul>
-            <li>Môi trường phát triển là nơi kỹ sư ML viết code, chạy thử nghiệm, và tương tác với production (champion/challenger).</li>
-            <li>Ba thành phần cốt lõi: <strong>IDE</strong>, <strong>versioning</strong>, <strong>CI/CD</strong>.</li>
-          </ul>
-          <div class="question-box" style="margin-top:0.5em;">
-            <div class="question-title">Trích ý</div>
-            Theo Ville Tuulos (Effective Data Science Infrastructure): nhiều công ty có hạ tầng production tốt nhưng quá trình phát triển/debug/test lại ad-hoc;
-            nếu chỉ làm tốt một mảnh hạ tầng, hãy ưu tiên <span class="keyword">môi trường phát triển</span>.
+        <section style="font-size:0.76em;">
+          <h2>Cloud vs on-prem vs hybrid</h2>
+          <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:0.5em; align-items:start;">
+            <table>
+              <thead>
+                <tr><th></th><th>Cloud</th><th>On-prem</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Thời gian có máy</td><td>phút–giờ</td><td>tuần–tháng</td></tr>
+                <tr><td>Chi phí</td><td>opex theo giờ</td><td>capex + điện + người</td></tr>
+                <tr><td>Utilization</td><td>trả khi dùng (spot/reserved)</td><td>lỗ nếu máy idle</td></tr>
+                <tr><td>Data / compliance</td><td>phụ thuộc region &amp; hợp đồng</td><td>kiểm soát vật lý</td></tr>
+                <tr><td>Scale đột biến</td><td>dễ</td><td>khó (mua thêm)</td></tr>
+              </tbody>
+            </table>
+            <div class="fig-wrap">
+              <img src="img/lec-08/infra-on-prem-vs-cloud.png" style="width:100%" alt="On-prem vs cloud" />
+            </div>
           </div>
-        </section>
-
-        <section style="font-size:0.82em;">
-          <h2>IDE &amp;</h2>
-          <ul>
-            <li><strong>IDE</strong>: native IDE (VS Code, PyCharm…), terminal editor (Vim), browser IDE (Cloud9/Codespaces), remote IDE (VS Code Remote/SSH).</li>
-            <li>Chức năng quan trọng: code intelligence, debugging, lint/format/type-check, extension ecosystem (Python/SSH/Docker/K8s/notebook).</li>
-            <li><strong>Notebook</strong> hữu ích cho EDA + phân tích kết quả vì chứa được code + bảng + biểu đồ + diễn giải; lại giữ state để thử nghiệm nhanh.</li>
-            <li>Môi trường notebook: Jupyter/JupyterLab, Colab, SageMaker Studio, notebook trong VS Code.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>IDE có trợ giúp AI: Cursor, Claude Code…</h2>
-          <ul>
-            <li><strong>Điểm mạnh</strong>: sinh/biến đổi code nhanh, giải thích codebase, gợi ý refactor, tạo test, viết script glue (Docker/K8s/CI), tìm lỗi theo ngữ cảnh.</li>
-            <li><strong>Cách dùng hiệu quả</strong>: giao nhiệm vụ rõ ràng (đầu vào/đầu ra), chia nhỏ bước, yêu cầu “test plan”, và luôn chạy lint/tests/format như bình thường.</li>
-            <li><strong>Rủi ro</strong>: có thể bịa API/logic, tạo thay đổi lan rộng hoặc lộ dữ liệu nhạy cảm nếu dán log/secret → cần review và chính sách chia sẻ.</li>
-            <li>Trong workflow ML: hữu ích khi “đóng gói thử nghiệm → module hóa → container hóa → pipeline hóa”.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Ảnh ví dụ: notebook</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Ảnh ví dụ notebook">
-            <img src="img/lec-08/notebook.webp" alt="Ví dụ notebook" style="max-width:100%; height:auto;">
-          </div>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>Notebook: điểm mạnh và điểm yếu</h2>
-          <ul>
-            <li><strong>Điểm mạnh</strong>: stateful → nếu fail ở bước 4, có thể chạy lại đúng bước đó; dữ liệu lớn chỉ cần load 1 lần.</li>
-            <li><strong>Điểm yếu</strong>: stateful cũng cho phép chạy cell không theo thứ tự → khó tái lập nếu không có quy ước “run all / run order”.</li>
-            <li>Thực hành tốt: cell idempotent, chạy được từ trên xuống; phần core đóng gói thành module để reuse + test.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Ảnh minh họa: rerun step (Figure 10-5)</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Figure 10-5">
-            <img src="img/lec-08/infra-rerun.png" alt="Figure 10-5" style="max-width:100%; height:auto;">
-          </div>
-        </section>
-
-        <section>
-          <h2>Ảnh minh họa: reproducibility (Figure 10-6)</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Figure 10-6">
-            <img src="img/lec-08/infra-notebook-meme.png" alt="Figure 10-6" style="max-width:100%; height:auto;">
-          </div>
-        </section>
-
-        <section style="font-size:0.84em;">
-          <h2>Notebook trong tổ chức (Netflix)</h2>
-          <p style="margin-top:0;">“Beyond Interactive: Notebook Innovation at Netflix”</p>
-          <ul>
-            <li><strong>Papermill</strong>: chạy nhiều notebook theo nhiều bộ tham số, chạy song song, tổng hợp metrics.</li>
-            <li><strong>Commuter</strong>: notebook hub để xem/tìm/chia sẻ notebook.</li>
-            <li><strong>nbdev</strong>: viết tài liệu và tests ngay trong notebook.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.82em;">
-          <h2>Chuẩn hóa môi trường phát triển</h2>
-          <ul>
-            <li>Chuẩn hóa tối thiểu theo team: pin <strong>package + version</strong> và <strong>Python version</strong> để tránh “works on my machine”.</li>
-            <li>Thực tế có thể vướng phần cứng/tooling (vd. chip mới) → chuyển sang <strong>cloud dev environment</strong> để chuẩn hóa cả “loại máy”.</li>
-            <li>Cloud dev: cloud IDE (Cloud9/SageMaker Studio) hoặc local IDE + SSH; có thể auto shutdown (vd. 30 phút) và chi phí cỡ $0.1/giờ cho 4 vCPU + 8GB.</li>
-            <li>Lợi ích: IT support dễ hơn, làm việc từ xa thuận tiện, kiểm soát truy cập tốt hơn, giảm gap dev–prod khi production ở cloud.</li>
-          </ul>
-        </section>
-
-    
-
-        <section style="font-size:0.82em;">
-          <h2>Từ phát triển đến sản phẩm: containers</h2>
-          <ul>
-            <li>Dev thường “stateful” (cài deps một lần). Production “stateless” và scale theo tải (ví dụ traffic tăng 10×) → instance mới phải chạy được ngay.</li>
-            <li>Docker giải quyết bằng <strong>Dockerfile</strong> (hướng dẫn dựng môi trường) → build ra <strong>image</strong> → chạy thành <strong>container</strong>.</li>
-            <li>Base image/registry giúp tái sử dụng và chia sẻ (Docker Hub, AWS ECR…).</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Docker: Dockerfile, image, container</h2>
-          <div class="question-box">
-            <div class="question-title">Khái niệm cốt lõi</div>
-            <ul>
-              <li><strong>Dockerfile</strong>: tập hướng dẫn dựng môi trường chạy (cài dependency, copy code, set env…).</li>
-              <li><strong>Image</strong>: kết quả sau khi build từ Dockerfile (một môi trường bất biến, có version/tag).</li>
-              <li><strong>Container</strong>: một instance đang chạy, được tạo từ image.</li>
-            </ul>
-          </div>
-        </section>
-
-        <section style="font-size:0.84em;">
-          <h2>Docker: build → run → push</h2>
-          <ul>
-            <li><strong>Build</strong>: tạo image theo tag để tái lập.</li>
-            <li><strong>Run</strong>: chạy container như một deploy unit có thể tạo mới ở bất kỳ máy/instance nào.</li>
-            <li><strong>Push</strong>: đẩy image lên registry để CI/CD và production kéo về.</li>
-          </ul>
-          <pre><code class="language-bash" data-trim>
-docker build -t fancy-nlp:1.0 .
-docker run --rm fancy-nlp:1.0
-docker tag fancy-nlp:1.0 registry.example.com/fancy-nlp:1.0
-docker push registry.example.com/fancy-nlp:1.0
-          </code></pre>
+          <p class="caption">Hybrid điển hình: data nhạy cảm on-prem; fine-tune / burst inference trên cloud.</p>
         </section>
 
         <section style="font-size:0.78em;">
-          <h2>Ví dụ Dockerfile</h2>
-          <pre><code class="language-dockerfile" data-trim>
-# Dockerfile
-FROM pytorch/pytorch:latest
-RUN git clone https://github.com/NVIDIA/apex
-RUN cd apex && \
-    python3 setup.py install && \
-    pip install -v --no-cache-dir --global-option="--cpp_ext" \
-    --global-option="--cuda_ext" ./
-WORKDIR /fancy-nlp-project
-RUN git clone https://github.com/huggingface/transformers.git && \
-    cd transformers && \
-    python3 -m pip install --no-cache-dir .
-          </code></pre>
-        </section>
-
-        <section style="font-size:0.82em;">
-          <h2>Nhiều container &amp; orchestration</h2>
-          <ul>
-            <li>Tách container để tối ưu tài nguyên (vd. featurizing cần RAM cao chạy CPU; training cần GPU) hoặc khi dependencies xung đột.</li>
-            <li>Nhiều service → nhiều containers: Docker Compose hợp 1 host; Kubernetes chạy multi-host, tạo network, scale up/down và giữ HA.</li>
-          </ul>
-        </section>
-
-      </section>
-
-      <!-- 5 ML platform -->
-      <section>
-        <section>
-          <h1><span class="text-light">5.</span><br />Nền tảng AI (AI Platform)</h1>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>Nền tảng AI (AI platform) là gì?</h2>
-          <ul>
-            <li>Một tập các <strong>thành phần hạ tầng + công cụ</strong> để xây, huấn luyện, triển khai và vận hành ML theo cách <strong>lặp lại được</strong> và <strong>mở rộng được</strong>.</li>
-            <li>Mục tiêu: “chuẩn hoá” đường đi của AI từ <strong>data → feature → model → deploy</strong>, để nhiều team/use case dùng chung.</li>
-            <li>Một cách nhìn thực dụng: AI platform là “xương sống” gồm các tầng dưới đây.</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>1) Data Layer (Tầng dữ liệu)</h2>
-          <ul>
-            <li>Đây là nền tảng của mọi thứ — <strong>ML mà không có data thì vô nghĩa</strong>.</li>
-            <li><strong>Data sources</strong>: database, log, API, IoT, user events…</li>
-            <li><strong>Data storage</strong>: data lake (S3, HDFS), data warehouse (BigQuery, Snowflake)</li>
-            <li><strong>Data processing</strong>: batch (Spark), streaming (Kafka, Flink)</li>
-            <li><strong>Mục tiêu</strong>: thu thập + làm sạch + chuẩn hoá dữ liệu</li>
-          </ul>
-        </section>
-
-        <section style="font-size:0.86em;">
-          <h2>2) Feature Engineering &amp; Feature Store</h2>
-          <ul>
-            <li><strong>Tạo feature</strong> từ raw data để phục vụ model.</li>
-            <li><strong>Feature store</strong>: lưu trữ và tái sử dụng feature, đảm bảo <strong>train</strong> và <strong>inference</strong> dùng cùng logic.</li>
-            <li><strong>Ví dụ</strong>: <code>user_age</code> → <code>bucket_age</code>; click history → embedding</li>
-            <li><strong>Công cụ phổ biến</strong>: Feast, Tecton</li>
-          </ul>
+          <h2>IaaS / PaaS / SaaS trong AI</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5em; align-items:center;">
+            <table>
+              <thead><tr><th>Mức</th><th>Bạn quản</th><th>Ví dụ AI</th></tr></thead>
+              <tbody>
+                <tr><td><strong>IaaS</strong></td><td>OS, runtime, scaling</td><td>VM + GPU, tự cài CUDA</td></tr>
+                <tr><td><strong>PaaS</strong></td><td>code/model, config</td><td>managed K8s, managed DB</td></tr>
+                <tr><td><strong>SaaS</strong></td><td>prompt / API call</td><td>API LLM thương mại</td></tr>
+              </tbody>
+            </table>
+            <div class="fig-wrap">
+              <img src="img/lec-08/iaas-paas-saas.jpg" style="width:100%" alt="IaaS PaaS SaaS" />
+            </div>
+          </div>
+          <p class="caption">Càng lên SaaS: lên nhanh hơn, kiểm soát runtime/model kém hơn, hóa đơn theo token/request.</p>
         </section>
 
         <section>
-          <h2>Ảnh: Stitch Fix feature store (Figure 10-13)</h2>
-          <div class="sec1-figure-placeholder" style="min-height: 520px;" aria-label="Figure 10-13">
-            <img src="img/lec-08/stitch-fix.png" alt="Artifacts Stitch Fix theo dõi">
+          <h2>Ví dụ tính cost serving</h2>
+          <div class="fig-wrap">
+            <img src="img/lec-08/cost-example.svg" style="width:94%" alt="Ví dụ cost serving" />
           </div>
         </section>
 
-        <section style="font-size:0.86em;">
-          <h2>3) Model Development (Training)</h2>
+        <section style="font-size:0.80em;">
+          <h2>Công thức cost (serving GPU)</h2>
+          \[
+            C_{\text{req}} = \frac{P_{\text{GPU-hour}}}{Q \cdot 3600 \cdot U}
+          \]
           <ul>
-            <li>Nơi data scientist/ML engineer làm việc: thử nghiệm (notebook/script), huấn luyện, tuning, đánh giá.</li>
-            <li><strong>Training</strong>: chạy job huấn luyện (GPU/CPU) và quản lý tài nguyên đi kèm.</li>
-            <li><strong>Hyperparameter tuning</strong> và <strong>evaluation</strong> là phần “tốn compute” và cần chuẩn hoá pipeline.</li>
-            <li><strong>Framework</strong>: PyTorch, TensorFlow</li>
+            <li>\(P_{\text{GPU-hour}}\): giá thuê GPU một giờ (\$).</li>
+            <li>\(Q\): throughput đỉnh đo được (req/s) khi GPU bận liên tục.</li>
+            <li>\(U\): utilization trung bình thực tế (\(0 &lt; U \le 1\)).</li>
           </ul>
+          <p class="caption">Tăng \(Q\) (batching) hoặc \(U\) (bớt chờ I/O) giảm \(C_{\text{req}}\) mạnh hơn việc “đổi GPU đắt hơn” nếu chưa nghẽn compute.</p>
         </section>
 
-        <section style="font-size:0.86em;">
-          <h2>4) Experiment Tracking &amp; Versioning</h2>
+        <section style="font-size:0.82em;">
+          <h2>Ràng buộc edge</h2>
           <ul>
-            <li>Không track thì <strong>không reproduce</strong> được model.</li>
-            <li><strong>Log metrics</strong> (accuracy, loss), lưu config, so sánh runs.</li>
-            <li><strong>Version</strong> model + dataset + code để truy vết và rollback.</li>
-            <li><strong>Tools</strong>: MLflow, Weights &amp; Biases</li>
+            <li><strong>Điện năng / nhiệt:</strong> giới hạn TDP → model phải nhỏ hoặc NPU chuyên dụng.</li>
+            <li><strong>Kích thước model:</strong> flash + RAM; thường cần quantize (INT8/INT4).</li>
+            <li><strong>Cập nhật:</strong> OTA phải an toàn; rollback khi model mới lỗi.</li>
+            <li><strong>Telemetry:</strong> có gửi log/ảnh lên cloud không? (privacy + băng thông).</li>
           </ul>
+          <p class="caption">Edge thắng latency/offline; thua khả năng model lớn và dễ cập nhật so với cloud.</p>
         </section>
 
-        <section style="font-size:0.86em;">
-          <h2>5) Model Registry</h2>
-          <ul>
-            <li>Lưu trữ và quản lý model theo vòng đời.</li>
-            <li><strong>Versioning</strong>: v1, v2…; <strong>Stage</strong>: staging, production</li>
-            <li><strong>Metadata</strong>: owner, data lineage, metrics, approval, compat notes…</li>
-            <li>Trực giác: như <strong>“Git cho model”</strong>.</li>
-          </ul>
+        <section>
+          <h2>Câu hỏi nhanh</h2>
+          <div class="question-box">
+            <div class="question-title">Chatbot nội bộ 100 user</div>
+            <div class="question-content">
+              Giờ cao điểm ~5 req/s; p95 &lt; 2 s; data không được ra ngoài VN.
+              <br />Chọn: (A) 1× GPU cloud nước ngoài, (B) 1× GPU on-prem, (C) CPU on-prem + model 3B quantized.
+              <br />Nêu <strong>một</strong> chỉ tiêu khiến bạn loại một phương án.
+            </div>
+          </div>
         </section>
-
-        <section style="font-size:0.86em;">
-          <h2>6) Deployment / Serving</h2>
-          <ul>
-            <li>Đưa model ra production theo hai kiểu chính:</li>
-            <li><strong>Batch inference</strong> (offline) và <strong>real-time inference</strong> (API)</li>
-            <li><strong>Công nghệ</strong>: REST/gRPC service, TensorFlow Serving, KServe, Triton</li>
-          </ul>
-        </section>
-
       </section>
 
-      <!-- 11 -->
+      <!-- ================================================================
+           4. DỮ LIỆU & SCALE
+           ================================================================ -->
       <section>
-        <section style="font-size: 0.82em;">
-          <h2>Tổng kết</h2>
+        <section>
+          <h1><span class="text-light">4.</span><br />Dữ liệu<br />&amp; scale tối thiểu</h1>
+        </section>
+
+        <section style="font-size:0.80em;">
+          <h2>Bốn loại dữ liệu → bốn profile hạ tầng</h2>
+          <table>
+            <thead>
+              <tr><th>Loại</th><th>Ví dụ</th><th>Storage</th><th>Compute</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Training</strong></td><td>dataset, checkpoint</td><td>object store / NFS nhanh</td><td>GPU batch, giờ–ngày</td></tr>
+              <tr><td><strong>Input</strong></td><td>request user, ảnh upload</td><td>tạm / object</td><td>inference latency thấp</td></tr>
+              <tr><td><strong>Telemetry</strong></td><td>log, feedback, drift</td><td>append-heavy</td><td>batch ETL định kỳ</td></tr>
+              <tr><td><strong>Models</strong></td><td>artifact, embedding index</td><td>versioned store</td><td>load vào RAM/VRAM</td></tr>
+            </tbody>
+          </table>
+          <p class="caption">Đừng để training dataset và log telemetry tranh cùng một ổ chậm.</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Batch vs online trên đường compute</h2>
           <ul>
-            <li>CSHT tốt là nền tảng của MLOps tốt.</li>
-            <li>Lưu trữ và tính toán là lớp gốc; quản lý tài nguyên quyết định hiệu quả vận hành.</li>
-            <li>Containers + Kubernetes giúp chuẩn hóa từ dev sang prod.</li>
-            <li>Cloud cho tốc độ, private cho kiểm soát; đa số chọn hybrid theo giai đoạn.</li>
-            <li>Networking và dev tooling là “điểm nghẽn vô hình” nhưng tác động rất lớn.</li>
-            <li>ML platform giúp tái sử dụng năng lực giữa nhiều use case AI.</li>
+            <li><strong>Online:</strong> mỗi request → prediction ngay; chỉ tiêu p95; cần replica nóng.</li>
+            <li><strong>Batch:</strong> chạy theo lịch trên tập lớn; chỉ tiêu throughput &amp; deadline job (ví dụ 06:00 xong).</li>
+            <li>Nhiều hệ kết hợp: ban đêm batch cập nhật feature/embedding; ban ngày online đọc kết quả đã sẵn.</li>
+          </ul>
+          <p class="caption">Chi tiết serving/API contract → Bài 6; ở đây chỉ chọn <em>kiểu compute</em>.</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Khi nào cần “thêm máy”?</h2>
+          <ul>
+            <li>p95 tăng khi QPS tăng → thêm <strong>replica</strong> serving (horizontal).</li>
+            <li>Một máy không chứa nổi model/data → <strong>shard</strong> hoặc model parallel.</li>
+            <li>Spike ngắn → <strong>queue</strong> (RabbitMQ) + worker; trả 202 + poll kết quả.</li>
+            <li>Chưa đo đã mua thêm GPU = đoán mò.</li>
+          </ul>
+          <div class="slide-badge-row"><span class="self-study-badge">📖 Tự học</span></div>
+          <p style="margin:0.2em 0 0; font-size:0.92em;">Lambda architecture, parameter server — đọc thêm khi làm phân tán quy mô lớn.</p>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           5. ĐÓNG GÓI & ĐIỀU PHỐI
+           ================================================================ -->
+      <section>
+        <section>
+          <h1><span class="text-light">5.</span><br />Đóng gói<br />&amp; điều phối tài nguyên</h1>
+        </section>
+
+        <section style="font-size:0.80em;">
+          <h2>Vấn đề: “chạy được trên máy tôi”</h2>
+          <div style="display:grid; grid-template-columns:0.9fr 1.1fr; gap:0.5em; align-items:center;">
+            <ul>
+              <li>Khác phiên bản CUDA / Python / driver → model load lỗi.</li>
+              <li>Notebook: thứ tự cell, state ẩn → khó tái hiện.</li>
+              <li>Cần một <span class="keyword">đơn vị đóng gói</span> mang code + dependency + lệnh chạy.</li>
+            </ul>
+            <div class="fig-wrap">
+              <img src="img/lec-08/infra-rerun.png" style="width:100%" alt="Vấn đề tái chạy notebook" />
+            </div>
+          </div>
+          <p class="caption">Chuẩn hóa môi trường trước khi tối ưu model — nếu không, bug “môi trường” đội lốt bug “AI”.</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Container = đơn vị đóng gói</h2>
+          <div style="display:grid; grid-template-columns:1fr 0.7fr; gap:0.5em; align-items:center;">
+            <ul>
+              <li><strong>Image:</strong> filesystem + metadata + lệnh mặc định (bất biến sau build).</li>
+              <li><strong>Container:</strong> process chạy từ image + cấu hình runtime (env, volume, port).</li>
+              <li>Secret / URL DB: đưa qua <span class="inline-code">.env</span>, không bake vào image.</li>
+              <li>Hands-on build/push → <strong>Lab 7</strong>.</li>
+            </ul>
+            <div class="fig-wrap">
+              <img src="img/lec-08/docker.svg" style="width:70%" alt="Docker" />
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Compose local vs cluster production</h2>
+          <table>
+            <thead>
+              <tr><th></th><th>Docker Compose</th><th>Kubernetes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Mục tiêu</td><td>tái hiện stack trên 1 máy</td><td>lập lịch trên nhiều node</td></tr>
+              <tr><td>Scale</td><td>thủ công / ít service</td><td>replica, HPA</td></tr>
+              <tr><td>Self-heal</td><td>restart policy cơ bản</td><td>controller thay pod chết</td></tr>
+              <tr><td>GPU quota</td><td>gắn device đơn giản</td><td>request/limit + device plugin</td></tr>
+              <tr><td>Phù hợp</td><td>dev, BTL, demo</td><td>prod nhiều node</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Lập lịch vs điều phối</h2>
+          <ul>
+            <li><strong>Lập lịch (scheduling):</strong> chọn <em>máy nào / khi nào</em> chạy một đơn vị công việc (pod/job) theo tài nguyên còn trống.</li>
+            <li><strong>Điều phối (orchestration):</strong> mô tả <em>luồng nhiều bước</em> (DAG): bước A xong mới B; retry; song song.</li>
+            <li>Ví dụ: K8s scheduler đặt training pod lên node còn GPU; Airflow/CronJob quyết định pipeline “embed → index → evaluate” chạy lúc nào.</li>
+          </ul>
+          <p class="caption">Hai việc khác nhau; tool có thể làm cả hai nhưng khái niệm phải tách.</p>
+        </section>
+
+        <section>
+          <h2>Kubernetes: mental model</h2>
+          <div class="fig-wrap">
+            <img src="img/lec-08/k8s-mental.svg" style="width:96%" alt="Kubernetes mental model" />
+          </div>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>requests / limits — công thức tư duy</h2>
+          <ul>
+            <li><strong>requests:</strong> lượng tài nguyên scheduler <em>giữ chỗ</em> khi đặt pod.</li>
+            <li><strong>limits:</strong> trần sử dụng; vượt CPU → throttle; vượt memory → có thể OOMKill.</li>
+          </ul>
+          \[
+            \sum_i \text{request}_i(\text{node}) \le \text{Capacity}(\text{node})
+          \]
+          <pre><code class="yaml">resources:
+  requests:
+    cpu: "500m"
+    memory: "2Gi"
+    nvidia.com/gpu: 1
+  limits:
+    cpu: "2"
+    memory: "8Gi"
+    nvidia.com/gpu: 1</code></pre>
+          <p class="caption">Thiếu limits: một job train có thể chiếm hết GPU/RAM node → pod serving chung node bị đói.</p>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Autoscaling, restart, cập nhật dần</h2>
+          <ul>
+            <li><strong>Replica:</strong> \(N\) pod giống nhau sau Service → tăng throughput, chịu lỗi 1 pod.</li>
+            <li><strong>HPA (ý tưởng):</strong> tăng \(N\) khi CPU/GPU util hoặc QPS vượt ngưỡng.</li>
+            <li><strong>Rolling update:</strong> thay pod dần; giữ một phần bản cũ nhận traffic.</li>
+            <li><strong>Restart policy:</strong> process chết → tạo lại pod (self-heal mức cơ bản).</li>
+          </ul>
+          <p class="caption">Chi tiết lệnh/YAML → Lab 8; ở đây nắm <em>vì sao</em> cần các cơ chế này.</p>
+        </section>
+
+        <section style="font-size:0.80em;">
+          <h2>SLO gắn với hạ tầng</h2>
+          <table>
+            <thead>
+              <tr><th>SLO ví dụ</th><th>Hạ tầng phải làm gì</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>p95 latency API &lt; 800 ms</td><td>đủ replica; model/hardware phù hợp; không chung GPU với train</td></tr>
+              <tr><td>Availability 99.5%</td><td>health check; multi-replica; restart; tránh single node</td></tr>
+              <tr><td>Deploy model mới &lt; 30 phút</td><td>image sẵn; rolling update; registry artifact</td></tr>
+              <tr><td>Job batch xong trước 06:00</td><td>quota GPU; ưu tiên queue; alert khi backlog</td></tr>
+            </tbody>
+          </table>
+          \[
+            \text{Error budget} = 1 - \text{SLO}
+          \]
+          <p class="caption">Ví dụ SLO 99.5% → error budget 0.5% thời gian; hết budget thì dừng deploy mạo hiểm.</p>
+        </section>
+
+        <section>
+          <div class="slide-badge-row"><span class="self-study-badge">📖 Tự học</span></div>
+          <h2>Cluster HPC / SLURM</h2>
+          <ul>
+            <li>Môi trường nghiên cứu/HPC: hàng đợi job GPU theo partition, time limit, account.</li>
+            <li>Khác K8s: tối ưu batch scientific hơn là microservice 24/7.</li>
+            <li>Cùng ý: <span class="keyword">không ai chiếm GPU vô hạn</span> — mọi job khai báo tài nguyên.</li>
           </ul>
         </section>
 
         <section>
-          <h2>Bài tập gợi ý</h2>
+          <h2>Câu hỏi nhanh</h2>
+          <div class="question-box">
+            <div class="question-title">Thiếu limits</div>
+            <div class="question-content">
+              Node 1×A100; pod serving request 1 GPU không ghi limits; job train mới cũng xin 1 GPU.
+              <br />Scheduler còn đặt được train không? Serving đang chạy có thể bị ảnh hưởng thế nào?
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           6. MAP PROJECT
+           ================================================================ -->
+      <section>
+        <section>
+          <h1><span class="text-light">6.</span><br />Map project Compose<br />→ production</h1>
+        </section>
+
+        <section>
+          <h2>Stack BTL → lớp hạ tầng</h2>
+          <div class="fig-wrap">
+            <img src="img/lec-08/project-stack-map.svg" style="width:96%" alt="Map project stack" />
+          </div>
+        </section>
+
+        <section style="font-size:0.80em;">
+          <h2>Compose đủ để học gì?</h2>
+          <ul>
+            <li><strong>Đã học được:</strong> đóng gói image; nối service bằng hostname; env; volume; healthcheck.</li>
+            <li><strong>Chưa phải production đủ:</strong> không có scheduler đa node, HPA, rolling có chiến lược, network policy, secret manager, backup tự động.</li>
+            <li>Đường đi thực tế: Compose (BTL) → thêm quan sát/SLO → khi tải/nhiều máy thì Lab 8 / K8s.</li>
+          </ul>
+          <p class="caption">Điểm cộng project: tận dụng đúng Redis/MinIO/Milvus/RabbitMQ — mỗi cái gắn một chỉ tiêu, không “cắm cho đủ”.</p>
+        </section>
+
+        <section style="font-size:0.80em;">
+          <h2>Ví dụ gắn chỉ tiêu vào service</h2>
+          <table>
+            <thead>
+              <tr><th>Use case</th><th>Service</th><th>Chỉ tiêu cụ thể</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Tránh gọi AI trùng ticket</td><td>Redis</td><td>cache hit; khóa idempotency TTL 24h</td></tr>
+              <tr><td>Lưu ảnh sản phẩm</td><td>MinIO</td><td>object tồn tại sau restart; URL nội bộ</td></tr>
+              <tr><td>Tìm biên bản tương tự</td><td>Milvus</td><td>top-k trong &lt; 100 ms trên 10k vector</td></tr>
+              <tr><td>Job AI chạy nền</td><td>RabbitMQ</td><td>queue depth &lt; 100; consumer ack đúng</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+
+      <!-- ================================================================
+           7. KẾT
+           ================================================================ -->
+      <section>
+        <section>
+          <h1><span class="text-light">7.</span><br />Checklist<br />&amp; điểm chốt</h1>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Checklist quyết định hạ tầng</h2>
           <ol>
-            <li>Thiết kế CSHT cho 1 app AI realtime 50K DAU, budget hữu hạn.</li>
-            <li>Chọn stack IaaS/PaaS/SaaS và giải thích trade-off.</li>
-            <li>Đề xuất kế hoạch tối ưu cloud bill trong 6 tháng.</li>
+            <li>3–5 chỉ tiêu đo được (p95, QPS, cost/req, availability, time-to-deploy) là gì?</li>
+            <li>Model chạy device / edge / on-prem / cloud / hybrid — vì sao?</li>
+            <li>Training và serving có tách path/quota không?</li>
+            <li>VRAM / precision / batch có khớp SKU GPU không?</li>
+            <li>Utilization đo được bao nhiêu? Nghẽn ở compute, memory hay I/O?</li>
+            <li>Đóng gói bằng image chưa? Secret có nằm ngoài image không?</li>
+            <li>Cần scheduler đa node chưa, hay Compose vẫn đủ?</li>
+            <li>Mỗi service trong stack phục vụ chỉ tiêu nào?</li>
           </ol>
+        </section>
+
+        <section style="font-size:0.85em;">
+          <h2>Tổng kết</h2>
+          <ul>
+            <li>Chọn hạ tầng theo <span class="keyword">chỉ tiêu đo được</span>, không theo danh sách tool.</li>
+            <li>Vị trí chạy model = trade-off latency, privacy, cost, offline, cập nhật.</li>
+            <li>FLOPS đỉnh ≠ tốc độ thực; theo dõi utilization và cost/req.</li>
+            <li>Container chuẩn hóa môi trường; K8s thêm lập lịch, quota, replica trên nhiều máy.</li>
+            <li>Compose của project là bản thu nhỏ — production thêm SLO, scale, quan sát.</li>
+          </ul>
+        </section>
+
+        <section style="font-size:0.82em;">
+          <h2>Bài tập</h2>
+          <ol>
+            <li>Chọn 1 use case (RAG nội bộ / OCR quầy / chatbot 100 user).</li>
+            <li>Viết 3 SLO cụ thể (có số).</li>
+            <li>Chọn vị trí chạy model + 1 SKU compute (CPU hoặc GPU) và giải thích bằng checklist.</li>
+            <li>Phác thảo: Compose đủ hay cần K8s? Liệt kê 4 service và chỉ tiêu từng service.</li>
+          </ol>
+        </section>
+
+        <section style="font-size:0.78em;">
+          <h2>Tham khảo</h2>
+          <ul>
+            <li>Stanford CS329S — Hardware &amp; infrastructure</li>
+            <li>CMU 17-445 Machine Learning in Production — deployment, scale, operations</li>
+            <li>Chip Huyen — <em>Designing Machine Learning Systems</em>, chương Infrastructure and Tooling</li>
+            <li>Lab 7 (Docker), Lab 8 (Kubernetes), Bài 5–7 trong môn học</li>
+          </ul>
         </section>
       </section>
 
       <div class="footer">
-        Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) §8a: Infrastructure &amp; Tooling
+        Kỹ nghệ hệ thống Trí tuệ nhân tạo (Học kỳ 2 2025-2026) · Bài 8: Cơ sở hạ tầng hệ thống TTNT
       </div>
     </div>
   </div>

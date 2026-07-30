@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 380" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="920" height="380" fill="#fafafa"/>
+  <text x="460" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Ví dụ tính cost serving (số minh họa)</text>
+  <text x="60" y="80" font-size="15" fill="#333">Giả sử: GPU cloud = <tspan font-weight="700">$1.20 / giờ</tspan>; throughput đo được = <tspan font-weight="700">30 req/s</tspan> khi GPU bận liên tục.</text>
+  <text x="60" y="120" font-size="16" fill="#1565C0">Chi phí mỗi request:</text>
+  <text x="60" y="165" font-size="18" fill="#333">cost/req = (giá GPU-giờ) / (req trong 1 giờ)</text>
+  <text x="60" y="210" font-size="18" fill="#333">= 1.20 / (30 × 3600) = 1.20 / 108000 ≈ <tspan font-weight="700" fill="#E62727">$0.000011 / req</tspan></text>
+  <rect x="50" y="245" width="820" height="100" rx="10" fill="#fff8e1" stroke="#ffcc80"/>
+  <text x="460" y="280" text-anchor="middle" font-size="14" fill="#333">Nếu utilization thực chỉ 40% (GPU chờ I/O), throughput hiệu dụng ≈ 12 req/s</text>
+  <text x="460" y="315" text-anchor="middle" font-size="16" fill="#E62727" font-weight="700">cost/req ≈ 1.20 / (12×3600) ≈ $0.000028 — đắt gấp ~2.5 lần</text>
+</svg>

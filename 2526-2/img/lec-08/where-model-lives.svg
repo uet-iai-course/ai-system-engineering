@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 420" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="980" height="420" fill="#fafafa"/>
+  <text x="490" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#333">Model inference sống ở đâu?</text>
+  <!-- device -->
+  <rect x="40" y="80" width="160" height="220" rx="14" fill="#e3f2fd" stroke="#1565C0" stroke-width="2"/>
+  <text x="120" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#1565C0">On-device</text>
+  <text x="120" y="155" text-anchor="middle" font-size="13" fill="#444">điện thoại / IoT</text>
+  <text x="120" y="185" text-anchor="middle" font-size="12" fill="#555">latency ~ms</text>
+  <text x="120" y="210" text-anchor="middle" font-size="12" fill="#555">offline OK</text>
+  <text x="120" y="235" text-anchor="middle" font-size="12" fill="#555">model nhỏ</text>
+  <text x="120" y="270" text-anchor="middle" font-size="12" fill="#666">vd: bàn phím</text>
+  <!-- edge -->
+  <rect x="230" y="80" width="160" height="220" rx="14" fill="#e8f5e9" stroke="#2E7D32" stroke-width="2"/>
+  <text x="310" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#2E7D32">Edge</text>
+  <text x="310" y="155" text-anchor="middle" font-size="13" fill="#444">gateway / camera</text>
+  <text x="310" y="185" text-anchor="middle" font-size="12" fill="#555">latency thấp</text>
+  <text x="310" y="210" text-anchor="middle" font-size="12" fill="#555">băng thông giảm</text>
+  <text x="310" y="235" text-anchor="middle" font-size="12" fill="#555">cập nhật OTA</text>
+  <text x="310" y="270" text-anchor="middle" font-size="12" fill="#666">vd: OCR cửa hàng</text>
+  <!-- private -->
+  <rect x="420" y="80" width="160" height="220" rx="14" fill="#fff3e0" stroke="#E65100" stroke-width="2"/>
+  <text x="500" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#E65100">Private DC</text>
+  <text x="500" y="155" text-anchor="middle" font-size="13" fill="#444">máy chủ nội bộ</text>
+  <text x="500" y="185" text-anchor="middle" font-size="12" fill="#555">kiểm soát data</text>
+  <text x="500" y="210" text-anchor="middle" font-size="12" fill="#555">capex cao</text>
+  <text x="500" y="235" text-anchor="middle" font-size="12" fill="#555">utilization?</text>
+  <text x="500" y="270" text-anchor="middle" font-size="12" fill="#666">vd: ngân hàng</text>
+  <!-- cloud -->
+  <rect x="610" y="80" width="160" height="220" rx="14" fill="#f3e5f5" stroke="#6A1B9A" stroke-width="2"/>
+  <text x="690" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#6A1B9A">Public cloud</text>
+  <text x="690" y="155" text-anchor="middle" font-size="13" fill="#444">GPU theo giờ</text>
+  <text x="690" y="185" text-anchor="middle" font-size="12" fill="#555">scale nhanh</text>
+  <text x="690" y="210" text-anchor="middle" font-size="12" fill="#555">opex biến thiên</text>
+  <text x="690" y="235" text-anchor="middle" font-size="12" fill="#555">latency mạng</text>
+  <text x="690" y="270" text-anchor="middle" font-size="12" fill="#666">vd: SaaS LLM</text>
+  <!-- hybrid -->
+  <rect x="800" y="80" width="140" height="220" rx="14" fill="#eceff1" stroke="#455A64" stroke-width="2"/>
+  <text x="870" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#455A64">Hybrid</text>
+  <text x="870" y="155" text-anchor="middle" font-size="13" fill="#444">kết hợp</text>
+  <text x="870" y="190" text-anchor="middle" font-size="12" fill="#555">edge + cloud</text>
+  <text x="870" y="220" text-anchor="middle" font-size="12" fill="#555">hoặc</text>
+  <text x="870" y="250" text-anchor="middle" font-size="12" fill="#555">private + burst</text>
+  <text x="490" y="360" text-anchor="middle" font-size="15" fill="#333">Cùng một model có thể đặt khác chỗ — quyết định theo latency, privacy, cost, offline.</text>
+  <text x="490" y="395" text-anchor="middle" font-size="13" fill="#666">Không có vị trí “đúng tuyệt đối”; chỉ có trade-off phù hợp use case.</text>
+</svg>

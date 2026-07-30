@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="960" height="380" fill="#fafafa"/>
+  <text x="480" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#333">Hai đường compute: Training vs Serving</text>
+  <rect x="40" y="70" width="420" height="250" rx="14" fill="#e3f2fd" stroke="#1565C0" stroke-width="2"/>
+  <text x="250" y="110" text-anchor="middle" font-size="18" font-weight="700" fill="#1565C0">Training path</text>
+  <text x="250" y="150" text-anchor="middle" font-size="14" fill="#333">Dataset lớn → GPU nhiều giờ/ngày</text>
+  <text x="250" y="185" text-anchor="middle" font-size="14" fill="#333">Throughput ưu tiên hơn latency</text>
+  <text x="250" y="220" text-anchor="middle" font-size="14" fill="#333">Batch / job queue (CronJob, SLURM)</text>
+  <text x="250" y="255" text-anchor="middle" font-size="14" fill="#333">Chi phí: $/epoch, GPU-hour</text>
+  <text x="250" y="290" text-anchor="middle" font-size="13" fill="#555">vd: fine-tune 7B trên 4×A100, 8 giờ</text>
+  <rect x="500" y="70" width="420" height="250" rx="14" fill="#e8f5e9" stroke="#2E7D32" stroke-width="2"/>
+  <text x="710" y="110" text-anchor="middle" font-size="18" font-weight="700" fill="#2E7D32">Serving path</text>
+  <text x="710" y="150" text-anchor="middle" font-size="14" fill="#333">Request đến → trả prediction</text>
+  <text x="710" y="185" text-anchor="middle" font-size="14" fill="#333">Latency p95 / p99 là chỉ tiêu chính</text>
+  <text x="710" y="220" text-anchor="middle" font-size="14" fill="#333">Replica + load balancer + autoscaling</text>
+  <text x="710" y="255" text-anchor="middle" font-size="14" fill="#333">Chi phí: $/1k request hoặc GPU idle</text>
+  <text x="710" y="290" text-anchor="middle" font-size="13" fill="#555">vd: API chat, p95 &lt; 800 ms</text>
+  <text x="480" y="360" text-anchor="middle" font-size="14" fill="#444">Hai đường thường dùng cluster/quota khác nhau — đừng gộp một “máy GPU chung” vô tội vạ.</text>
+</svg>
